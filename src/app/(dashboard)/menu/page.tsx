@@ -15,6 +15,7 @@ import {
   orderBy
 } from "firebase/firestore";
 import { Plus, FolderPlus, Utensils, Search, Loader2, X } from "lucide-react";
+import { motion } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
