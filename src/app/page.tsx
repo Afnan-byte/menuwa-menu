@@ -6,21 +6,21 @@ import { motion } from "framer-motion";
 
 export default function Home() {
   return (
-    <div className="flex flex-col min-h-screen">
+    <div className="flex flex-col min-h-screen font-sans">
       {/* Header */}
-      <header className="px-4 lg:px-6 h-16 flex items-center border-b bg-white/80 backdrop-blur-md sticky top-0 z-50">
-        <Link className="flex items-center justify-center" href="#">
-          <div className="bg-primary p-1.5 rounded-lg mr-2">
+      <header className="px-10 h-20 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
+        <Link className="flex items-center justify-center group" href="#">
+          <div className="bg-primary p-2 rounded-xl mr-3 group-hover:rotate-12 transition-transform shadow-lg shadow-primary/10">
             <QrCode className="h-6 w-6 text-white" />
           </div>
-          <span className="text-2xl font-bold tracking-tight text-primary">Menuvo</span>
+          <span className="text-2xl font-black tracking-tighter text-primary">Menuvo</span>
         </Link>
-        <nav className="ml-auto flex gap-4 sm:gap-6">
-          <Link className="text-sm font-medium hover:text-accent transition-colors" href="/login">
+        <nav className="ml-auto flex items-center gap-8">
+          <Link className="text-sm font-bold text-gray-500 hover:text-primary transition-colors" href="/login">
             Login
           </Link>
           <Link 
-            className="text-sm font-medium bg-primary text-white px-4 py-2 rounded-full hover:bg-primary/90 transition-all shadow-sm" 
+            className="text-sm font-black bg-brand-green text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-green/20" 
             href="/signup"
           >
             Get Started
@@ -30,35 +30,45 @@ export default function Home() {
 
       <main className="flex-1">
         {/* Hero Section */}
-        <section className="w-full py-12 md:py-24 lg:py-32 xl:py-48 bg-background-soft">
-          <div className="container px-4 md:px-6 mx-auto">
-            <div className="flex flex-col items-center space-y-4 text-center">
+        <section className="w-full py-24 md:py-32 lg:py-48 bg-background-soft relative overflow-hidden">
+          {/* Background Elements */}
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-green/5 blur-[120px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
+          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full -translate-x-1/4 translate-y-1/4"></div>
+          
+          <div className="container px-4 md:px-6 mx-auto relative z-10">
+            <div className="flex flex-col items-center space-y-10 text-center">
               <motion.div 
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                className="space-y-2"
+                transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+                className="space-y-6"
               >
-                <h1 className="text-4xl font-extrabold tracking-tighter sm:text-5xl md:text-6xl lg:text-7xl/none text-primary">
-                  Modernize Your Restaurant <br />
-                  <span className="text-accent">with Digital Menus</span>
+                <h1 className="text-5xl font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-primary">
+                  Modernize Your <br />
+                  <span className="text-brand-green">Digital Experience</span>
                 </h1>
-                <p className="mx-auto max-w-[700px] text-gray-500 md:text-xl dark:text-gray-400">
+                <p className="mx-auto max-w-[600px] text-gray-400 text-lg md:text-xl font-medium leading-relaxed">
                   The simplest way to create, manage, and share your menu via QR codes.
                   Provide a touchless, premium experience for your customers.
                 </p>
               </motion.div>
               <motion.div 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.3, duration: 0.5 }}
-                className="space-x-4"
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4, duration: 0.5 }}
+                className="flex flex-col sm:flex-row gap-4"
               >
                 <Link
                   href="/signup"
-                  className="inline-flex h-12 items-center justify-center rounded-full bg-primary px-8 text-sm font-medium text-white shadow transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-primary px-10 text-sm font-black text-white shadow-2xl shadow-primary/20 transition-all hover:scale-105"
                 >
                   Create Your Menu <ArrowRight className="ml-2 h-4 w-4" />
+                </Link>
+                <Link
+                  href="/login"
+                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-white border border-gray-100 px-10 text-sm font-black text-primary transition-all hover:bg-gray-50 shadow-sm"
+                >
+                  View Demo
                 </Link>
               </motion.div>
             </div>
@@ -66,39 +76,41 @@ export default function Home() {
         </section>
 
         {/* Features Section */}
-        <section className="w-full py-24 bg-white">
+        <section className="w-full py-32 bg-white">
           <div className="container px-4 md:px-6 mx-auto">
-            <div className="grid gap-12 lg:grid-cols-3">
+            <div className="grid gap-10 lg:grid-cols-3">
               <FeatureCard 
-                icon={<MenuIcon className="h-10 w-10 text-accent" />}
-                title="Easy Menu Manager"
-                description="Upload items, set prices, and manage categories with our intuitive drag-and-drop builder."
+                icon={<MenuIcon className="h-10 w-10 text-brand-green" />}
+                title="Smart Menu Manager"
+                description="Upload items, set prices, and manage categories with our intuitive cloud-based builder."
               />
               <FeatureCard 
-                icon={<QrCode className="h-10 w-10 text-accent" />}
-                title="Instant QR Generation"
-                description="Get a unique QR code for your restaurant instantly. Print it and place it on your tables."
+                icon={<QrCode className="h-10 w-10 text-brand-green" />}
+                title="Instant QR Export"
+                description="Get high-resolution QR codes for your restaurant instantly. Ready for print and digital use."
               />
               <FeatureCard 
-                icon={<LayoutDashboard className="h-10 w-10 text-accent" />}
-                title="Real-time Updates"
-                description="Changed a price? Item out of stock? Update it instantly without reprinting your menus."
+                icon={<LayoutDashboard className="h-10 w-10 text-brand-green" />}
+                title="Live Synchronization"
+                description="Update prices or availability in real-time. Changes reflect instantly on customer devices."
               />
             </div>
           </div>
         </section>
       </main>
 
-      <footer className="py-12 border-t bg-background-soft">
-        <div className="container px-4 md:px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-6">
-          <div className="flex items-center gap-2">
-            <QrCode className="h-6 w-6 text-primary" />
-            <span className="text-xl font-bold text-primary">Menuvo</span>
+      <footer className="py-20 border-t border-gray-50 bg-background-soft">
+        <div className="container px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
+          <div className="flex items-center gap-3">
+            <div className="bg-primary p-2 rounded-xl">
+              <QrCode className="h-6 w-6 text-white" />
+            </div>
+            <span className="text-2xl font-black text-primary tracking-tighter">Menuvo</span>
           </div>
-          <p className="text-sm text-gray-500">© 2024 Menuvo. All rights reserved.</p>
-          <div className="flex gap-4">
-            <Link href="#" className="text-sm text-gray-500 hover:text-primary">Privacy</Link>
-            <Link href="#" className="text-sm text-gray-500 hover:text-primary">Terms</Link>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">© 2024 Menuvo. All rights reserved.</p>
+          <div className="flex gap-8">
+            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Privacy Policy</Link>
+            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
@@ -108,12 +120,12 @@ export default function Home() {
 
 function FeatureCard({ icon, title, description }: { icon: React.ReactNode, title: string, description: string }) {
   return (
-    <div className="flex flex-col items-center text-center p-8 rounded-2xl bg-background-soft hover:shadow-lg transition-all duration-300">
-      <div className="mb-4 p-3 bg-white rounded-2xl shadow-sm">
+    <div className="flex flex-col items-center text-center p-12 rounded-[2.5rem] bg-gray-50/50 border border-gray-100 group hover:bg-white hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500">
+      <div className="mb-8 p-5 bg-white rounded-3xl shadow-sm group-hover:scale-110 transition-transform">
         {icon}
       </div>
-      <h3 className="text-xl font-bold mb-2 text-primary">{title}</h3>
-      <p className="text-gray-500">{description}</p>
+      <h3 className="text-2xl font-black mb-4 text-primary tracking-tight">{title}</h3>
+      <p className="text-gray-500 font-medium leading-relaxed">{description}</p>
     </div>
   );
 }

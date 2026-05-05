@@ -18,8 +18,8 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-background-soft">
-        <Loader2 className="h-10 w-10 animate-spin text-accent" />
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="h-10 w-10 animate-spin text-brand-green" />
       </div>
     );
   }
@@ -27,31 +27,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-background-soft">
+    <div className="flex min-h-screen bg-background-soft font-sans">
       <Sidebar />
       <div className="flex-1 flex flex-col">
         {/* Topbar */}
-        <header className="h-16 bg-white border-b border-gray-100 flex items-center justify-between px-8 sticky top-0 z-10">
+        <header className="h-20 bg-white/70 backdrop-blur-xl border-b border-gray-100 flex items-center justify-between px-10 sticky top-0 z-10">
           <div className="relative w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400" />
             <input 
               type="text" 
-              placeholder="Search..." 
-              className="w-full pl-10 pr-4 py-2 bg-background-soft border-transparent rounded-xl focus:bg-white focus:ring-2 focus:ring-accent/20 transition-all text-sm"
+              placeholder="Search features, menus..." 
+              className="w-full pl-12 pr-4 py-3 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-medium"
             />
           </div>
-          <div className="flex items-center gap-4">
-            <button className="p-2 text-gray-400 hover:text-primary transition-colors">
+          <div className="flex items-center gap-6">
+            <button className="p-2.5 bg-gray-50 text-gray-400 hover:text-primary rounded-xl transition-all hover:scale-110">
               <Bell className="h-5 w-5" />
             </button>
-            <div className="h-8 w-8 rounded-full bg-accent/20 flex items-center justify-center text-accent font-bold text-sm">
-              {user.displayName?.charAt(0) || "U"}
+            <div className="flex items-center gap-3 pl-2 border-l border-gray-100">
+              <div className="text-right hidden sm:block">
+                <p className="text-sm font-black text-primary leading-none">{user.displayName || "Restaurant Owner"}</p>
+                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Premium Plan</p>
+              </div>
+              <div className="h-11 w-11 rounded-2xl bg-brand-green/10 flex items-center justify-center text-brand-green font-black text-lg shadow-sm border border-brand-green/10">
+                {user.displayName?.charAt(0) || "U"}
+              </div>
             </div>
           </div>
         </header>
 
         {/* Content */}
-        <main className="p-8 animate-fade-in">
+        <main className="p-10 animate-fade-in">
           {children}
         </main>
       </div>

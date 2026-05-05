@@ -11,6 +11,12 @@ const firebaseConfig = {
   appId: process.env.NEXT_PUBLIC_FIREBASE_APP_ID
 };
 
+if (typeof window !== "undefined") {
+  Object.entries(firebaseConfig).forEach(([key, value]) => {
+    if (!value) console.warn(`Firebase Config Error: ${key} is missing!`);
+  });
+}
+
 // Initialize Firebase
 const app = getApps().length > 0 ? getApp() : initializeApp(firebaseConfig);
 const auth = getAuth(app);
