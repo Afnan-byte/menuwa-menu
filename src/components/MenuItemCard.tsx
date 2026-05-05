@@ -1,6 +1,7 @@
 "use client";
 
-import { Utensils, Edit2, Trash2, Tag } from "lucide-react";
+import Image from "next/image";
+import { Utensils, Edit2, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface MenuItemProps {
@@ -26,7 +27,13 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
     )}>
       <div className="aspect-video bg-gray-100 relative">
         {item.imageUrl ? (
-          <img src={item.imageUrl} alt={item.name} className="w-full h-full object-cover" />
+          <Image 
+            src={item.imageUrl} 
+            alt={item.name} 
+            fill 
+            className="object-cover transition-transform group-hover:scale-105" 
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          />
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-400">
             <Utensils className="h-12 w-12 opacity-20" />

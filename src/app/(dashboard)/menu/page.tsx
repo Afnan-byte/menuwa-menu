@@ -86,27 +86,36 @@ export default function MenuPage() {
     }
   };
 
+  const [isSaving, setIsSaving] = useState(false);
+
   const handleAddCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!newCategoryName.trim()) return;
+    if (!newCategoryName.trim() || !user) return;
 
+    setIsSaving(true);
     try {
       const docRef = await addDoc(collection(db, "categories"), {
         name: newCategoryName,
-        restaurantId: user?.uid,
+        restaurantId: user.uid,
         createdAt: new Date().toISOString(),
       });
       setCategories([...categories, { id: docRef.id, name: newCategoryName }]);
       setNewCategoryName("");
       setIsCategoryModalOpen(false);
       toast.success("Category added!");
-    } catch (error) {
-      toast.error("Failed to add category");
+    } catch (error: any) {
+      console.error("Firestore Error:", error);
+      toast.error(`Database Error: ${error.message}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
   const handleItemSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user) return;
+
+    setIsSaving(true);
     try {
       if (editingItem) {
         await updateDoc(doc(db, "items", editingItem.id), itemForm);
@@ -115,7 +124,7 @@ export default function MenuPage() {
       } else {
         const docRef = await addDoc(collection(db, "items"), {
           ...itemForm,
-          restaurantId: user?.uid,
+          restaurantId: user.uid,
           isAvailable: true,
           createdAt: new Date().toISOString(),
         });
@@ -125,8 +134,11 @@ export default function MenuPage() {
       setIsItemModalOpen(false);
       setEditingItem(null);
       setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [] });
-    } catch (error) {
-      toast.error("Failed to save item");
+    } catch (error: any) {
+      console.error("Firestore Error:", error);
+      toast.error(`Database Error: ${error.message}`);
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -267,9 +279,10 @@ export default function MenuPage() {
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 shadow-md"
+                  disabled={isSaving}
+                  className="flex-1 py-3 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 shadow-md flex items-center justify-center disabled:opacity-70"
                 >
-                  Create
+                  {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create"}
                 </button>
               </div>
             </form>
@@ -351,9 +364,10 @@ export default function MenuPage() {
                 </button>
                 <button 
                   type="submit"
-                  className="flex-1 py-3 bg-accent text-white font-bold rounded-2xl hover:bg-accent/90 shadow-md"
+                  disabled={isSaving}
+                  className="flex-1 py-3 bg-accent text-white font-bold rounded-2xl hover:bg-accent/90 shadow-md flex items-center justify-center disabled:opacity-70"
                 >
-                  {editingItem ? "Update Item" : "Add to Menu"}
+                  {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : (editingItem ? "Update Item" : "Add to Menu")}
                 </button>
               </div>
             </form>

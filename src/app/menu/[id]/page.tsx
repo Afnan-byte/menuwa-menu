@@ -11,6 +11,7 @@ import {
   where, 
   getDocs 
 } from "firebase/firestore";
+import Image from "next/image";
 import { 
   Loader2, 
   Phone, 
@@ -112,7 +113,14 @@ export default function PublicMenuPage() {
       <div className="bg-primary text-white p-8 rounded-b-[3rem] shadow-xl relative overflow-hidden">
         <div className="relative z-10 flex flex-col items-center text-center">
           {restaurant.logoUrl ? (
-            <img src={restaurant.logoUrl} alt={restaurant.restaurantName} className="h-20 w-20 rounded-2xl mb-4 object-cover border-4 border-white/20" />
+            <div className="h-20 w-20 rounded-2xl mb-4 relative overflow-hidden border-4 border-white/20">
+              <Image 
+                src={restaurant.logoUrl} 
+                alt={restaurant.restaurantName} 
+                fill 
+                className="object-cover"
+              />
+            </div>
           ) : (
             <div className="h-20 w-20 rounded-2xl bg-white/10 flex items-center justify-center mb-4 border-2 border-dashed border-white/20">
               <Utensils className="h-10 w-10 text-white/50" />
@@ -165,9 +173,15 @@ export default function PublicMenuPage() {
               key={item.id}
               className="bg-white rounded-3xl p-4 shadow-sm border border-gray-50 flex gap-4 hover:shadow-md transition-all group"
             >
-              <div className="h-24 w-24 rounded-2xl bg-background-soft overflow-hidden flex-shrink-0">
+              <div className="h-24 w-24 rounded-2xl bg-background-soft overflow-hidden flex-shrink-0 relative">
                 {item.imageUrl ? (
-                  <img src={item.imageUrl} alt={item.name} className="h-full w-full object-cover group-hover:scale-110 transition-transform duration-500" />
+                  <Image 
+                    src={item.imageUrl} 
+                    alt={item.name} 
+                    fill 
+                    className="object-cover group-hover:scale-110 transition-transform duration-500" 
+                    sizes="96px"
+                  />
                 ) : (
                   <div className="h-full w-full flex items-center justify-center text-gray-300">
                     <Utensils className="h-8 w-8" />
