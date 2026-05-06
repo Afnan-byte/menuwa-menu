@@ -3,18 +3,17 @@
 import { useState, useEffect, useMemo } from "react";
 import { useParams } from "next/navigation";
 import { db } from "@/lib/firebase";
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs
+import { 
+  doc, 
+  getDoc, 
+  collection, 
+  query, 
+  where, 
+  getDocs 
 } from "firebase/firestore";
 import Image from "next/image";
-import {
+import { 
   Utensils,
-  Star,
   LayoutGrid,
   X,
   ArrowRight
@@ -92,7 +91,7 @@ export default function PublicMenuPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <motion.div
+        <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
           className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full"
@@ -110,198 +109,115 @@ export default function PublicMenuPage() {
       `}</style>
 
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-[0_0_100px_rgba(0,0,0,0.05)]">
-
-        {/* Cinematic Header */}
+        
+        {/* Header Section */}
         <header className="relative pt-16 pb-10 px-8 flex flex-col items-center">
-          <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-gray-50 to-transparent -z-10 opacity-60"></div>
-
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            className="relative h-40 w-40 rounded-[3rem] p-2 bg-white shadow-2xl mb-8 border border-gray-50"
-          >
-            <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-50">
-              <Image
-                src={restaurant?.logoUrl || "/logo.svg"}
-                alt="Logo"
-                fill
-                className="object-cover"
-              />
-            </div>
-          </motion.div>
-
-          <motion.h1
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            className="text-3xl font-black text-gray-900 tracking-tighter"
-          >
-            {restaurant?.restaurantName || "Menuvo"}
-          </motion.h1>
-          <motion.p
-            initial={{ y: 10, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="text-gray-400 text-[10px] uppercase font-black tracking-[0.3em] mt-3 bg-gray-50 px-4 py-1 rounded-full"
-          >
-            Culinary Excellence
-          </motion.p>
+           <div className="absolute top-0 inset-x-0 h-40 bg-gradient-to-b from-gray-50 to-transparent -z-10 opacity-60"></div>
+           <motion.div 
+             initial={{ scale: 0.8, opacity: 0 }}
+             animate={{ scale: 1, opacity: 1 }}
+             className="relative h-40 w-40 rounded-[3rem] p-2 bg-white shadow-2xl mb-8 border border-gray-50"
+           >
+              <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-50">
+                 <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
+              </div>
+           </motion.div>
+           <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{restaurant?.restaurantName || "Menuvo"}</h1>
+           <p className="text-gray-400 text-[10px] uppercase font-black tracking-[0.3em] mt-3 bg-gray-50 px-4 py-1 rounded-full">Culinary Excellence</p>
         </header>
 
         {/* 2-Column Grid */}
         <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-12 pt-6 pb-20">
-          <AnimatePresence mode="popLayout">
-            {filteredItems.map((item, index) => (
-              <motion.div
-                key={item.id}
-                layout
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ delay: index * 0.05 }}
-                className="relative group cursor-pointer"
-                onClick={() => setSelectedItem(item)}
-              >
-                <div className="relative w-full h-64 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 border border-gray-50">
-                  <Image
-                    src={item.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"}
-                    alt={item.name}
-                    fill
-                    className="object-cover transition-transform duration-1000 group-hover:scale-125"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-
-                  <div className="absolute top-4 right-4 z-10 px-3 py-1 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform" style={{ backgroundColor: `${themeColor}cc` }}>
-                    <span className="text-[10px] font-black text-white">{item.price}</span>
-                  </div>
-
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
-                    <div className="flex items-center gap-0.5">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="h-2 w-2 fill-yellow-400 text-yellow-400" />
-                      ))}
+           <AnimatePresence mode="popLayout">
+             {filteredItems.map((item, index) => (
+               <motion.div 
+                 key={item.id}
+                 layout
+                 initial={{ opacity: 0, y: 30 }}
+                 animate={{ opacity: 1, y: 0 }}
+                 exit={{ opacity: 0, scale: 0.8 }}
+                 transition={{ delay: index * 0.05 }}
+                 className="relative group cursor-pointer"
+                 onClick={() => setSelectedItem(item)}
+               >
+                  <div className="relative w-full h-64 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 border border-gray-50">
+                    <Image src={item.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} alt={item.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-125" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                    <div className="absolute top-4 right-4 z-10 px-3 py-1 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform" style={{ backgroundColor: `${themeColor}cc` }}>
+                       <span className="text-[10px] font-black text-white">{item.price}</span>
+                    </div>
+                    <div className="absolute bottom-6 left-6 right-6">
+                       <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
+                       <p className="text-white/40 text-[8px] font-black uppercase tracking-widest line-clamp-1">View Details</p>
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            ))}
-          </AnimatePresence>
+               </motion.div>
+             ))}
+           </AnimatePresence>
         </div>
 
         {/* Item Details Immersive Modal */}
         <AnimatePresence>
           {selectedItem && (
             <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-hidden">
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
-                onClick={() => setSelectedItem(null)}
-                className="absolute inset-0 bg-black/60 backdrop-blur-xl"
-              />
-              <motion.div
-                layoutId={selectedItem.id}
-                initial={{ y: "100%" }}
-                animate={{ y: 0 }}
-                exit={{ y: "100%" }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="relative w-full max-w-md bg-white rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[90vh] sm:h-auto"
-              >
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className="absolute top-8 right-8 z-50 h-12 w-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-
-                <div className="relative h-[45vh] w-full">
-                  <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
-                </div>
-
-                <div className="p-10 -mt-20 relative z-10 bg-white rounded-t-[4rem]">
-                  <div className="flex items-center justify-between mb-4">
-                    <span className="px-4 py-1.5 bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] rounded-full text-gray-400">
-                      {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
-                    </span>
-                    <div className="flex items-center gap-1">
-                      {[1, 2, 3, 4, 5].map((s) => (
-                        <Star key={s} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                      ))}
-                      <span className="text-[10px] font-black text-gray-300 ml-1">5.0</span>
-                    </div>
+               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedItem(null)} className="absolute inset-0 bg-black/60 backdrop-blur-xl" />
+               <motion.div 
+                 layoutId={selectedItem.id} 
+                 initial={{ y: "100%" }} 
+                 animate={{ y: 0 }} 
+                 exit={{ y: "100%" }} 
+                 className="relative w-full max-w-md bg-white rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[90vh] sm:h-auto"
+               >
+                  <button onClick={() => setSelectedItem(null)} className="absolute top-8 right-8 z-50 h-12 w-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all">
+                     <X className="h-6 w-6" />
+                  </button>
+                  <div className="relative h-[45vh] w-full">
+                     <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   </div>
+                  <div className="p-10 -mt-20 relative z-10 bg-white rounded-t-[4rem]">
+                     <div className="flex items-center justify-between mb-4">
+                        <span className="px-4 py-1.5 bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] rounded-full text-gray-400">
+                           {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
+                        </span>
+                     </div>
 
-                  <h2 className="text-4xl font-black text-gray-900 tracking-tighter mb-4">{selectedItem.name}</h2>
-                  <p className="text-gray-500 text-sm font-medium leading-relaxed mb-10">
-                    {selectedItem.description || "This artisanal dish is crafted using only the finest ingredients, slow-prepared to preserve every delicate flavor profile for your ultimate enjoyment."}
-                  </p>
+                     <h2 className="text-4xl font-black text-gray-900 tracking-tighter mb-4">{selectedItem.name}</h2>
+                     <p className="text-gray-500 text-sm font-medium leading-relaxed mb-10">{selectedItem.description}</p>
 
-                  <div className="flex items-center justify-between gap-6 pt-4 border-t border-gray-50">
-                    <div className="flex flex-col">
-                      <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-1">Total Price</span>
-                      <span className="text-3xl font-black text-gray-900">{selectedItem.price}</span>
-                    </div>
-                    <button
-                      onClick={() => setSelectedItem(null)}
-                      className="flex-1 py-6 text-white font-black text-xs uppercase tracking-widest rounded-3xl shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-3"
-                      style={{ backgroundColor: themeColor }}
-                    >
-                      Back to Menu
-                      <ArrowRight className="h-4 w-4" />
-                    </button>
+                     <div className="flex items-center justify-between gap-6 pt-4 border-t border-gray-50">
+                        <div className="flex flex-col">
+                           <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-1">Total Price</span>
+                           <span className="text-3xl font-black text-gray-900">{selectedItem.price}</span>
+                        </div>
+                        <button onClick={() => setSelectedItem(null)} className="flex-1 py-6 text-white font-black text-xs uppercase tracking-widest rounded-3xl shadow-2xl transition-all hover:scale-105 flex items-center justify-center gap-3" style={{ backgroundColor: themeColor }}>
+                           Back to Menu <ArrowRight className="h-4 w-4" />
+                        </button>
+                     </div>
                   </div>
-                </div>
-              </motion.div>
+               </motion.div>
             </div>
           )}
         </AnimatePresence>
 
-        {/* Premium Floating Dock Categories */}
+        {/* Floating Dock */}
         <div className="fixed bottom-8 inset-x-0 flex justify-center px-6 z-50">
-          <motion.div
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            className="bg-white/70 backdrop-blur-3xl p-2 rounded-[3rem] flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/50 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth"
-          >
-            <button
-              onClick={() => setActiveCategory("all")}
-              className={cn(
-                "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-[2.5rem] transition-all",
-                activeCategory === "all"
-                  ? "text-white shadow-xl scale-105"
-                  : "text-gray-400 hover:bg-gray-50"
-              )}
-              style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              <span className="text-[10px] font-black uppercase tracking-widest">All</span>
-            </button>
-
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={cn(
-                  "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-[2.5rem] transition-all",
-                  activeCategory === cat.id
-                    ? "text-white shadow-xl scale-105"
-                    : "text-gray-400 hover:bg-gray-50"
-                )}
-                style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}
-              >
-                <Utensils className="h-4 w-4" />
-                <span className="text-[10px] font-black uppercase tracking-widest">{cat.name}</span>
+           <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="bg-white/70 backdrop-blur-3xl p-2 rounded-[3rem] flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/50 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth">
+              <button onClick={() => setActiveCategory("all")} className={cn("flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-[2.5rem] transition-all", activeCategory === "all" ? "text-white shadow-xl scale-105" : "text-gray-400 hover:bg-gray-50")} style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}>
+                 <LayoutGrid className="h-4 w-4" /> <span className="text-[10px] font-black uppercase tracking-widest">All</span>
               </button>
-            ))}
-          </motion.div>
+              {categories.map((cat) => (
+                <button key={cat.id} onClick={() => setActiveCategory(cat.id)} className={cn("flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-[2.5rem] transition-all", activeCategory === cat.id ? "text-white shadow-xl scale-105" : "text-gray-400 hover:bg-gray-50")} style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}>
+                   <Utensils className="h-4 w-4" /> <span className="text-[10px] font-black uppercase tracking-widest">{cat.name}</span>
+                </button>
+              ))}
+           </motion.div>
         </div>
 
         {/* Footer */}
         <footer className="mt-10 py-20 px-8 text-center bg-gray-50/50 rounded-t-[4rem]">
-          <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.3em] mb-4">Powered by Digital Excellence</p>
+            <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.3em] mb-4">Powered by Digital Excellence</p>
         </footer>
-
       </div>
     </div>
   );
