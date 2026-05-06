@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans">
       {/* Header */}
-      <header className="px-10 h-28 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
+      <header className="px-10 h-36 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
         <Link className="flex items-center justify-center group" href="/">
-          <div className="relative h-20 w-20 mr-3 group-hover:scale-110 transition-transform">
+          <div className="relative h-28 w-28 mr-3 group-hover:scale-110 transition-transform">
             <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
           </div>
         </Link>
@@ -102,7 +102,7 @@ export default function Home() {
       <footer className="py-20 border-t border-gray-50 bg-background-soft">
         <div className="container px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
           <Link className="flex items-center gap-3 group" href="/">
-            <div className="relative h-16 w-16 group-hover:rotate-12 transition-transform">
+            <div className="relative h-24 w-24 group-hover:rotate-12 transition-transform">
               <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
             </div>
           </Link>
