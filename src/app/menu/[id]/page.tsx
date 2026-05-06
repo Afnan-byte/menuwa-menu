@@ -168,7 +168,7 @@ export default function PublicMenuPage() {
                       fill 
                       className="object-cover transition-transform duration-1000 group-hover:scale-125"
                     />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                     
                     <div className="absolute top-4 right-4 z-10 px-3 py-1 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform" style={{ backgroundColor: `${themeColor}cc` }}>
                        <span className="text-[10px] font-black text-white">{item.price}</span>
@@ -176,7 +176,11 @@ export default function PublicMenuPage() {
 
                     <div className="absolute bottom-6 left-6 right-6">
                        <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
-                       <p className="text-white/50 text-[8px] font-black uppercase tracking-widest line-clamp-1">Details & Rating</p>
+                       <div className="flex items-center gap-0.5">
+                          {[1, 2, 3, 4, 5].map((s) => (
+                            <Star key={s} className="h-2 w-2 fill-yellow-400 text-yellow-400" />
+                          ))}
+                       </div>
                     </div>
                   </div>
                </motion.div>
@@ -220,9 +224,11 @@ export default function PublicMenuPage() {
                         <span className="px-4 py-1.5 bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] rounded-full text-gray-400">
                            {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
                         </span>
-                        <div className="flex items-center gap-1.5 bg-yellow-400/10 px-4 py-1.5 rounded-full">
-                           <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
-                           <span className="text-[10px] font-black text-yellow-600">4.8 Rating</span>
+                        <div className="flex items-center gap-1">
+                           {[1, 2, 3, 4, 5].map((s) => (
+                             <Star key={s} className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                           ))}
+                           <span className="text-[10px] font-black text-gray-300 ml-1">5.0</span>
                         </div>
                      </div>
 
