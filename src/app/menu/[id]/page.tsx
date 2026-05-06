@@ -163,7 +163,7 @@ export default function PublicMenuPage() {
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
         {/* Cinematic Branding Header */}
-        <header className="relative pt-32 pb-24 w-full overflow-hidden flex flex-col items-center justify-center">
+        <header className="relative pt-48 pb-24 w-full overflow-hidden flex flex-col items-center justify-center">
           {/* Dynamic Background Layer */}
           <div className="absolute inset-0 bg-[#0A0A0A]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)]"></div>
