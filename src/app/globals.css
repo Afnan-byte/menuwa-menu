@@ -28,7 +28,11 @@
 
 @layer base {
   * {
-    font-family: 'Outfit', sans-serif !important;
+    font-family: var(--font-outfit), 'Outfit', sans-serif;
+  }
+  
+  .font-serif, .font-serif * {
+    font-family: var(--font-serif), 'Playfair Display', serif !important;
   }
 }
 
