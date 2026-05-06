@@ -14,7 +14,8 @@ import {
   Loader2, 
   Palette, 
   Layout, 
-  CheckCircle2
+  CheckCircle2,
+  Star
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -39,6 +40,7 @@ export default function SettingsPage() {
     whatsapp: "",
     logoUrl: "",
     themeColor: "#FF9F0D",
+    googleReviewUrl: "",
   });
 
   useEffect(() => {
@@ -50,6 +52,7 @@ export default function SettingsPage() {
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
         themeColor: restaurantData.themeColor || "#FF9F0D",
+        googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
     }
   }, [restaurantData]);
@@ -270,6 +273,19 @@ export default function SettingsPage() {
                         onChange={(e) => setFormData({...formData, whatsapp: e.target.value})}
                         className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary"
                         placeholder="+1 (555) 000-0000"
+                      />
+                    </div>
+                 </div>
+                 <div className="space-y-2 md:col-span-2">
+                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Google Review Link</label>
+                    <div className="relative">
+                      <Star className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                      <input 
+                        type="text" 
+                        value={formData.googleReviewUrl}
+                        onChange={(e) => setFormData({...formData, googleReviewUrl: e.target.value})}
+                        className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary"
+                        placeholder="Paste your Google Maps Review link here..."
                       />
                     </div>
                  </div>
