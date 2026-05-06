@@ -37,7 +37,6 @@ export default function SettingsPage() {
     whatsapp: "",
     logoUrl: "",
     menuTheme: "dark",
-    themeColor: "#196F03",
     googleReviewUrl: "",
   });
 
@@ -50,46 +49,10 @@ export default function SettingsPage() {
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
         menuTheme: restaurantData.menuTheme || "dark",
-        themeColor: restaurantData.themeColor || "#196F03",
         googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
     }
   }, [restaurantData]);
-
-  // Automatically extract dominant color from logo
-  const [extractingColor, setExtractingColor] = useState(false);
-
-  useEffect(() => {
-    if (!formData.logoUrl) return;
-
-    const timeoutId = setTimeout(async () => {
-      // Don't extract if the URL hasn't changed from the saved one (optimization)
-      if (restaurantData && restaurantData.logoUrl === formData.logoUrl) return;
-
-      try {
-        setExtractingColor(true);
-        const res = await fetch('/api/extract-color', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ url: formData.logoUrl }),
-        });
-        
-        if (res.ok) {
-          const data = await res.json();
-          if (data.color) {
-            setFormData(prev => ({ ...prev, themeColor: data.color }));
-            toast.success("Brand color extracted from logo!");
-          }
-        }
-      } catch (error) {
-        console.error("Failed to extract color", error);
-      } finally {
-        setExtractingColor(false);
-      }
-    }, 1000); // 1s debounce
-
-    return () => clearTimeout(timeoutId);
-  }, [formData.logoUrl, restaurantData]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,7 +92,7 @@ export default function SettingsPage() {
         <div className="lg:col-span-1 space-y-8">
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group">
             <div className="absolute top-0 inset-x-0 h-32 bg-gray-50 overflow-hidden">
-               <div className={cn("h-full w-full transition-colors", formData.menuTheme === 'dark' ? "bg-[#0A0A0A]" : "bg-white border-b border-gray-100")}></div>
+              <div className={cn("h-full w-full transition-colors", formData.menuTheme === 'dark' ? "bg-[#0A0A0A]" : "bg-white border-b border-gray-100")}></div>
             </div>
 
             <div className="relative mt-12 mb-6">
@@ -205,10 +168,7 @@ export default function SettingsPage() {
 
               <div className="pt-8 border-t border-gray-50">
                 <div>
-                  <div className="flex items-center justify-between mb-4 ml-1">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest">Logo Image URL</label>
-                    {extractingColor && <span className="text-[10px] font-bold text-brand-orange animate-pulse">Extracting brand color...</span>}
-                  </div>
+                  <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo Image URL</label>
                   <div className="relative">
                     <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
                     <input
@@ -216,12 +176,8 @@ export default function SettingsPage() {
                       value={formData.logoUrl}
                       onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
                       className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                      placeholder="Paste your logo URL to auto-extract brand color"
+                      placeholder="Paste your logo URL"
                     />
-                  </div>
-                  <div className="mt-4 flex items-center gap-3 ml-2">
-                    <div className="h-4 w-4 rounded-full border border-gray-200" style={{ backgroundColor: formData.themeColor }}></div>
-                    <span className="text-xs font-medium text-gray-400">Current Brand Color: <span className="font-bold">{formData.themeColor}</span></span>
                   </div>
                 </div>
               </div>
@@ -313,19 +269,19 @@ export default function SettingsPage() {
 
 function ArrowRight({ className }: { className?: string }) {
   return (
-    <svg 
-      className={className} 
-      xmlns="http://www.w3.org/2000/svg" 
-      width="24" 
-      height="24" 
-      viewBox="0 0 24 24" 
-      fill="none" 
-      stroke="currentColor" 
-      strokeWidth="2" 
-      strokeLinecap="round" 
+    <svg
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
       strokeLinejoin="round"
     >
-      <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+      <path d="M5 12h14" /><path d="m12 5 7 7-7 7" />
     </svg>
   );
 }
