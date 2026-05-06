@@ -16,8 +16,11 @@ import {
   Utensils,
   Star,
   LayoutGrid,
-  ChevronRight,
-  Plus
+  X,
+  Plus,
+  ArrowRight,
+  Clock,
+  ThumbsUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -52,6 +55,7 @@ export default function PublicMenuPage() {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
+  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
   const themeColor = restaurant?.themeColor || "#14B8A6";
 
@@ -143,7 +147,7 @@ export default function PublicMenuPage() {
            </motion.p>
         </header>
 
-        {/* Stunning 2-Column Grid */}
+        {/* 2-Column Grid */}
         <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-12 pt-6 pb-20">
            <AnimatePresence mode="popLayout">
              {filteredItems.map((item, index) => (
@@ -154,7 +158,8 @@ export default function PublicMenuPage() {
                  animate={{ opacity: 1, y: 0, scale: 1 }}
                  exit={{ opacity: 0, scale: 0.8 }}
                  transition={{ delay: index * 0.05, type: "spring", stiffness: 100 }}
-                 className="relative group"
+                 className="relative group cursor-pointer"
+                 onClick={() => setSelectedItem(item)}
                >
                   <div className="relative w-full h-64 rounded-[3rem] overflow-hidden shadow-2xl group-hover:shadow-[0_20px_40px_rgba(0,0,0,0.15)] transition-all duration-500">
                     <Image 
@@ -165,30 +170,104 @@ export default function PublicMenuPage() {
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-90 group-hover:opacity-100 transition-opacity"></div>
                     
-                    {/* Price Badge Overlay */}
                     <div className="absolute top-4 right-4 z-10 px-3 py-1 bg-white/20 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform group-hover:scale-110">
                        <span className="text-[10px] font-black text-white">{item.price}</span>
                     </div>
 
                     <div className="absolute bottom-6 left-6 right-6">
                        <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
-                       <p className="text-white/50 text-[8px] font-black uppercase tracking-widest line-clamp-1">Premium Quality</p>
+                       <p className="text-white/50 text-[8px] font-black uppercase tracking-widest line-clamp-1">Details & Rating</p>
                     </div>
-
-                    <button 
-                      className="absolute bottom-4 right-4 h-10 w-10 bg-white rounded-2xl flex items-center justify-center shadow-lg transition-all scale-0 group-hover:scale-100 hover:rotate-90 active:scale-90"
-                      style={{ color: themeColor }}
-                    >
-                       <Plus className="h-5 w-5" />
-                    </button>
                   </div>
-                  
-                  {/* Subtle Glow Effect on Hover */}
                   <div className="absolute -inset-1 rounded-[3rem] opacity-0 group-hover:opacity-20 blur-2xl transition-opacity -z-10" style={{ backgroundColor: themeColor }}></div>
                </motion.div>
              ))}
            </AnimatePresence>
         </div>
+
+        {/* Item Details Immersive Modal */}
+        <AnimatePresence>
+          {selectedItem && (
+            <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-hidden">
+               <motion.div 
+                 initial={{ opacity: 0 }}
+                 animate={{ opacity: 1 }}
+                 exit={{ opacity: 0 }}
+                 onClick={() => setSelectedItem(null)}
+                 className="absolute inset-0 bg-black/60 backdrop-blur-xl"
+               />
+               <motion.div 
+                 layoutId={selectedItem.id}
+                 initial={{ y: "100%" }}
+                 animate={{ y: 0 }}
+                 exit={{ y: "100%" }}
+                 transition={{ type: "spring", damping: 25, stiffness: 200 }}
+                 className="relative w-full max-w-md bg-white rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[90vh] sm:h-auto"
+               >
+                  {/* Close Button */}
+                  <button 
+                    onClick={() => setSelectedItem(null)}
+                    className="absolute top-8 right-8 z-50 h-12 w-12 bg-white/20 backdrop-blur-md rounded-full flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+                  >
+                     <X className="h-6 w-6" />
+                  </button>
+
+                  <div className="relative h-[45vh] w-full">
+                     <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
+                     <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
+                  </div>
+
+                  <div className="p-10 -mt-20 relative z-10 bg-white rounded-t-[4rem]">
+                     <div className="flex items-center justify-between mb-4">
+                        <span className="px-4 py-1.5 bg-gray-50 text-[10px] font-black uppercase tracking-[0.2em] rounded-full text-gray-400">
+                           {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
+                        </span>
+                        <div className="flex items-center gap-1.5 bg-yellow-400/10 px-4 py-1.5 rounded-full">
+                           <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                           <span className="text-[10px] font-black text-yellow-600">4.8 Rating</span>
+                        </div>
+                     </div>
+
+                     <h2 className="text-4xl font-black text-gray-900 tracking-tighter mb-4">{selectedItem.name}</h2>
+                     <p className="text-gray-500 text-sm font-medium leading-relaxed mb-8">
+                        {selectedItem.description || "This artisanal dish is crafted using only the finest ingredients, slow-prepared to preserve every delicate flavor profile for your ultimate enjoyment."}
+                     </p>
+
+                     <div className="grid grid-cols-2 gap-6 mb-10">
+                        <div className="p-6 bg-gray-50 rounded-[2.5rem] border border-gray-100">
+                           <p className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2">Preparation</p>
+                           <div className="flex items-center gap-3">
+                              <Clock className="h-5 w-5 text-gray-900" />
+                              <span className="text-sm font-black text-gray-900">15-20 Min</span>
+                           </div>
+                        </div>
+                        <div className="p-6 bg-gray-50 rounded-[2.5rem] border border-gray-100">
+                           <p className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-2">Healthiness</p>
+                           <div className="flex items-center gap-3">
+                              <ThumbsUp className="h-5 w-5 text-gray-900" />
+                              <span className="text-sm font-black text-gray-900">High Score</span>
+                           </div>
+                        </div>
+                     </div>
+
+                     <div className="flex items-center justify-between gap-6">
+                        <div className="flex flex-col">
+                           <span className="text-[9px] font-black text-gray-300 uppercase tracking-widest mb-1">Total Price</span>
+                           <span className="text-3xl font-black text-gray-900">{selectedItem.price}</span>
+                        </div>
+                        <button 
+                          onClick={() => setSelectedItem(null)}
+                          className="flex-1 py-6 bg-black text-white font-black text-xs uppercase tracking-widest rounded-3xl shadow-2xl hover:scale-105 transition-all flex items-center justify-center gap-3"
+                        >
+                           Back to Menu
+                           <ArrowRight className="h-4 w-4" />
+                        </button>
+                     </div>
+                  </div>
+               </motion.div>
+            </div>
+          )}
+        </AnimatePresence>
 
         {/* Premium Floating Dock Categories */}
         <div className="fixed bottom-8 inset-x-0 flex justify-center px-6 z-50">
