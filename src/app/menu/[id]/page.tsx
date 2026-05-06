@@ -165,7 +165,7 @@ export default function PublicMenuPage() {
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
         {/* Cinematic Branding Header */}
-        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-8 pb-8">
+        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-24 pb-4">
           {/* Co-branding Bar */}
           <div className="absolute top-8 left-6 flex items-center gap-3 z-30">
             <div className={cn("relative h-10 w-10 rounded-full overflow-hidden border", isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white shadow-sm")}>
@@ -184,7 +184,7 @@ export default function PublicMenuPage() {
         </header>
 
         {/* Search & Filters - Dark Glass */}
-        <div className="px-6 -mt-6 relative z-30 space-y-4">
+        <div className="px-6 relative z-30 space-y-4">
           <div className="relative group">
             <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
             <input
