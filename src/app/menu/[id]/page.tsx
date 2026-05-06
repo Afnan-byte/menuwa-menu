@@ -260,7 +260,9 @@ export default function PublicMenuPage() {
                             )}
                             {item.dietaryType === "non-veg" && (
                               <div className="h-7 w-7 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center border-2 border-red-600 p-0.5 shadow-lg">
-                                <div className="h-2.5 w-2.5 bg-red-600 rounded-full" />
+                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                  <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
+                                </svg>
                               </div>
                             )}
                           </div>
@@ -277,7 +279,7 @@ export default function PublicMenuPage() {
                           <div className="absolute bottom-6 left-6 right-6">
                             <div className="flex items-center gap-2 mb-1.5">
                                {item.dietaryType === "veg" && <span className="text-[8px] font-bold text-green-400 uppercase tracking-[0.2em]">Vegetarian</span>}
-                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-bold text-red-400 uppercase tracking-[0.2em]">Non-Veg</span>}
+                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-bold text-red-400 uppercase tracking-[0.2em]">Non-Veg Selection</span>}
                             </div>
                             <h3 className={cn(
                               "text-white font-bold tracking-tight line-clamp-1 mb-1",
@@ -363,12 +365,15 @@ export default function PublicMenuPage() {
                      {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-orange-400"><Flame className="h-3 w-3" /> Trending</div>}
                      {selectedItem.dietaryType === "veg" && (
                        <div className="px-4 py-2 bg-white text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-green-100">
-                         <div className="h-2 w-2 bg-green-600 rounded-full" /> Vegetarian
+                         <div className="h-2.5 w-2.5 bg-green-600 rounded-full" /> Vegetarian Selection
                        </div>
                      )}
                      {selectedItem.dietaryType === "non-veg" && (
                        <div className="px-4 py-2 bg-white text-red-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-red-100">
-                         <div className="h-2 w-2 bg-red-600 rounded-full" /> Non-Veg
+                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
+                          </svg>
+                          Non-Veg Selection
                        </div>
                      )}
                   </div>

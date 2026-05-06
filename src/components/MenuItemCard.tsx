@@ -31,7 +31,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Dietary Indicator (Traditional Square Dot) */}
+      {/* Dietary Indicator (Custom Standards) */}
       <div className="absolute top-6 right-6">
         {item.dietaryType === "veg" && (
           <div className="h-6 w-6 border-2 border-green-600 p-0.5 flex items-center justify-center rounded-md">
@@ -40,7 +40,9 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         )}
         {item.dietaryType === "non-veg" && (
           <div className="h-6 w-6 border-2 border-red-600 p-0.5 flex items-center justify-center rounded-md">
-            <div className="h-2.5 w-2.5 bg-red-600 rounded-full" />
+             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+               <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
+             </svg>
           </div>
         )}
       </div>
@@ -67,7 +69,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
           )}
 
           {/* Price Badge Overlapping Image */}
-          <div className="absolute -bottom-2 right-0 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-xs shadow-lg shadow-brand-green/30">
+          <div className="absolute -bottom-2 right-0 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-bold text-xs shadow-lg shadow-brand-green/30">
             {item.price}
           </div>
         </div>
@@ -75,7 +77,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
 
       {/* Content Area */}
       <div className="pt-24 text-center">
-        <h3 className="text-lg font-black text-primary tracking-tight mb-2 group-hover:text-[#196F03] transition-colors line-clamp-1">
+        <h3 className="text-lg font-bold text-primary tracking-tight mb-2 group-hover:text-[#196F03] transition-colors line-clamp-1">
           {item.name}
         </h3>
 
@@ -87,9 +89,8 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         <div className="flex gap-3 mt-4">
           <button
             onClick={onEdit}
-            className="flex-1 py-3 bg-gray-50 text-primary font-black text-[10px] uppercase tracking-widest rounded-2xl hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2"
+            className="flex-1 py-3 bg-gray-50 text-primary font-bold text-[10px] uppercase tracking-widest rounded-2xl hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2"
           >
-            <Edit2 className="h-3 w-3" />
             Edit
           </button>
           <button
