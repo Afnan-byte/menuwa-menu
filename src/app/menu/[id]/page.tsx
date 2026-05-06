@@ -188,8 +188,8 @@ export default function PublicMenuPage() {
             >
               <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
               <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#0A0A0A] border-4 border-[#0A0A0A]">
-                  <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-white/5 border-2 border-white/10 p-4">
+                  <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-contain p-2" />
                 </div>
               </div>
             </motion.div>
