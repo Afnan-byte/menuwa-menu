@@ -163,7 +163,7 @@ export default function PublicMenuPage() {
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
         {/* Cinematic Branding Header */}
-        <header className="relative py-24 w-full overflow-hidden flex flex-col items-center justify-center">
+        <header className="relative pt-32 pb-24 w-full overflow-hidden flex flex-col items-center justify-center">
           {/* Dynamic Background Layer */}
           <div className="absolute inset-0 bg-[#0A0A0A]"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)]"></div>
@@ -240,7 +240,7 @@ export default function PublicMenuPage() {
         </header>
 
         {/* Search & Filters - Dark Glass */}
-        <div className="px-6 -mt-10 relative z-30 space-y-6">
+        <div className="px-8 -mt-10 relative z-30 space-y-8">
           <div className="relative group">
             <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-white transition-colors" />
             <input
@@ -248,11 +248,11 @@ export default function PublicMenuPage() {
               placeholder="Search our selection..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#1A1A1A]/80 backdrop-blur-2xl border border-white/5 rounded-[2.5rem] py-6 pl-16 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/50 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600"
+              className="w-full bg-[#1A1A1A]/80 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] py-6 pl-16 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/50 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-2xl"
             />
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
+          <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-4">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
@@ -285,12 +285,12 @@ export default function PublicMenuPage() {
 
         {/* Featured Section - Dark Mode */}
         {featuredItems.length > 0 && searchQuery === "" && (
-          <section className="pt-20 pb-4">
-            <div className="px-8 mb-8 flex items-baseline justify-between">
-              <h2 className="text-3xl font-serif text-white tracking-tight">Best Sellers</h2>
-              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.3em]">Signature</span>
+          <section className="pt-24 pb-8">
+            <div className="px-10 mb-10 flex items-baseline justify-between">
+              <h2 className="text-4xl font-serif text-white tracking-tight">Best Sellers</h2>
+              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em]">Signature</span>
             </div>
-            <div className="flex gap-6 overflow-x-auto no-scrollbar px-6 pb-6">
+            <div className="flex gap-8 overflow-x-auto no-scrollbar px-10 pb-8">
               {featuredItems.map((item) => (
                 <motion.div
                   key={item.id}
@@ -318,7 +318,7 @@ export default function PublicMenuPage() {
         )}
 
         {/* Menu Content - Bento Grid Dark */}
-        <div className="px-6 py-16 space-y-24 min-h-[400px]">
+        <div className="px-10 py-24 space-y-32 min-h-[400px]">
           {filteredItems.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -356,14 +356,14 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 className="space-y-12"
               >
-                <div className="flex items-baseline justify-between px-2 border-b border-white/5 pb-6">
+                <div className="flex items-baseline justify-between px-2 border-b border-white/5 pb-8">
                   <h2 className="text-4xl font-serif text-white tracking-tight flex items-center gap-4">
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em]">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-12">
+                <div className="grid grid-cols-1 gap-16">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -375,8 +375,8 @@ export default function PublicMenuPage() {
                         onClick={() => setSelectedItem(item)}
                         className="group cursor-pointer relative"
                       >
-                        <div className="grid grid-cols-12 gap-6 items-center">
-                          <div className="col-span-5 relative aspect-square rounded-[2.5rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
+                        <div className="grid grid-cols-12 gap-8 items-center">
+                          <div className="col-span-5 relative aspect-square rounded-[3rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
