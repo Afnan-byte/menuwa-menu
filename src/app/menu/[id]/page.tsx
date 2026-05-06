@@ -169,7 +169,7 @@ export default function PublicMenuPage() {
             <motion.div
               initial={{ scale: 0.8, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              className="h-36 w-36 rounded-[3.5rem] p-2 bg-white/30 backdrop-blur-3xl shadow-2xl mb-8 relative group"
+              className="h-32 w-32 rounded-[3.5rem] p-2 bg-white/30 backdrop-blur-3xl shadow-2xl mb-8 relative group"
             >
               <div className="relative w-full h-full rounded-[3rem] overflow-hidden bg-white border border-white/50">
                 <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
@@ -178,7 +178,7 @@ export default function PublicMenuPage() {
             <motion.h1 
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-5xl font-black text-gray-900 tracking-tighter leading-none"
+              className="text-4xl font-extrabold text-gray-900 tracking-tight leading-none"
             >
               {restaurant?.restaurantName || "Menu"}
             </motion.h1>
@@ -190,12 +190,12 @@ export default function PublicMenuPage() {
             >
               <div className="flex items-center gap-1.5 px-4 py-1.5 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] rounded-full border border-gray-50">
                 <Star className="h-3.5 w-3.5 text-yellow-400 fill-yellow-400" />
-                <span className="text-[11px] font-black text-gray-900">4.9 Rare Find</span>
+                <span className="text-[11px] font-bold text-gray-900 tracking-tight">4.9 Rare Find</span>
               </div>
               <div className="h-1.5 w-1.5 bg-gray-200 rounded-full" />
               <div className="flex items-center gap-1.5 px-4 py-1.5 bg-white shadow-[0_4px_20px_rgba(0,0,0,0.04)] rounded-full border border-gray-50">
                 <Clock className="h-3.5 w-3.5 text-[#196F03]" />
-                <span className="text-[11px] font-black text-gray-900">Fast Delivery</span>
+                <span className="text-[11px] font-bold text-gray-900 tracking-tight">Fast Delivery</span>
               </div>
             </motion.div>
           </div>
@@ -216,11 +216,11 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-100px" }}
                 className="space-y-8"
               >
-                <div className="flex items-baseline justify-between px-2">
-                  <h2 className="text-3xl font-black text-gray-900 tracking-tighter flex items-center gap-4">
+                <div className="flex items-baseline justify-between px-2 border-b border-gray-50 pb-4">
+                  <h2 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-4">
                     {cat.name}
-                    <div className="h-1 w-12 bg-gradient-to-r from-[#196F03] to-transparent rounded-full" />
                   </h2>
+                  <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{categoryItems.length} Selection</span>
                 </div>
 
                 <div className="grid grid-cols-2 gap-x-6 gap-y-10">
@@ -270,21 +270,21 @@ export default function PublicMenuPage() {
                             className="absolute top-5 right-5 z-20 px-4 py-2 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl"
                             style={{ backgroundColor: `${themeColor}E6` }}
                           >
-                            <span className="text-[11px] font-black text-white tracking-tight">{item.price}</span>
+                            <span className="text-[11px] font-bold text-white tracking-tight">{item.price}</span>
                           </div>
 
                           {/* Info Overlay */}
                           <div className="absolute bottom-6 left-6 right-6">
                             <div className="flex items-center gap-2 mb-1.5">
-                               {item.dietaryType === "veg" && <span className="text-[8px] font-black text-green-400 uppercase tracking-[0.2em]">Vegetarian</span>}
-                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-black text-red-400 uppercase tracking-[0.2em]">Non-Veg</span>}
+                               {item.dietaryType === "veg" && <span className="text-[8px] font-bold text-green-400 uppercase tracking-[0.2em]">Vegetarian</span>}
+                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-bold text-red-400 uppercase tracking-[0.2em]">Non-Veg</span>}
                             </div>
                             <h3 className={cn(
-                              "text-white font-black tracking-tight line-clamp-1 mb-1",
+                              "text-white font-bold tracking-tight line-clamp-1 mb-1",
                               isFeatured ? "text-2xl" : "text-sm"
                             )}>{item.name}</h3>
                             <div className="flex items-center gap-1 opacity-60">
-                              <span className="text-[8px] font-black text-white uppercase tracking-widest">Discover More</span>
+                              <span className="text-[8px] font-bold text-white uppercase tracking-widest">View Recipe</span>
                               <ArrowRight className="h-2 w-2 text-white" />
                             </div>
                           </div>
@@ -314,7 +314,7 @@ export default function PublicMenuPage() {
               style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}
             >
               <LayoutGrid className="h-4 w-4" /> 
-              <span className="text-[10px] font-black uppercase tracking-widest">All Items</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest">Catalogue</span>
             </button>
             {categories.map((cat) => (
               <button 
@@ -327,7 +327,7 @@ export default function PublicMenuPage() {
                 style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}
               >
                 <Utensils className="h-4 w-4" /> 
-                <span className="text-[10px] font-black uppercase tracking-widest">{cat.name}</span>
+                <span className="text-[10px] font-bold uppercase tracking-widest">{cat.name}</span>
               </button>
             ))}
           </motion.div>
@@ -360,14 +360,14 @@ export default function PublicMenuPage() {
                   <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover transition-transform duration-[5s] group-hover:scale-125" />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
-                     {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Popular Choice</div>}
+                     {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-orange-400"><Flame className="h-3 w-3" /> Trending</div>}
                      {selectedItem.dietaryType === "veg" && (
-                       <div className="px-4 py-2 bg-white text-green-600 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-green-100">
-                         <div className="h-2 w-2 bg-green-600 rounded-full" /> Fresh Veg
+                       <div className="px-4 py-2 bg-white text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-green-100">
+                         <div className="h-2 w-2 bg-green-600 rounded-full" /> Vegetarian
                        </div>
                      )}
                      {selectedItem.dietaryType === "non-veg" && (
-                       <div className="px-4 py-2 bg-white text-red-600 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-red-100">
+                       <div className="px-4 py-2 bg-white text-red-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-red-100">
                          <div className="h-2 w-2 bg-red-600 rounded-full" /> Non-Veg
                        </div>
                      )}
@@ -377,20 +377,20 @@ export default function PublicMenuPage() {
                 <div className="px-12 pb-12 -mt-20 relative z-10 bg-white rounded-t-[5rem] flex-1 flex flex-col">
                   <div className="pt-12 space-y-8 flex-1">
                     <div className="flex items-center justify-between">
-                      <span className="px-6 py-2.5 bg-gray-50 text-gray-400 text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-gray-100">
+                      <span className="px-6 py-2.5 bg-gray-50 text-gray-400 text-[10px] font-bold uppercase tracking-[0.25em] rounded-full border border-gray-100">
                         {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
                       </span>
                     </div>
 
-                    <h2 className="text-6xl font-black text-gray-900 tracking-tighter leading-[0.9]">{selectedItem.name}</h2>
+                    <h2 className="text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">{selectedItem.name}</h2>
                     <p className="text-gray-500 text-lg font-medium leading-relaxed opacity-80">{selectedItem.description}</p>
                   </div>
 
                   <div className="pt-10 space-y-8">
                     <div className="flex items-end justify-between px-2">
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-black text-gray-300 uppercase tracking-[0.3em] mb-3">Total Investment</span>
-                        <span className="text-6xl font-black text-gray-900 tracking-tighter leading-none">{selectedItem.price}</span>
+                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em] mb-3">Total Value</span>
+                        <span className="text-5xl font-extrabold text-gray-900 tracking-tight leading-none">{selectedItem.price}</span>
                       </div>
                     </div>
 
@@ -404,11 +404,11 @@ export default function PublicMenuPage() {
                        {restaurant?.whatsapp && (
                          <button 
                            onClick={() => handleWhatsAppOrder(selectedItem)}
-                           className="col-span-4 h-20 text-white font-black text-xs uppercase tracking-[0.3em] rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 group"
+                           className="col-span-4 h-20 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 group"
                            style={{ backgroundColor: themeColor }}
                          >
                            <MessageCircle className="h-5 w-5 group-hover:animate-bounce" />
-                           Place Order
+                           Order via WhatsApp
                          </button>
                        )}
                     </div>
@@ -424,7 +424,7 @@ export default function PublicMenuPage() {
           <div className="mb-12">
             <Image src="/logo.svg" alt="Menuvo" width={140} height={60} className="mx-auto grayscale opacity-40" />
           </div>
-          <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.5em] mb-6">Designed by Menuvo Elite</p>
+          <p className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.5em] mb-6">Designed by Menuvo Digital</p>
           <div className="h-1 w-12 bg-gray-200 mx-auto rounded-full" />
         </footer>
       </div>
