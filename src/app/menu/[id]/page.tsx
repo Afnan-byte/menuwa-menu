@@ -169,15 +169,6 @@ export default function PublicMenuPage() {
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)]"></div>
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
-          {/* Top Actions */}
-          <div className="absolute top-10 right-6 flex gap-3 z-30">
-            <button className="h-12 w-12 bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all shadow-xl">
-              <Share2 className="h-5 w-5" />
-            </button>
-            <button className="h-12 w-12 bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all shadow-xl">
-              <Heart className="h-5 w-5" />
-            </button>
-          </div>
 
           {/* Branding Content */}
           <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-8 text-center z-20">
