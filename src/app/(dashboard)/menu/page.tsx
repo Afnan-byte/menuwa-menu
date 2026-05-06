@@ -73,7 +73,6 @@ export default function MenuPage() {
     description: "",
     categoryId: "",
     imageUrl: "",
-    prepTime: "",
     tags: [] as string[],
   });
 
@@ -324,7 +323,7 @@ export default function MenuPage() {
               <button
                 onClick={() => {
                   setEditingItem(null);
-                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", prepTime: "", tags: [] });
+                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
                   setIsItemModalOpen(true);
                 }}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-brand-orange text-white font-black rounded-[2rem] hover:bg-orange-600 hover:scale-105 transition-all shadow-xl shadow-brand-orange/30 whitespace-nowrap"
@@ -379,15 +378,7 @@ export default function MenuPage() {
                 item={item}
                 onEdit={() => {
                   setEditingItem(item);
-                  setItemForm({ 
-                    name: item.name,
-                    price: item.price,
-                    description: item.description,
-                    categoryId: item.categoryId,
-                    imageUrl: item.imageUrl,
-                    prepTime: (item as any).prepTime || "",
-                    tags: item.tags || []
-                  });
+                  setItemForm({ ...item });
                   setIsItemModalOpen(true);
                 }}
                 onDelete={() => deleteItem(item.id)}
@@ -507,17 +498,7 @@ export default function MenuPage() {
                       placeholder="e.g. 18.00"
                       className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       value={itemForm.price}
-                      onChange={(e) => setItemForm({...itemForm, price: e.target.value})}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Prep Time (Optional)</label>
-                    <input
-                      type="text"
-                      placeholder="e.g. 15-20 mins"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                      value={itemForm.prepTime}
-                      onChange={(e) => setItemForm({...itemForm, prepTime: e.target.value})}
+                      onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })}
                     />
                   </div>
                   <div className="md:col-span-2">
