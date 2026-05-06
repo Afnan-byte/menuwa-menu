@@ -165,68 +165,93 @@ export default function PublicMenuPage() {
     >
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
-        {/* Cinematic Dark Hero */}
-        <header className="relative h-[500px] w-full overflow-hidden">
+        {/* Cinematic Floating Hero */}
+        <header className="relative h-[600px] w-full overflow-hidden">
+          {/* Background Layer */}
           <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0">
             <Image
               src={heroImage}
               alt="Hero"
               fill
               className="object-cover scale-110"
+              priority
             />
           </motion.div>
-          <div className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/40 to-[#0A0A0A]"></div>
+          
+          {/* Dynamic Overlays */}
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#0A0A0A]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.1),transparent_70%)]"></div>
 
-          <div className="absolute top-10 right-6 flex gap-2 z-20">
-            <button className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all">
-              <Share2 className="h-4 w-4" />
+          {/* Top Actions */}
+          <div className="absolute top-10 right-6 flex gap-3 z-30">
+            <button className="h-12 w-12 bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all shadow-xl">
+              <Share2 className="h-5 w-5" />
             </button>
-            <button className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-full border border-white/10 flex items-center justify-center text-white hover:bg-white/10 transition-all">
-              <Heart className="h-4 w-4" />
+            <button className="h-12 w-12 bg-white/10 backdrop-blur-2xl rounded-full border border-white/20 flex items-center justify-center text-white hover:scale-110 transition-all shadow-xl">
+              <Heart className="h-5 w-5" />
             </button>
           </div>
 
-          <div className="absolute inset-0 flex flex-col items-center justify-end pb-16 px-8 text-center">
+          {/* Branding Content */}
+          <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-8 text-center z-20">
             <motion.div
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              className="h-28 w-28 rounded-full p-1.5 bg-white/5 backdrop-blur-3xl shadow-2xl mb-10 border border-white/10"
+              initial={{ y: 30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              className="relative mb-12"
             >
-              <div className="relative w-full h-full rounded-full overflow-hidden bg-black/50 border border-white/20">
-                <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
+              <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
+              <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
+                <div className="relative w-full h-full rounded-full overflow-hidden bg-[#0A0A0A] border-4 border-[#0A0A0A]">
+                  <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
+                </div>
               </div>
             </motion.div>
-            <motion.h1
+
+            <motion.div
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-5xl font-serif text-white tracking-tight leading-tight"
-            >
-              {(restaurant?.restaurantName || "Menu") + " (MODERN DARK)"}
-            </motion.h1>
-            <motion.p
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="mt-4 text-gray-400 font-medium text-sm max-w-[280px] leading-relaxed opacity-80"
+              className="space-y-4"
             >
-              {restaurant?.description || "Experience the finest flavors and culinary excellence."}
-            </motion.p>
+              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.5em] mb-2 block">Premium Dining Experience</span>
+              <h1 className="text-6xl font-serif text-white tracking-tight leading-none drop-shadow-2xl">
+                {restaurant?.restaurantName || "Menu"}
+              </h1>
+              <p className="text-gray-400 font-medium text-base max-w-[300px] leading-relaxed mx-auto opacity-70 italic font-serif">
+                "{restaurant?.description || "Experience the finest flavors and culinary excellence."}"
+              </p>
+            </motion.div>
+
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="flex items-center gap-4 mt-8"
+              className="flex items-center gap-6 mt-12"
             >
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10">
-                <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">4.9 Rare Find</span>
+              <div className="flex flex-col items-center gap-2">
+                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
+                  <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">4.9 Rare</span>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 bg-white/5 backdrop-blur-xl rounded-full border border-white/10">
-                <Clock className="h-3 w-3 text-[#196F03]" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">Fast Prep</span>
+              <div className="h-10 w-[1px] bg-white/10" />
+              <div className="flex flex-col items-center gap-2">
+                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
+                  <Clock className="h-5 w-5 text-[#196F03]" />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Fast Prep</span>
+              </div>
+              <div className="h-10 w-[1px] bg-white/10" />
+              <div className="flex flex-col items-center gap-2">
+                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
+                  <Info className="h-5 w-5 text-blue-400" />
+                </div>
+                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Fine Dine</span>
               </div>
             </motion.div>
           </div>
+          
+          <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent"></div>
         </header>
 
         {/* Search & Filters - Dark Glass */}
