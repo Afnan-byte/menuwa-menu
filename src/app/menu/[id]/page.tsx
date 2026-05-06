@@ -50,6 +50,7 @@ interface Restaurant {
   logoUrl?: string;
   description?: string;
   bannerUrl?: string;
+  themeColor?: string;
 }
 
 export default function PublicMenuPage() {
@@ -60,6 +61,8 @@ export default function PublicMenuPage() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
+
+  const themeColor = restaurant?.themeColor || "#FF9F0D";
 
   useEffect(() => {
     if (id) {
@@ -103,9 +106,9 @@ export default function PublicMenuPage() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="h-16 w-16 bg-brand-orange/10 rounded-full flex items-center justify-center"
+          className="h-16 w-16 bg-gray-50 rounded-full flex items-center justify-center"
         >
-          <Utensils className="h-8 w-8 text-brand-orange" />
+          <Utensils className="h-8 w-8 text-gray-200" />
         </motion.div>
       </div>
     );
@@ -121,12 +124,17 @@ export default function PublicMenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFF] font-sans text-primary selection:bg-brand-orange/20">
+    <div className="min-h-screen bg-[#FAFBFF] font-sans text-primary selection:bg-gray-100">
+      <style jsx global>{`
+        :root {
+          --brand-color: ${themeColor};
+        }
+      `}</style>
+
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-[0_0_100px_rgba(0,0,0,0.05)] overflow-hidden">
         
         {/* Immersive Banner Header */}
         <div className="relative h-72 w-full overflow-hidden">
-           {/* Background Overlay / Image */}
            <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-black/20 to-white z-10"></div>
            <Image 
              src={restaurant.logoUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} 
@@ -135,7 +143,6 @@ export default function PublicMenuPage() {
              className="object-cover scale-110 blur-[2px]"
            />
            
-           {/* Header Content */}
            <div className="absolute inset-x-0 bottom-0 z-20 p-8 pb-12 flex flex-col items-center text-center">
               <motion.div 
                 initial={{ y: 20, opacity: 0 }}
@@ -145,7 +152,7 @@ export default function PublicMenuPage() {
                 <div className="relative w-full h-full rounded-[2rem] overflow-hidden">
                   <Image src={restaurant.logoUrl || "/logo.svg"} alt={restaurant.restaurantName} fill className="object-cover" />
                 </div>
-                <div className="absolute -bottom-1 -right-1 h-8 w-8 bg-brand-orange rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white">
+                <div className="absolute -bottom-1 -right-1 h-8 w-8 rounded-full flex items-center justify-center text-white shadow-lg border-4 border-white" style={{ backgroundColor: themeColor }}>
                    <Star className="h-4 w-4 fill-white" />
                 </div>
               </motion.div>
@@ -168,7 +175,6 @@ export default function PublicMenuPage() {
               </motion.p>
            </div>
 
-           {/* Quick Actions Overlay */}
            <div className="absolute top-8 left-8 right-8 z-30 flex justify-between">
               <button className="h-12 w-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all">
                  <ArrowRight className="h-5 w-5 rotate-180" />
@@ -177,7 +183,7 @@ export default function PublicMenuPage() {
                 <button className="h-12 w-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all">
                   <Phone className="h-5 w-5" />
                 </button>
-                <button className="h-12 w-12 bg-brand-orange rounded-2xl flex items-center justify-center text-white shadow-xl shadow-brand-orange/30">
+                <button className="h-12 w-12 rounded-2xl flex items-center justify-center text-white shadow-xl" style={{ backgroundColor: themeColor }}>
                   <Heart className="h-5 w-5 fill-white" />
                 </button>
               </div>
@@ -186,19 +192,17 @@ export default function PublicMenuPage() {
 
         {/* Search & Categories Container */}
         <div className="sticky top-0 z-40 bg-white/80 backdrop-blur-2xl px-8 py-6 space-y-6 -mt-4 rounded-t-[3rem] shadow-[0_-20px_40px_rgba(0,0,0,0.02)]">
-           {/* Modern Search */}
            <div className="relative group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-orange transition-colors" />
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[var(--brand-color)] transition-colors" />
               <input 
                 type="text" 
                 placeholder="Search your cravings..." 
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-6 py-5 bg-gray-50 border-transparent rounded-[2rem] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none"
+                className="w-full pl-14 pr-6 py-5 bg-gray-50 border-transparent rounded-[2rem] text-sm font-bold focus:bg-white focus:ring-4 focus:ring-[var(--brand-color)]/5 transition-all outline-none"
               />
            </div>
 
-           {/* Dynamic Categories */}
            <div className="flex flex-wrap gap-3">
               <button
                 onClick={() => setActiveCategory("all")}
@@ -215,11 +219,12 @@ export default function PublicMenuPage() {
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(cat.id)}
+                  style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}
                   className={cn(
-                    "px-6 py-3.5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest transition-all",
+                    "px-6 py-3.5 rounded-[1.5rem] font-black text-[10px] uppercase tracking-widest transition-all shadow-sm",
                     activeCategory === cat.id 
-                      ? "bg-brand-orange text-white shadow-2xl shadow-brand-orange/20 scale-105" 
-                      : "bg-gray-50 text-gray-400 hover:bg-gray-100"
+                      ? "text-white shadow-2xl scale-105" 
+                      : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                   )}
                 >
                   {cat.name}
@@ -228,14 +233,14 @@ export default function PublicMenuPage() {
            </div>
         </div>
 
-        {/* Food Stories / Featured (Optional Wow Factor) */}
+        {/* Content Section */}
         <div className="px-8 mt-8">
            <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-black tracking-tight">Today's Specials</h2>
               <Flame className="h-5 w-5 text-red-500 animate-pulse" />
            </div>
            
-           <div className="grid grid-cols-2 gap-x-6 gap-y-16 pt-8">
+           <div className="grid grid-cols-2 gap-x-6 gap-y-16 pt-8 pb-32">
             <AnimatePresence mode="popLayout">
               {filteredItems.map((item, index) => (
                 <motion.div
@@ -245,9 +250,8 @@ export default function PublicMenuPage() {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, scale: 0.8 }}
                   transition={{ delay: index * 0.05, type: "spring", stiffness: 100 }}
-                  className="bg-white rounded-[2.5rem] p-4 shadow-xl shadow-gray-100/50 relative group cursor-pointer hover:shadow-2xl hover:shadow-brand-orange/10 transition-all border border-gray-50"
+                  className="bg-white rounded-[2.5rem] p-4 shadow-xl shadow-gray-100/50 relative group cursor-pointer hover:shadow-2xl transition-all border border-gray-50"
                 >
-                    {/* Badge */}
                     <div className="absolute top-4 left-4 z-10 px-3 py-1 bg-white/90 backdrop-blur-md rounded-full shadow-sm">
                        <div className="flex items-center gap-1">
                           <Star className="h-2.5 w-2.5 fill-yellow-400 text-yellow-400" />
@@ -255,7 +259,6 @@ export default function PublicMenuPage() {
                        </div>
                     </div>
 
-                    {/* Overlapping Immersive Image */}
                     <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 md:w-36 md:h-36 pointer-events-none">
                        {item.imageUrl ? (
                          <div className="relative w-full h-full">
@@ -281,15 +284,18 @@ export default function PublicMenuPage() {
                     </div>
 
                     <div className="pt-20 pb-2 text-center">
-                       <h3 className="text-sm font-black text-primary mb-1 line-clamp-1 group-hover:text-brand-orange transition-colors">
+                       <h3 className="text-sm font-black text-primary mb-1 line-clamp-1 group-hover:opacity-70 transition-colors">
                           {item.name}
                        </h3>
                        <p className="text-[10px] text-gray-400 font-medium mb-3 line-clamp-1">
                           Freshly prepared for you
                        </p>
                        <div className="flex items-center justify-center gap-3">
-                          <span className="text-brand-orange font-black text-lg">${item.price}</span>
-                          <button className="h-8 w-8 bg-primary text-white rounded-xl flex items-center justify-center shadow-lg hover:bg-brand-orange transition-colors">
+                          <span className="font-black text-lg" style={{ color: themeColor }}>${item.price}</span>
+                          <button 
+                            className="h-8 w-8 text-white rounded-xl flex items-center justify-center shadow-lg transition-colors"
+                            style={{ backgroundColor: themeColor }}
+                          >
                              <ArrowRight className="h-4 w-4" />
                           </button>
                        </div>
@@ -319,23 +325,28 @@ export default function PublicMenuPage() {
           </div>
         )}
 
-        {/* Floating Premium Contact */}
+        {/* Floating Premium Contact Dock */}
         <div className="fixed bottom-10 inset-x-0 flex justify-center z-50 px-8">
            <motion.div 
              initial={{ y: 100 }}
              animate={{ y: 0 }}
-             className="bg-primary/90 backdrop-blur-2xl px-8 py-4 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.3)] flex items-center gap-8 border border-white/10"
+             className="bg-primary/95 backdrop-blur-2xl px-8 py-4 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-8 border border-white/10"
            >
               <button className="flex flex-col items-center gap-1 group">
-                 <Utensils className="h-5 w-5 text-white group-hover:text-brand-orange transition-colors" />
+                 <Utensils className="h-5 w-5 text-white transition-colors" style={{ color: activeCategory === 'all' ? themeColor : 'white' }} />
                  <span className="text-[8px] font-black text-white/50 uppercase tracking-widest">Menu</span>
               </button>
               <button className="flex flex-col items-center gap-1 group">
-                 <Clock className="h-5 w-5 text-white group-hover:text-brand-orange transition-colors" />
+                 <Clock className="h-5 w-5 text-white group-hover:opacity-70 transition-colors" />
                  <span className="text-[8px] font-black text-white/50 uppercase tracking-widest">Orders</span>
               </button>
               <div className="h-10 w-[1px] bg-white/10"></div>
-              <a href={`https://wa.me/#`} target="_blank" className="flex items-center gap-3 bg-brand-orange px-6 py-2.5 rounded-2xl shadow-lg shadow-brand-orange/20 hover:scale-105 transition-all">
+              <a 
+                href={`https://wa.me/#`} 
+                target="_blank" 
+                className="flex items-center gap-3 px-6 py-2.5 rounded-2xl shadow-lg transition-all hover:scale-105 active:scale-95"
+                style={{ backgroundColor: themeColor }}
+              >
                  <MessageCircle className="h-5 w-5 text-white" />
                  <span className="text-xs font-black text-white uppercase tracking-widest">Contact</span>
               </a>
