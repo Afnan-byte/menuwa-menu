@@ -252,37 +252,36 @@ export default function PublicMenuPage() {
           </div>
         </div>
 
-        {/* Top Selling Product - Landscape Rectangle */}
+        {/* Top Selling Products - Vertical Cards */}
         {featuredItems.length > 0 && searchQuery === "" && (
-          <section className="pt-6 px-6 pb-2">
-            <div className="mb-4 flex items-center justify-between">
+          <section className="pt-6 pb-2">
+            <div className="px-6 mb-4 flex items-center justify-between">
               <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
               <Star className="h-5 w-5 text-[color:var(--brand-primary)] fill-[color:var(--brand-primary)]" />
             </div>
-            <motion.div
-              onClick={() => setSelectedItem(featuredItems[0])}
-              whileHover={{ scale: 1.02 }}
-              className={cn("cursor-pointer relative w-full aspect-[2/1] rounded-[2rem] overflow-hidden shadow-2xl border group transition-all duration-500 hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}
-            >
-              <Image src={featuredItems[0].imageUrl} alt={featuredItems[0].name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
-              <div className={cn("absolute inset-0 bg-gradient-to-t via-black/20 to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/90")}></div>
-              
-              <div className="absolute top-4 left-4 bg-[color:var(--brand-primary)] text-white text-[10px] font-bold uppercase tracking-widest px-3 py-1.5 rounded-full shadow-lg flex items-center gap-1.5 backdrop-blur-md">
-                <Flame className="h-3 w-3" /> #1 Choice
-              </div>
-              
-              <div className="absolute bottom-5 left-5 right-5">
-                <div className="flex items-end justify-between gap-4">
-                  <div className="space-y-1.5 flex-1">
-                     <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-lg">{featuredItems[0].name}</h3>
-                     <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.25em] text-gray-300 drop-shadow-md">
-                       Order Now <ArrowRight className="h-3 w-3 text-[color:var(--brand-primary)]" />
-                     </div>
+            <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
+              {featuredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  whileHover={{ scale: 1.02 }}
+                  className="flex-shrink-0 w-64 group cursor-pointer"
+                >
+                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}>
+                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
+                    <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
+                    
+                    <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-2">
+                      <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
+                      <div className="flex items-center justify-between">
+                         <span className="text-[13px] font-black text-[color:var(--brand-primary)] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                         <ArrowRight className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300" />
+                      </div>
+                    </div>
                   </div>
-                  <span className="text-[14px] font-black text-[color:var(--brand-primary)] bg-white px-4 py-2 rounded-2xl shadow-xl shrink-0">₹{featuredItems[0].price.replace(/[^0-9.]/g, '')}</span>
-                </div>
-              </div>
-            </motion.div>
+                </motion.div>
+              ))}
+            </div>
           </section>
         )}
 
