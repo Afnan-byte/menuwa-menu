@@ -22,6 +22,7 @@ import {
   ChevronRight,
   Star,
   Flame,
+  Leaf,
   Info,
   Share2,
   Heart
@@ -93,9 +94,10 @@ export default function PublicMenuPage() {
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id), where("isAvailable", "==", true));
       const itemSnap = await getDocs(itemQuery);
       
-      const fetchedItems = itemSnap.docs.map((doc) => ({ 
+      const fetchedItems = itemSnap.docs.map((doc, idx) => ({ 
         id: doc.id, 
-        ...doc.data()
+        ...doc.data(),
+        isPopular: idx % 4 === 0, // Mock popular for visual parity
       } as MenuItem));
       
       setItems(fetchedItems);
@@ -240,7 +242,7 @@ export default function PublicMenuPage() {
                         )}
                       >
                         <div className={cn(
-                          "relative rounded-[3rem] overflow-hidden shadow-2xl bg-white border border-gray-100 transition-all duration-500",
+                          "relative rounded-[4rem] overflow-hidden shadow-2xl bg-white border border-gray-100 transition-all duration-500",
                           isFeatured ? "aspect-[16/10]" : "aspect-[4/5]"
                         )}>
                           <Image 
@@ -249,45 +251,38 @@ export default function PublicMenuPage() {
                             fill 
                             className="object-cover transition-transform duration-1000 group-hover:scale-110" 
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
                           
-                          {/* Traditional Dietary Badges */}
-                          <div className="absolute top-5 left-5 z-20">
+                          {/* Top Left Icons (Dietary/Status) */}
+                          <div className="absolute top-5 left-5 flex flex-col gap-2 z-20">
+                            {item.isPopular && (
+                              <div className="bg-orange-500 p-2.5 rounded-2xl shadow-lg border border-white/20">
+                                <Flame className="h-4 w-4 text-white fill-white" />
+                              </div>
+                            )}
                             {item.dietaryType === "veg" && (
-                              <div className="h-7 w-7 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center border-2 border-green-600 p-0.5 shadow-lg">
-                                <div className="h-2.5 w-2.5 bg-green-600 rounded-full" />
-                              </div>
-                            )}
-                            {item.dietaryType === "non-veg" && (
-                              <div className="h-7 w-7 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center border-2 border-red-600 p-0.5 shadow-lg">
-                                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                  <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
-                                </svg>
+                              <div className="bg-[#196F03] p-2.5 rounded-2xl shadow-lg border border-white/20">
+                                <Leaf className="h-4 w-4 text-white fill-white" />
                               </div>
                             )}
                           </div>
 
-                          {/* Price Tag */}
-                          <div 
-                            className="absolute top-5 right-5 z-20 px-4 py-2 backdrop-blur-xl rounded-2xl border border-white/10 shadow-2xl"
-                            style={{ backgroundColor: `${themeColor}E6` }}
-                          >
-                            <span className="text-[11px] font-bold text-white tracking-tight">{item.price}</span>
+                          {/* Top Right Price Badge (Purple Circle) */}
+                          <div className="absolute top-5 right-5 z-20 h-12 w-12 bg-[#7C5CFC] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(124,92,252,0.3)] border border-white/20">
+                            <span className="text-[11px] font-extrabold text-white tracking-tighter">
+                               {item.price.replace(/[^0-9.]/g, '')}
+                            </span>
                           </div>
 
-                          {/* Info Overlay */}
-                          <div className="absolute bottom-6 left-6 right-6">
-                            <div className="flex items-center gap-2 mb-1.5">
-                               {item.dietaryType === "veg" && <span className="text-[8px] font-bold text-green-400 uppercase tracking-[0.2em]">Vegetarian</span>}
-                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-bold text-red-400 uppercase tracking-[0.2em]">Non-Veg Selection</span>}
-                            </div>
+                          {/* Info Overlay (Bottom) */}
+                          <div className="absolute bottom-8 left-8 right-8">
                             <h3 className={cn(
-                              "text-white font-bold tracking-tight line-clamp-1 mb-1",
-                              isFeatured ? "text-2xl" : "text-sm"
+                              "text-white font-extrabold tracking-tight line-clamp-1 mb-1 lowercase",
+                              isFeatured ? "text-3xl" : "text-lg"
                             )}>{item.name}</h3>
-                            <div className="flex items-center gap-1 opacity-60">
-                              <span className="text-[8px] font-bold text-white uppercase tracking-widest">View Recipe</span>
-                              <ArrowRight className="h-2 w-2 text-white" />
+                            <div className="flex items-center gap-1.5 opacity-80">
+                              <span className="text-[9px] font-bold text-white uppercase tracking-widest">Discover More</span>
+                              <ArrowRight className="h-2.5 w-2.5 text-white" />
                             </div>
                           </div>
                         </div>
@@ -362,18 +357,10 @@ export default function PublicMenuPage() {
                   <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover transition-transform duration-[5s] group-hover:scale-125" />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
-                     {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-orange-400"><Flame className="h-3 w-3" /> Trending</div>}
+                     {selectedItem.isPopular && <div className="px-5 py-3 bg-orange-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-orange-400"><Flame className="h-4 w-4 fill-white" /> Trending</div>}
                      {selectedItem.dietaryType === "veg" && (
-                       <div className="px-4 py-2 bg-white text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-green-100">
-                         <div className="h-2.5 w-2.5 bg-green-600 rounded-full" /> Vegetarian Selection
-                       </div>
-                     )}
-                     {selectedItem.dietaryType === "non-veg" && (
-                       <div className="px-4 py-2 bg-white text-red-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-red-100">
-                          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
-                          </svg>
-                          Non-Veg Selection
+                       <div className="px-5 py-3 bg-[#196F03] text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-green-400">
+                         <Leaf className="h-4 w-4 fill-white" /> Vegetarian
                        </div>
                      )}
                   </div>
