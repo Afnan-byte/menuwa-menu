@@ -28,7 +28,9 @@ import {
   Eye,
   Globe,
   Maximize2,
-  Circle
+  Circle,
+  Leaf,
+  Flame
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -449,35 +451,21 @@ export default function MenuPage() {
                         { 
                           id: "veg", 
                           label: "Vegetarian", 
-                          renderIcon: () => (
-                            <div className="h-6 w-6 border-2 border-green-600 p-0.5 flex items-center justify-center rounded-md">
-                              <div className="h-2.5 w-2.5 bg-green-600 rounded-full" />
-                            </div>
-                          ),
-                          color: "text-green-600", 
+                          icon: Leaf,
+                          color: "text-[#196F03]", 
                           bg: "bg-green-50" 
                         },
                         { 
                           id: "non-veg", 
                           label: "Non-Veg", 
-                          renderIcon: () => (
-                            <div className="h-6 w-6 border-2 border-red-600 p-0.5 flex items-center justify-center rounded-md">
-                               <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                 <path d="M12 4L20 18H4L12 4Z" fill="#DC2626" />
-                               </svg>
-                            </div>
-                          ),
-                          color: "text-red-600", 
+                          icon: Flame,
+                          color: "text-red-500", 
                           bg: "bg-red-50" 
                         },
                         { 
                           id: "none", 
                           label: "None", 
-                          renderIcon: () => (
-                            <div className="p-3 bg-gray-100 rounded-2xl text-gray-400">
-                              <Circle className="h-6 w-6" />
-                            </div>
-                          ),
+                          icon: Circle,
                           color: "text-gray-400", 
                           bg: "bg-gray-50" 
                         },
@@ -493,8 +481,8 @@ export default function MenuPage() {
                               : "border-gray-100 hover:border-gray-200"
                           )}
                         >
-                          <div className={cn("rounded-2xl transition-all", type.bg, type.color)}>
-                            {type.renderIcon()}
+                          <div className={cn("p-3 rounded-2xl transition-all", type.bg, type.color)}>
+                            <type.icon className="h-6 w-6" />
                           </div>
                           <span className={cn("text-[10px] font-bold uppercase tracking-widest", itemForm.dietaryType === type.id ? "text-[#196F03]" : "text-gray-400")}>{type.label}</span>
                         </button>
@@ -553,7 +541,7 @@ export default function MenuPage() {
             </motion.div>
           </div>
         )}
-      </AnimatePresence>
+      </div>
     </div>
   );
 }
