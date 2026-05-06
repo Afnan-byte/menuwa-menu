@@ -94,7 +94,7 @@ export default function PublicMenuPage() {
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full animate-spin"
+          className="h-12 w-12 border-4 border-gray-100 border-t-[#196F03] rounded-full animate-spin"
         />
       </div>
     );
@@ -124,7 +124,7 @@ export default function PublicMenuPage() {
         </header>
 
         {/* 2-Column Grid */}
-        <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-16 pt-6 pb-20">
+        <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-12 pt-6 pb-20">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, index) => (
               <motion.div
@@ -134,21 +134,19 @@ export default function PublicMenuPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ delay: index * 0.05 }}
-                className="relative group cursor-pointer flex flex-col items-center"
+                className="relative group cursor-pointer"
                 onClick={() => setSelectedItem(item)}
               >
-                <div className="relative w-full aspect-square rounded-full overflow-hidden shadow-2xl transition-all duration-500 border-4 border-white ring-1 ring-gray-100 group-hover:ring-brand-primary/20">
+                <div className="relative w-full h-64 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 border border-gray-50">
                   <Image src={item.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} alt={item.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-125" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-                  
-                  <div className="absolute top-2 right-2 z-10 px-2 py-0.5 backdrop-blur-md rounded-full border border-white/20 shadow-sm" style={{ backgroundColor: `${themeColor}cc` }}>
-                    <span className="text-[8px] font-black text-white">{item.price}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
+                  <div className="absolute top-4 right-4 z-10 px-3 py-1 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform" style={{ backgroundColor: `${themeColor}cc` }}>
+                    <span className="text-[10px] font-black text-white">{item.price}</span>
                   </div>
-                </div>
-                
-                <div className="mt-4 text-center">
-                  <h3 className="text-gray-900 text-xs font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
-                  <p className="text-gray-400 text-[7px] font-black uppercase tracking-widest">Details</p>
+                  <div className="absolute bottom-6 left-6 right-6">
+                    <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
+                    <p className="text-white/40 text-[8px] font-black uppercase tracking-widest line-clamp-1">View Details</p>
+                  </div>
                 </div>
               </motion.div>
             ))}

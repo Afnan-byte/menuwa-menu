@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Utensils, Edit2, Trash2, Check, X } from "lucide-react";
+import { Utensils, Edit2, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -30,8 +30,6 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Removed Availability Toggle Badge */}
-
       {/* Overlapping Image Container */}
       <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 md:w-36 md:h-36">
         <div className="relative w-full h-full">
@@ -39,16 +37,16 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
           <div className="absolute inset-0 bg-gray-50 rounded-full scale-90 group-hover:scale-100 transition-transform duration-500 shadow-inner"></div>
 
           {item.imageUrl ? (
-            <div className="relative w-full h-full p-2 overflow-hidden rounded-full border-4 border-white shadow-2xl">
+            <div className="relative w-full h-full p-2">
               <Image
                 src={item.imageUrl}
                 alt={item.name}
                 fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                className="object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-200 bg-white rounded-full border-4 border-gray-50 overflow-hidden shadow-inner">
+            <div className="w-full h-full flex items-center justify-center text-gray-200 bg-white rounded-full border-4 border-gray-50">
               <Utensils className="h-10 w-10 opacity-20" />
             </div>
           )}

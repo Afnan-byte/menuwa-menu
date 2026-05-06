@@ -24,7 +24,10 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-  Trash2
+  Trash2,
+  Eye,
+  Globe,
+  Maximize2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -59,6 +62,7 @@ export default function MenuPage() {
   // Modals
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -267,6 +271,18 @@ export default function MenuPage() {
               </div>
             ))}
           </div>
+
+          <div className="mt-12 pt-8 border-t border-gray-50">
+            <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
+              <button 
+                onClick={() => setIsPreviewOpen(true)}
+                className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Eye className="h-3 w-3" />
+                View Live Menu
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -418,6 +434,36 @@ export default function MenuPage() {
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+
+        {isPreviewOpen && (
+          <div className="fixed inset-0 bg-primary/90 backdrop-blur-2xl z-[200] flex flex-col items-center justify-center p-4 sm:p-10">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-5xl h-full flex flex-col"
+            >
+               <div className="flex items-center justify-between mb-6 text-white">
+                  <div className="flex items-center gap-4">
+                     <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center">
+                        <Globe className="h-5 w-5 text-brand-orange" />
+                     </div>
+                     <div>
+                        <h2 className="text-xl font-black tracking-tight">Live Menu Preview</h2>
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Interactive Dashboard Preview</p>
+                     </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <button onClick={() => window.open(`/menu/${user?.uid}`, '_blank')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all"><Maximize2 className="h-5 w-5" /></button>
+                     <button onClick={() => setIsPreviewOpen(false)} className="p-3 bg-white/10 hover:bg-red-500 rounded-xl transition-all"><X className="h-5 w-5" /></button>
+                  </div>
+               </div>
+               <div className="flex-1 bg-white rounded-[3rem] overflow-hidden shadow-2xl relative">
+                  <iframe src={`/menu/${user?.uid}`} className="w-full h-full border-none" title="Menu Preview" />
+               </div>
             </motion.div>
           </div>
         )}
