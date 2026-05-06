@@ -257,7 +257,6 @@ export default function PublicMenuPage() {
           <section className="pt-6 pb-2">
             <div className="px-6 mb-4 flex items-center justify-between">
               <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
-              <Star className="h-5 w-5 text-[color:var(--brand-primary)] fill-[color:var(--brand-primary)]" />
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
               {featuredItems.map((item) => (
@@ -274,7 +273,7 @@ export default function PublicMenuPage() {
                     <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-2">
                       <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
                       <div className="flex items-center justify-between">
-                         <span className="text-[13px] font-black text-[color:var(--brand-primary)] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                         <span className="text-[13px] font-black text-[#196F03] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                          <ArrowRight className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300" />
                       </div>
                     </div>
