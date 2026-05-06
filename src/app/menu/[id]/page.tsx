@@ -163,18 +163,18 @@ export default function PublicMenuPage() {
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
         {/* Cinematic Branding Header */}
-        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-16 pb-12">
+        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-8 pb-8">
           {/* Dynamic Background Layer */}
           <div className="absolute inset-0 bg-[#0A0A0A] z-0"></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)] z-0"></div>
           <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0"></div>
 
           {/* Branding Content */}
-          <div className="relative flex flex-col items-center justify-center px-8 text-center z-20 w-full mt-12">
+          <div className="relative flex flex-col items-center justify-center px-6 text-center z-20 w-full mt-6">
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="relative mb-10"
+              className="relative mb-6"
             >
               <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
               <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
@@ -188,13 +188,13 @@ export default function PublicMenuPage() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="space-y-4"
+              className="space-y-2"
             >
-              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.5em] mb-2 block">Premium Dining Experience</span>
-              <h1 className="text-6xl font-serif text-white tracking-tight leading-none drop-shadow-2xl px-2">
+              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em] mb-1 block">Premium Dining</span>
+              <h1 className="text-4xl sm:text-5xl font-serif text-white tracking-tight leading-none drop-shadow-2xl px-2">
                 {restaurant?.restaurantName || "Menu"}
               </h1>
-              <p className="text-gray-400 font-medium text-base max-w-[300px] leading-relaxed mx-auto opacity-70 italic font-serif mt-4">
+              <p className="text-gray-400 font-medium text-xs max-w-[280px] leading-relaxed mx-auto opacity-70 italic font-serif mt-2 line-clamp-1">
                 "{restaurant?.description || "Experience the finest flavors and culinary excellence."}"
               </p>
             </motion.div>
@@ -203,46 +203,46 @@ export default function PublicMenuPage() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="flex items-center gap-6 mt-12 mb-8"
+              className="flex items-center gap-4 mt-6 mb-2"
             >
-              <div className="flex flex-col items-center gap-2">
-                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
-                  <Star className="h-5 w-5 text-yellow-400 fill-yellow-400" />
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
+                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">4.9 Rare</span>
+                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">4.9 Rare</span>
               </div>
-              <div className="h-10 w-[1px] bg-white/10" />
-              <div className="flex flex-col items-center gap-2">
-                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
-                  <Clock className="h-5 w-5 text-[#196F03]" />
+              <div className="h-8 w-[1px] bg-white/10" />
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
+                  <Clock className="h-4 w-4 text-[#196F03]" />
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Fast Prep</span>
+                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Fast Prep</span>
               </div>
-              <div className="h-10 w-[1px] bg-white/10" />
-              <div className="flex flex-col items-center gap-2">
-                <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
-                  <Info className="h-5 w-5 text-blue-400" />
+              <div className="h-8 w-[1px] bg-white/10" />
+              <div className="flex flex-col items-center gap-1.5">
+                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
+                  <Info className="h-4 w-4 text-blue-400" />
                 </div>
-                <span className="text-[9px] font-bold uppercase tracking-widest text-gray-500">Fine Dine</span>
+                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Fine Dine</span>
               </div>
             </motion.div>
           </div>
         </header>
 
         {/* Search & Filters - Dark Glass */}
-        <div className="px-10 -mt-12 relative z-30 space-y-10">
+        <div className="px-6 -mt-6 relative z-30 space-y-4">
           <div className="relative group">
-            <Search className="absolute left-7 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-500 group-focus-within:text-white transition-colors" />
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-white transition-colors" />
             <input
               type="text"
               placeholder="Search our selection..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#1A1A1A]/90 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] py-7 pl-18 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-2xl"
+              className="w-full bg-[#1A1A1A]/90 backdrop-blur-3xl border border-white/5 rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-xl"
             />
           </div>
 
-          <div className="flex items-center gap-5 overflow-x-auto no-scrollbar pb-6">
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
@@ -275,12 +275,12 @@ export default function PublicMenuPage() {
 
         {/* Featured Section - Dark Mode */}
         {featuredItems.length > 0 && searchQuery === "" && (
-          <section className="pt-24 pb-8">
-            <div className="px-10 mb-10 flex items-baseline justify-between">
-              <h2 className="text-4xl font-serif text-white tracking-tight">Best Sellers</h2>
+          <section className="pt-8 pb-4">
+            <div className="px-6 mb-6 flex items-baseline justify-between">
+              <h2 className="text-3xl font-serif text-white tracking-tight">Best Sellers</h2>
               <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em]">Signature</span>
             </div>
-            <div className="flex gap-8 overflow-x-auto no-scrollbar px-10 pb-8">
+            <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
               {featuredItems.map((item) => (
                 <motion.div
                   key={item.id}
@@ -308,7 +308,7 @@ export default function PublicMenuPage() {
         )}
 
         {/* Menu Content - Bento Grid Dark */}
-        <div className="px-10 py-24 space-y-32 min-h-[400px]">
+        <div className="px-6 py-8 space-y-16 min-h-[400px]">
           {filteredItems.length === 0 && (
             <motion.div
               initial={{ opacity: 0 }}
@@ -346,14 +346,14 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 className="space-y-12"
               >
-                <div className="flex items-end justify-between px-2 border-b border-white/5 pb-10">
-                  <h2 className="text-5xl font-serif text-white tracking-tighter leading-none">
+                <div className="flex items-end justify-between px-2 border-b border-white/5 pb-4">
+                  <h2 className="text-4xl font-serif text-white tracking-tight leading-none">
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-20">
+                <div className="grid grid-cols-1 gap-10">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -365,8 +365,8 @@ export default function PublicMenuPage() {
                         onClick={() => setSelectedItem(item)}
                         className="group cursor-pointer relative"
                       >
-                        <div className="grid grid-cols-12 gap-10 items-start">
-                          <div className="col-span-4 relative aspect-square rounded-[2.5rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
+                        <div className="grid grid-cols-12 gap-6 items-start">
+                          <div className="col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
