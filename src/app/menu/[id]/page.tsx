@@ -179,7 +179,7 @@ export default function PublicMenuPage() {
             <motion.h1
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="text-4xl font-extrabold text-gray-900 tracking-tight leading-none"
+              className="text-5xl font-serif text-gray-900 tracking-tight leading-tight"
             >
               {restaurant?.restaurantName || "Menu"}
             </motion.h1>
@@ -218,7 +218,7 @@ export default function PublicMenuPage() {
                 className="space-y-8"
               >
                 <div className="flex items-baseline justify-between px-2 border-b border-gray-50 pb-4">
-                  <h2 className="text-2xl font-bold text-gray-900 tracking-tight flex items-center gap-4">
+                  <h2 className="text-3xl font-serif text-gray-900 tracking-tight flex items-center gap-4">
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">{categoryItems.length} Selection</span>
@@ -241,48 +241,49 @@ export default function PublicMenuPage() {
                         )}
                       >
                         <div className={cn(
-                          "relative rounded-[4rem] overflow-hidden shadow-2xl bg-white border border-gray-100 transition-all duration-500",
+                          "relative rounded-[3rem] overflow-hidden bg-white transition-all duration-700",
+                          "shadow-[0_15px_40px_-15px_rgba(0,0,0,0.1)] group-hover:shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)]",
+                          "border border-gray-100 group-hover:border-gray-200 group-hover:-translate-y-2",
                           isFeatured ? "aspect-[16/10]" : "aspect-[4/5]"
                         )}>
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
-                            className="object-cover transition-transform duration-1000 group-hover:scale-110"
+                            className="object-cover transition-transform duration-1000 group-hover:scale-105"
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent opacity-80 group-hover:opacity-100 transition-opacity"></div>
 
-                          {/* Top Left Icons (Dietary - Light Background) */}
-                          <div className="absolute top-5 left-5 flex flex-col gap-2 z-20">
+                          {/* Top Left Icons */}
+                          <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
                             {item.dietaryType === "veg" && (
-                              <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-lg border border-white/20">
-                                <Leaf className="h-4 w-4 text-[#196F03] fill-[#196F03]/20" />
+                              <div className="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-white/50">
+                                <Leaf className="h-3.5 w-3.5 text-green-600 fill-green-600/10" />
                               </div>
                             )}
                             {item.dietaryType === "non-veg" && (
-                              <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-lg border border-white/20">
-                                <Flame className="h-4 w-4 text-red-500 fill-red-500/20" />
+                              <div className="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-white/50">
+                                <Flame className="h-3.5 w-3.5 text-red-500 fill-red-500/10" />
                               </div>
                             )}
                           </div>
 
-                          {/* Top Right Price Badge (Purple Circle) */}
-                          <div className="absolute top-5 right-5 z-20 h-12 w-12 bg-[#7C5CFC] rounded-full flex items-center justify-center shadow-[0_10px_20px_rgba(124,92,252,0.3)] border border-white/20">
-                            <span className="text-[11px] font-extrabold text-white tracking-tighter">
-                              {item.price.replace(/[^0-9.]/g, '')}
+                          {/* Price Tag - Minimalist */}
+                          <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/50">
+                            <span className="text-[12px] font-bold text-gray-900 tracking-tight">
+                              {item.price}
                             </span>
                           </div>
 
-                          {/* Info Overlay (Bottom) */}
-                          <div className="absolute bottom-8 left-8 right-8">
+                          {/* Info Overlay */}
+                          <div className="absolute bottom-6 left-6 right-6">
                             <h3 className={cn(
-                              "text-white font-extrabold tracking-tight line-clamp-1 mb-1 lowercase",
-                              isFeatured ? "text-3xl" : "text-lg"
+                              "text-white tracking-tight line-clamp-1 mb-1 font-serif",
+                              isFeatured ? "text-3xl" : "text-xl"
                             )}>{item.name}</h3>
-                            <div className="flex items-center gap-1.5 opacity-80">
-                              <span className="text-[9px] font-bold text-white uppercase tracking-widest">Discover More</span>
-                              <ArrowRight className="h-2.5 w-2.5 text-white" />
-                            </div>
+                            <p className="text-white/60 text-[10px] uppercase tracking-[0.2em] font-medium flex items-center gap-2">
+                              View Details <ArrowRight className="h-3 w-3" />
+                            </p>
                           </div>
                         </div>
                       </motion.div>
@@ -299,26 +300,26 @@ export default function PublicMenuPage() {
           <motion.div
             initial={{ y: 100 }}
             animate={{ y: 0 }}
-            className="bg-white/90 backdrop-blur-3xl p-2 rounded-[3.5rem] flex items-center gap-2 shadow-[0_30px_60px_-15px_rgba(0,0,0,0.2)] border border-white/50 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth"
+            className="bg-black/90 backdrop-blur-2xl p-1.5 rounded-full flex items-center gap-1 shadow-[0_20px_50px_rgba(0,0,0,0.3)] border border-white/10 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth"
           >
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "flex-shrink-0 flex items-center gap-3 px-8 py-4 rounded-[3rem] transition-all",
-                activeCategory === "all" ? "text-white shadow-xl scale-105" : "text-gray-400 hover:bg-gray-50"
+                "flex-shrink-0 flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-500",
+                activeCategory === "all" ? "text-white shadow-lg" : "text-white/40 hover:text-white/60"
               )}
               style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}
             >
               <LayoutGrid className="h-4 w-4" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Catalogue</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest">All</span>
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "flex-shrink-0 flex items-center gap-3 px-8 py-4 rounded-[3rem] transition-all",
-                  activeCategory === cat.id ? "text-white shadow-xl scale-105" : "text-gray-400 hover:bg-gray-50"
+                  "flex-shrink-0 flex items-center gap-2 px-6 py-3 rounded-full transition-all duration-500",
+                  activeCategory === cat.id ? "text-white shadow-lg" : "text-white/40 hover:text-white/60"
                 )}
                 style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}
               >
@@ -333,76 +334,86 @@ export default function PublicMenuPage() {
         <AnimatePresence>
           {selectedItem && (
             <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-hidden">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedItem(null)} className="absolute inset-0 bg-black/80 backdrop-blur-3xl" />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedItem(null)} className="absolute inset-0 bg-black/90 backdrop-blur-3xl" />
               <motion.div
                 layoutId={selectedItem.id}
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
-                className="relative w-full max-w-md bg-white rounded-t-[5rem] sm:rounded-[5rem] overflow-hidden shadow-2xl h-[95vh] flex flex-col"
+                className="relative w-full max-w-md bg-white rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[95vh] flex flex-col"
               >
-                <div className="absolute top-8 inset-x-0 flex justify-center z-[110]">
+                <div className="absolute top-6 inset-x-0 flex justify-center z-[110]">
                   <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
                 </div>
 
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="absolute top-10 right-10 z-[110] h-14 w-14 bg-white/20 backdrop-blur-2xl rounded-full flex items-center justify-center text-white border border-white/20 hover:bg-white hover:text-black transition-all"
+                  className="absolute top-8 right-8 z-[110] h-12 w-12 bg-black/10 backdrop-blur-xl rounded-full flex items-center justify-center text-gray-900 border border-black/5 hover:bg-black hover:text-white transition-all"
                 >
-                  <X className="h-6 w-6" />
+                  <X className="h-5 w-5" />
                 </button>
 
-                <div className="relative h-[45vh] w-full shrink-0 group">
-                  <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover transition-transform duration-[5s] group-hover:scale-125" />
+                <div className="relative h-[45vh] w-full shrink-0">
+                  <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
                     {selectedItem.dietaryType === "veg" && (
-                      <div className="px-5 py-3 bg-white text-[#196F03] text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-green-100">
-                        <Leaf className="h-4 w-4 fill-[#196F03]/20" /> Vegetarian
+                      <div className="px-4 py-2 bg-white/80 backdrop-blur-md text-green-600 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-sm flex items-center gap-2 border border-green-100">
+                        <Leaf className="h-4 w-4 fill-green-600/10" /> Vegetarian
                       </div>
                     )}
                     {selectedItem.dietaryType === "non-veg" && (
-                      <div className="px-5 py-3 bg-white text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-red-100">
-                        <Flame className="h-4 w-4 fill-red-500/20" /> Non-Veg
+                      <div className="px-4 py-2 bg-white/80 backdrop-blur-md text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-sm flex items-center gap-2 border border-red-100">
+                        <Flame className="h-4 w-4 fill-red-500/10" /> Non-Veg
                       </div>
                     )}
                   </div>
                 </div>
 
-                <div className="px-12 pb-12 -mt-20 relative z-10 bg-white rounded-t-[5rem] flex-1 flex flex-col">
-                  <div className="pt-12 space-y-8 flex-1">
+                <div className="px-10 pb-10 -mt-20 relative z-10 bg-white rounded-t-[4rem] flex-1 flex flex-col">
+                  <div className="pt-10 space-y-6 flex-1 overflow-y-auto no-scrollbar">
                     <div className="flex items-center justify-between">
-                      <span className="px-6 py-2.5 bg-gray-50 text-gray-400 text-[10px] font-bold uppercase tracking-[0.25em] rounded-full border border-gray-100">
+                      <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">
                         {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
                       </span>
                     </div>
 
-                    <h2 className="text-5xl font-extrabold text-gray-900 tracking-tight leading-tight">{selectedItem.name}</h2>
-                    <p className="text-gray-500 text-lg font-medium leading-relaxed opacity-80">{selectedItem.description}</p>
-                  </div>
-
-                  <div className="pt-10 space-y-8">
-                    <div className="flex items-end justify-between px-2">
+                    <h2 className="text-4xl font-serif text-gray-900 tracking-tight leading-tight">{selectedItem.name}</h2>
+                    <p className="text-gray-500 text-lg leading-relaxed font-medium">{selectedItem.description}</p>
+                    
+                    <div className="pt-4 flex items-center gap-6">
                       <div className="flex flex-col">
-                        <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em] mb-3">Total Value</span>
-                        <span className="text-5xl font-extrabold text-gray-900 tracking-tight leading-none">{selectedItem.price}</span>
+                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mb-1">Calories</span>
+                        <span className="text-sm font-bold text-gray-900">450 kcal</span>
+                      </div>
+                      <div className="h-8 w-[1px] bg-gray-100" />
+                      <div className="flex flex-col">
+                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mb-1">Preparation</span>
+                        <span className="text-sm font-bold text-gray-900">15-20 min</span>
                       </div>
                     </div>
+                  </div>
 
-                    <div className="grid grid-cols-5 gap-4">
+                  <div className="pt-8 space-y-6 border-t border-gray-50">
+                    <div className="flex items-baseline justify-between px-2">
+                      <span className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">Price</span>
+                      <span className="text-4xl font-serif text-gray-900 tracking-tight">{selectedItem.price}</span>
+                    </div>
+
+                    <div className="flex gap-3">
                       <button
                         onClick={() => setSelectedItem(null)}
-                        className="col-span-1 h-20 bg-gray-50 text-gray-300 rounded-[2.5rem] flex items-center justify-center hover:bg-gray-100 transition-all"
+                        className="h-16 w-16 bg-gray-50 text-gray-400 rounded-2xl flex items-center justify-center hover:bg-gray-100 transition-all shrink-0"
                       >
-                        <ArrowRight className="h-6 w-6 rotate-180" />
+                        <ArrowRight className="h-5 w-5 rotate-180" />
                       </button>
                       {restaurant?.whatsapp && (
                         <button
                           onClick={() => handleWhatsAppOrder(selectedItem)}
-                          className="col-span-4 h-20 text-white font-bold text-xs uppercase tracking-[0.3em] rounded-[2.5rem] shadow-[0_20px_50px_-10px_rgba(0,0,0,0.3)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 group"
+                          className="flex-1 h-16 text-white font-bold text-[11px] uppercase tracking-[0.2em] rounded-2xl shadow-lg transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-3"
                           style={{ backgroundColor: themeColor }}
                         >
-                          <MessageCircle className="h-5 w-5 group-hover:animate-bounce" />
+                          <MessageCircle className="h-4 w-4" />
                           Order via WhatsApp
                         </button>
                       )}

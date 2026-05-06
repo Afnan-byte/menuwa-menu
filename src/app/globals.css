@@ -11,9 +11,17 @@
   --radius-3xl: 2rem;
 
   --font-sans: var(--font-outfit), ui-sans-serif, system-ui;
+  --font-serif: var(--font-playfair), serif;
 
   --animate-fade-in: fade-in 0.3s ease-out;
   --animate-slide-up: slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+  
+  --shadow-gourmet: 0 20px 50px -12px rgba(0, 0, 0, 0.15);
+  --shadow-gourmet-hover: 0 30px 60px -12px rgba(0, 0, 0, 0.25);
+}
+
+.font-serif {
+  font-family: var(--font-serif);
 }
 
 @layer base {
