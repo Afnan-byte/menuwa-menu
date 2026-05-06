@@ -243,23 +243,31 @@ export default function PublicMenuPage() {
           </div>
 
           <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
-            {[
-              { id: "all", label: "All Items", icon: LayoutGrid },
-              { id: "veg", label: "Veg Only", icon: Leaf },
-              { id: "non-veg", label: "Non-Veg", icon: Flame }
-            ].map((filter) => (
+            <button
+              onClick={() => setActiveCategory("all")}
+              className={cn(
+                "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
+                activeCategory === "all"
+                  ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
+                  : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
+              )}
+            >
+              <LayoutGrid className="h-3.5 w-3.5" />
+              All Selection
+            </button>
+            {categories.map((cat) => (
               <button
-                key={filter.id}
-                onClick={() => setDietaryFilter(filter.id as any)}
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
                 className={cn(
                   "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
-                  dietaryFilter === filter.id
+                  activeCategory === cat.id
                     ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
                     : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
                 )}
               >
-                <filter.icon className="h-3.5 w-3.5" />
-                {filter.label}
+                <Utensils className="h-3.5 w-3.5" />
+                {cat.name}
               </button>
             ))}
           </div>
