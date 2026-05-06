@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { Utensils, Edit2, Trash2, Leaf, Flame } from "lucide-react";
+import { Utensils, Edit2, Trash2 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 
@@ -31,16 +31,16 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Dietary Indicator */}
+      {/* Dietary Indicator (Traditional Square Dot) */}
       <div className="absolute top-6 right-6">
         {item.dietaryType === "veg" && (
-          <div className="h-6 w-6 bg-green-50 text-green-500 rounded-lg flex items-center justify-center border border-green-100 shadow-sm">
-            <Leaf className="h-3.5 w-3.5" />
+          <div className="h-6 w-6 border-2 border-green-600 p-0.5 flex items-center justify-center rounded-md">
+            <div className="h-2.5 w-2.5 bg-green-600 rounded-full" />
           </div>
         )}
         {item.dietaryType === "non-veg" && (
-          <div className="h-6 w-6 bg-red-50 text-red-500 rounded-lg flex items-center justify-center border border-red-100 shadow-sm">
-            <Flame className="h-3.5 w-3.5" />
+          <div className="h-6 w-6 border-2 border-red-600 p-0.5 flex items-center justify-center rounded-md">
+            <div className="h-2.5 w-2.5 bg-red-600 rounded-full" />
           </div>
         )}
       </div>

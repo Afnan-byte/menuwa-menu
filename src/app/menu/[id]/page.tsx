@@ -22,11 +22,9 @@ import {
   ChevronRight,
   Star,
   Flame,
-  Leaf,
   Info,
   Share2,
-  Heart,
-  Circle
+  Heart
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -253,21 +251,16 @@ export default function PublicMenuPage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
                           
-                          {/* Badges */}
-                          <div className="absolute top-5 left-5 flex flex-col gap-2 z-20">
-                            {item.isPopular && (
-                              <div className="bg-orange-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
-                                <Flame className="h-3 w-3 text-white" />
-                              </div>
-                            )}
+                          {/* Traditional Dietary Badges */}
+                          <div className="absolute top-5 left-5 z-20">
                             {item.dietaryType === "veg" && (
-                              <div className="bg-green-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
-                                <Leaf className="h-3 w-3 text-white" />
+                              <div className="h-7 w-7 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center border-2 border-green-600 p-0.5 shadow-lg">
+                                <div className="h-2.5 w-2.5 bg-green-600 rounded-full" />
                               </div>
                             )}
                             {item.dietaryType === "non-veg" && (
-                              <div className="bg-red-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
-                                <Circle className="h-3 w-3 text-white fill-white" />
+                              <div className="h-7 w-7 bg-white/90 backdrop-blur-md rounded-lg flex items-center justify-center border-2 border-red-600 p-0.5 shadow-lg">
+                                <div className="h-2.5 w-2.5 bg-red-600 rounded-full" />
                               </div>
                             )}
                           </div>
@@ -368,8 +361,16 @@ export default function PublicMenuPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
                      {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Popular Choice</div>}
-                     {selectedItem.dietaryType === "veg" && <div className="px-4 py-2 bg-green-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Leaf className="h-3 w-3" /> Fresh Veg</div>}
-                     {selectedItem.dietaryType === "non-veg" && <div className="px-4 py-2 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Circle className="h-3 w-3 fill-white" /> Non-Veg</div>}
+                     {selectedItem.dietaryType === "veg" && (
+                       <div className="px-4 py-2 bg-white text-green-600 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-green-100">
+                         <div className="h-2 w-2 bg-green-600 rounded-full" /> Fresh Veg
+                       </div>
+                     )}
+                     {selectedItem.dietaryType === "non-veg" && (
+                       <div className="px-4 py-2 bg-white text-red-600 text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2 border border-red-100">
+                         <div className="h-2 w-2 bg-red-600 rounded-full" /> Non-Veg
+                       </div>
+                     )}
                   </div>
                 </div>
 
