@@ -2,9 +2,9 @@
 
 @theme {
   --color-primary: #0A161E;
-  --color-brand-orange: #196F03; /* New Green Brand Color */
-  --color-brand-green: #145A02; /* Darker Green */
-  --color-accent: #22C55E;
+  --color-brand-orange: #196F03; /* Primary Green */
+  --color-brand-green: #196F03; /* Primary Green */
+  --color-accent: #196F03;
   --color-background-soft: #FFFFFF;
 
   --radius-2xl: 1.25rem;

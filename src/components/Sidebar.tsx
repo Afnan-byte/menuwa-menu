@@ -43,7 +43,7 @@ export default function Sidebar() {
       <div className="p-8 mb-4">
         <Link href="/dashboard" className="flex items-center justify-center w-full">
           <div className="relative h-28 w-28 overflow-hidden">
-             <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain hover:scale-110 transition-transform" />
+            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain hover:scale-110 transition-transform" />
           </div>
         </Link>
       </div>
@@ -59,7 +59,7 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group",
                 isActive
-                  ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/20 scale-[1.02]"
+                  ? "bg-brand-green text-white shadow-xl shadow-brand-green/20 scale-[1.02]"
                   : "text-gray-500 hover:bg-gray-50 hover:text-primary"
               )}
             >
