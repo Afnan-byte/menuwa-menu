@@ -273,9 +273,6 @@ export default function MenuPage() {
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none text-primary"
               />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-gray-50 border border-gray-100 rounded-lg text-[9px] font-black text-gray-300 hidden sm:block">
-                 ⌘K
-              </div>
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
