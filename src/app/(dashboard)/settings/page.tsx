@@ -1,10 +1,9 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
   Save, 
   User, 
@@ -15,9 +14,7 @@ import {
   Loader2, 
   Palette, 
   Layout, 
-  CheckCircle2,
-  Camera,
-  Upload
+  CheckCircle2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -35,8 +32,6 @@ const THEME_COLORS = [
 export default function SettingsPage() {
   const { user, restaurantData } = useAuth();
   const [loading, setLoading] = useState(false);
-  const [uploading, setUploading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
   const [formData, setFormData] = useState({
     restaurantName: "",
     description: "",
@@ -58,26 +53,6 @@ export default function SettingsPage() {
       });
     }
   }, [restaurantData]);
-
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-
-    setUploading(true);
-    const storageRef = ref(storage, `logos/${user.uid}`);
-
-    try {
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      setFormData({ ...formData, logoUrl: url });
-      toast.success("Logo uploaded successfully!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload logo. Make sure Storage is configured.");
-    } finally {
-      setUploading(false);
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -104,7 +79,7 @@ export default function SettingsPage() {
         </div>
         <button 
           onClick={handleSubmit}
-          disabled={loading || uploading}
+          disabled={loading}
           className="flex items-center justify-center gap-2 px-10 py-4 bg-primary text-white font-black rounded-2xl hover:bg-brand-orange transition-all shadow-xl shadow-primary/20 hover:shadow-brand-orange/20 disabled:opacity-70"
         >
           {loading ? <Loader2 className="h-5 w-5 animate-spin" /> : <Save className="h-5 w-5" />}
@@ -120,12 +95,7 @@ export default function SettingsPage() {
               
               <div className="relative mt-12 mb-6">
                  <div className="h-32 w-32 rounded-[2.5rem] bg-white p-2 shadow-2xl relative z-10 overflow-hidden">
-                    {uploading ? (
-                      <div className="h-full w-full bg-gray-50 flex flex-col items-center justify-center rounded-[2rem]">
-                         <Loader2 className="h-8 w-8 text-brand-orange animate-spin mb-2" />
-                         <span className="text-[8px] font-black uppercase text-gray-400">Uploading...</span>
-                      </div>
-                    ) : formData.logoUrl ? (
+                    {formData.logoUrl ? (
                       <img src={formData.logoUrl} alt="Logo" className="h-full w-full object-cover rounded-[2rem]" />
                     ) : (
                       <div className="h-full w-full bg-gray-50 flex items-center justify-center rounded-[2rem]">
@@ -133,19 +103,6 @@ export default function SettingsPage() {
                       </div>
                     )}
                  </div>
-                 <button 
-                   onClick={() => fileInputRef.current?.click()}
-                   className="absolute -bottom-2 -right-2 h-10 w-10 bg-brand-orange text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white z-20 hover:scale-110 transition-transform active:scale-95"
-                 >
-                    <Camera className="h-4 w-4" />
-                 </button>
-                 <input 
-                   type="file" 
-                   ref={fileInputRef} 
-                   onChange={handleFileUpload} 
-                   accept="image/*" 
-                   className="hidden" 
-                 />
               </div>
 
               <h2 className="text-2xl font-black text-primary tracking-tight">{formData.restaurantName || "My Restaurant"}</h2>
@@ -165,13 +122,6 @@ export default function SettingsPage() {
                     <div className={cn("h-4 w-4 rounded-full shadow-sm", THEME_COLORS.find(c => c.color === formData.themeColor)?.class || "bg-brand-orange")} style={{ backgroundColor: !THEME_COLORS.find(c => c.color === formData.themeColor) ? formData.themeColor : undefined }}></div>
                  </div>
               </div>
-           </div>
-
-           <div className="bg-primary/5 rounded-[2.5rem] p-8 border border-primary/5">
-              <h3 className="text-sm font-black text-primary uppercase tracking-widest mb-4">Pro Tip</h3>
-              <p className="text-sm text-primary/60 leading-relaxed font-medium">
-                 Use the **Camera Icon** on your logo to upload a file directly from your device. High-quality transparent PNGs work best!
-              </p>
            </div>
         </div>
 
@@ -246,7 +196,7 @@ export default function SettingsPage() {
                  </div>
 
                  <div className="pt-8 border-t border-gray-50">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo URL (Optional override)</label>
+                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo URL</label>
                     <div className="relative">
                       <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
                       <input 
@@ -254,7 +204,7 @@ export default function SettingsPage() {
                         value={formData.logoUrl}
                         onChange={(e) => setFormData({...formData, logoUrl: e.target.value})}
                         className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                        placeholder="Or upload using the camera icon on the left"
+                        placeholder="Paste your logo URL (e.g. from Cloudinary or Unsplash)"
                       />
                     </div>
                  </div>

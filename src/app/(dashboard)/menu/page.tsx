@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useMemo, useRef } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase";
 import {
   collection,
   query,
@@ -13,7 +13,6 @@ import {
   deleteDoc,
   doc,
 } from "firebase/firestore";
-import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { 
   Plus, 
   FolderPlus, 
@@ -27,7 +26,6 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-  Camera,
   Globe
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -59,7 +57,6 @@ export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
-  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Modals
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -68,7 +65,6 @@ export default function MenuPage() {
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
-  const [isUploading, setIsUploading] = useState(false);
   const [itemForm, setItemForm] = useState({
     name: "",
     price: "",
@@ -101,27 +97,6 @@ export default function MenuPage() {
       toast.error("Failed to load menu");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file || !user) return;
-
-    setIsUploading(true);
-    const fileName = `${Date.now()}-${file.name}`;
-    const storageRef = ref(storage, `items/${user.uid}/${fileName}`);
-
-    try {
-      await uploadBytes(storageRef, file);
-      const url = await getDownloadURL(storageRef);
-      setItemForm({ ...itemForm, imageUrl: url });
-      toast.success("Image uploaded!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Upload failed");
-    } finally {
-      setIsUploading(false);
     }
   };
 
@@ -461,57 +436,6 @@ export default function MenuPage() {
 
               <form onSubmit={handleItemSubmit} className="space-y-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  {/* Photo Upload Section */}
-                  <div className="md:col-span-2">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Dish Photo</label>
-                    <div className="flex flex-col sm:flex-row items-center gap-8">
-                       <div className="relative group">
-                          <div className="h-32 w-32 rounded-[2.5rem] bg-gray-50 border-2 border-dashed border-gray-200 flex items-center justify-center overflow-hidden transition-all group-hover:border-brand-orange/30">
-                             {isUploading ? (
-                               <div className="flex flex-col items-center">
-                                  <Loader2 className="h-6 w-6 animate-spin text-brand-orange mb-2" />
-                                  <span className="text-[8px] font-black text-gray-400 uppercase">Uploading</span>
-                               </div>
-                             ) : itemForm.imageUrl ? (
-                               <img src={itemForm.imageUrl} alt="Preview" className="h-full w-full object-cover" />
-                             ) : (
-                               <Utensils className="h-8 w-8 text-gray-200" />
-                             )}
-                          </div>
-                          <button 
-                            type="button"
-                            onClick={() => fileInputRef.current?.click()}
-                            className="absolute -bottom-2 -right-2 h-10 w-10 bg-brand-orange text-white rounded-full flex items-center justify-center shadow-lg border-4 border-white hover:scale-110 transition-transform active:scale-95"
-                          >
-                             <Camera className="h-4 w-4" />
-                          </button>
-                          <input 
-                            type="file" 
-                            ref={fileInputRef} 
-                            onChange={handleImageUpload} 
-                            accept="image/*" 
-                            className="hidden" 
-                          />
-                       </div>
-                       <div className="flex-1">
-                          <p className="text-sm font-bold text-primary mb-1">Upload a delicious photo</p>
-                          <p className="text-xs text-gray-400 font-medium leading-relaxed">
-                             JPG, PNG or WEBP. Best results with a high-resolution top-down shot of the dish.
-                          </p>
-                          <div className="mt-4 relative">
-                            <Globe className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
-                            <input 
-                              type="text"
-                              placeholder="Or paste an image URL..."
-                              className="w-full pl-11 pr-4 py-3 bg-gray-50 border-transparent rounded-xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-xs font-bold outline-none text-primary"
-                              value={itemForm.imageUrl}
-                              onChange={(e) => setItemForm({...itemForm, imageUrl: e.target.value})}
-                            />
-                          </div>
-                       </div>
-                    </div>
-                  </div>
-
                   <div>
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Dish Name</label>
                     <input 
@@ -559,6 +483,19 @@ export default function MenuPage() {
                       onChange={(e) => setItemForm({...itemForm, description: e.target.value})}
                     />
                   </div>
+                  <div className="md:col-span-2">
+                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Image URL</label>
+                    <div className="relative">
+                       <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                       <input 
+                         type="text"
+                         className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
+                         placeholder="Paste image URL (Unsplash, Cloudinary, etc.)"
+                         value={itemForm.imageUrl}
+                         onChange={(e) => setItemForm({...itemForm, imageUrl: e.target.value})}
+                       />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex gap-6 pt-6 border-t border-gray-50">
@@ -571,7 +508,7 @@ export default function MenuPage() {
                   </button>
                   <button 
                     type="submit" 
-                    disabled={isSaving || isUploading}
+                    disabled={isSaving}
                     className="flex-[2] py-5 bg-brand-orange text-white font-black rounded-[1.5rem] hover:bg-orange-600 hover:scale-[1.02] transition-all shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-3 disabled:opacity-70"
                   >
                     {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : (
