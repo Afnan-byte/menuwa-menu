@@ -85,7 +85,7 @@ export default function DashboardPage() {
             animate={{ opacity: 1, y: 0 }}
             className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] flex items-center justify-between relative overflow-hidden group"
           >
-             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/5 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
+             <div className="absolute top-0 right-0 w-64 h-64 bg-[#196F03]/5 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
              <div className="relative z-10">
                 <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">Current Inventory</p>
                 {loading ? (
@@ -97,7 +97,7 @@ export default function DashboardPage() {
                   </div>
                 )}
              </div>
-             <div className="relative z-10 h-20 w-20 bg-brand-green/10 rounded-[2rem] flex items-center justify-center">
+             <div className="relative z-10 h-20 w-20 bg-[#196F03]/10 rounded-[2rem] flex items-center justify-center">
                 <Utensils className="h-10 w-10 text-[#196F03]" />
              </div>
           </motion.div>
