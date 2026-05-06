@@ -118,9 +118,9 @@ export default function PublicMenuPage() {
           <motion.div
             initial={{ scale: 0.8, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="relative h-24 w-24 rounded-[2.5rem] p-1.5 bg-white shadow-2xl mb-6 border border-gray-50"
+            className="relative h-40 w-40 rounded-[3rem] p-2 bg-white shadow-2xl mb-8 border border-gray-50"
           >
-            <div className="relative w-full h-full rounded-[2rem] overflow-hidden bg-gray-50">
+            <div className="relative w-full h-full rounded-[2.5rem] overflow-hidden bg-gray-50">
               <Image
                 src={restaurant?.logoUrl || "/logo.svg"}
                 alt="Logo"
@@ -299,8 +299,7 @@ export default function PublicMenuPage() {
 
         {/* Footer */}
         <footer className="mt-10 py-20 px-8 text-center bg-gray-50/50 rounded-t-[4rem]">
-          <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.3em] mb-4">Powered by</p>
-          <h2 className="text-2xl font-black tracking-tighter text-gray-200 uppercase">{restaurant?.restaurantName || "Menuvo"}</h2>
+          <p className="text-[9px] font-black text-gray-300 uppercase tracking-[0.3em] mb-4">Powered by Digital Excellence</p>
         </footer>
 
       </div>

@@ -41,11 +41,10 @@ export default function Sidebar() {
   return (
     <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans">
       <div className="p-8 mb-4">
-        <Link href="/dashboard" className="flex items-center gap-4 group">
-          <div className="relative h-10 w-10 overflow-hidden">
-             <img src="/logo.svg" alt="Menuvo" className="h-full w-full object-contain group-hover:scale-110 transition-transform" />
+        <Link href="/dashboard" className="flex items-center justify-center w-full">
+          <div className="relative h-28 w-28 overflow-hidden">
+             <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain hover:scale-110 transition-transform" />
           </div>
-          <span className="text-2xl font-black text-primary tracking-tighter">Menuvo</span>
         </Link>
       </div>
 
