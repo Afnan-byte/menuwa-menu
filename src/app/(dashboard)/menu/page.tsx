@@ -12,6 +12,7 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  writeBatch
 } from "firebase/firestore";
 import { 
   Plus, 
@@ -26,7 +27,8 @@ import {
   ChevronRight,
   LayoutGrid,
   List,
-  Globe
+  Globe,
+  Trash2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -123,6 +125,38 @@ export default function MenuPage() {
     }
   };
 
+  const handleDeleteCategory = async (catId: string, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (!confirm("Are you sure? This will delete the category and ALL items inside it.")) return;
+    
+    setIsSaving(true);
+    try {
+      // Use a batch to delete category and its items
+      const batch = writeBatch(db);
+      
+      // Delete Category
+      batch.delete(doc(db, "categories", catId));
+      
+      // Delete all items in this category
+      const categoryItems = items.filter(i => i.categoryId === catId);
+      categoryItems.forEach(item => {
+        batch.delete(doc(db, "items", item.id));
+      });
+      
+      await batch.commit();
+      
+      setCategories(categories.filter(c => c.id !== catId));
+      setItems(items.filter(i => i.categoryId !== catId));
+      if (activeCategory === catId) setActiveCategory("all");
+      
+      toast.success("Category and items removed");
+    } catch (error) {
+      toast.error("Deletion failed");
+    } finally {
+      setIsSaving(false);
+    }
+  };
+
   const handleItemSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -204,7 +238,7 @@ export default function MenuPage() {
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "w-full flex items-center justify-between p-4 rounded-2xl transition-all group",
+                "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
                 activeCategory === "all" ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" : "hover:bg-gray-50 text-gray-500"
               )}
             >
@@ -218,27 +252,36 @@ export default function MenuPage() {
             </button>
 
             {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={cn(
-                  "w-full flex items-center justify-between p-4 rounded-2xl transition-all group",
-                  activeCategory === cat.id ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" : "hover:bg-gray-50 text-gray-500"
-                )}
-              >
-                <div className="flex items-center gap-3">
-                   <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
-                      <Utensils className="h-4 w-4" />
-                   </div>
-                   <span className="text-xs font-black">{cat.name}</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className={cn("text-[10px] font-black", activeCategory === cat.id ? "text-white/80" : "text-gray-300")}>
-                    {items.filter(i => i.categoryId === cat.id).length}
-                  </span>
-                  <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === cat.id ? "text-white" : "text-gray-300")} />
-                </div>
-              </button>
+              <div key={cat.id} className="relative group">
+                <button
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={cn(
+                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
+                    activeCategory === cat.id ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" : "hover:bg-gray-50 text-gray-500"
+                  )}
+                >
+                  <div className="flex items-center gap-3">
+                    <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
+                        <Utensils className="h-4 w-4" />
+                    </div>
+                    <span className="text-xs font-black truncate max-w-[120px]">{cat.name}</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={cn("text-[10px] font-black", activeCategory === cat.id ? "text-white/80" : "text-gray-300")}>
+                      {items.filter(i => i.categoryId === cat.id).length}
+                    </span>
+                  </div>
+                </button>
+                <button 
+                  onClick={(e) => handleDeleteCategory(cat.id, e)}
+                  className={cn(
+                    "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
+                    activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
+                  )}
+                >
+                  <Trash2 className="h-3.5 w-3.5" />
+                </button>
+              </div>
             ))}
           </div>
 
