@@ -21,7 +21,6 @@ import {
   Utensils,
   Star,
   Search,
-  Heart,
   Clock,
   Flame,
   ArrowRight
@@ -182,9 +181,6 @@ export default function PublicMenuPage() {
               <div className="flex gap-3">
                 <button className="h-12 w-12 bg-white/20 backdrop-blur-xl rounded-2xl flex items-center justify-center text-white hover:bg-white hover:text-primary transition-all">
                   <Phone className="h-5 w-5" />
-                </button>
-                <button className="h-12 w-12 rounded-2xl flex items-center justify-center text-white shadow-xl" style={{ backgroundColor: themeColor }}>
-                  <Heart className="h-5 w-5 fill-white" />
                 </button>
               </div>
            </div>
