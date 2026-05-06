@@ -25,7 +25,8 @@ import {
   Leaf,
   Info,
   Share2,
-  Heart
+  Heart,
+  Circle
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -94,10 +95,9 @@ export default function PublicMenuPage() {
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id), where("isAvailable", "==", true));
       const itemSnap = await getDocs(itemQuery);
       
-      const fetchedItems = itemSnap.docs.map((doc, idx) => ({ 
+      const fetchedItems = itemSnap.docs.map((doc) => ({ 
         id: doc.id, 
-        ...doc.data(),
-        isPopular: idx % 4 === 0,
+        ...doc.data()
       } as MenuItem));
       
       setItems(fetchedItems);
@@ -267,7 +267,7 @@ export default function PublicMenuPage() {
                             )}
                             {item.dietaryType === "non-veg" && (
                               <div className="bg-red-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
-                                <Flame className="h-3 w-3 text-white rotate-180" />
+                                <Circle className="h-3 w-3 text-white fill-white" />
                               </div>
                             )}
                           </div>
@@ -369,7 +369,7 @@ export default function PublicMenuPage() {
                   <div className="absolute bottom-10 left-10 flex gap-3">
                      {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Popular Choice</div>}
                      {selectedItem.dietaryType === "veg" && <div className="px-4 py-2 bg-green-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Leaf className="h-3 w-3" /> Fresh Veg</div>}
-                     {selectedItem.dietaryType === "non-veg" && <div className="px-4 py-2 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Non-Veg</div>}
+                     {selectedItem.dietaryType === "non-veg" && <div className="px-4 py-2 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Circle className="h-3 w-3 fill-white" /> Non-Veg</div>}
                   </div>
                 </div>
 
