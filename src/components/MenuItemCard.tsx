@@ -30,16 +30,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Availability Toggle Floating */}
-      <button
-        onClick={onToggleAvailability}
-        className={cn(
-          "absolute -top-4 left-6 z-20 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest shadow-lg transition-all",
-          item.isAvailable ? "bg-brand-green text-white" : "bg-red-500 text-white"
-        )}
-      >
-        {item.isAvailable ? "In Stock" : "Out of Stock"}
-      </button>
+      {/* Removed Availability Toggle Badge */}
 
       {/* Overlapping Image Container */}
       <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-32 h-32 md:w-36 md:h-36">
