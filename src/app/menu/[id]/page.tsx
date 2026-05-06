@@ -48,8 +48,6 @@ interface Restaurant {
   restaurantName: string;
   logoUrl?: string;
   description?: string;
-  phone?: string;
-  whatsapp?: string;
 }
 
 export default function PublicMenuPage() {
@@ -98,7 +96,7 @@ export default function PublicMenuPage() {
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-white">
-        <Loader2 className="h-10 w-10 animate-spin text-brand-green" />
+        <Loader2 className="h-10 w-10 animate-spin text-brand-orange" />
       </div>
     );
   }
@@ -197,6 +195,7 @@ export default function PublicMenuPage() {
                         alt={item.name} 
                         fill 
                         className="object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500" 
+                        sizes="(max-width: 768px) 150px"
                       />
                      </div>
                    ) : (
