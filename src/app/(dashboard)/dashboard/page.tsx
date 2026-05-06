@@ -1,187 +1,169 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
+import { db } from "@/lib/firebase";
+import { collection, query, where, getDocs } from "firebase/firestore";
 import { 
-  Users, 
   Utensils, 
-  Eye, 
-  TrendingUp,
   Plus,
   ArrowRight,
-  QrCode
+  QrCode,
+  Loader2,
+  ExternalLink
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 
 export default function DashboardPage() {
-  const { restaurantData } = useAuth();
+  const { user, restaurantData } = useAuth();
+  const [itemCount, setItemCount] = useState<number | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    if (user) {
+      fetchStats();
+    }
+  }, [user]);
+
+  const fetchStats = async () => {
+    try {
+      const q = query(collection(db, "items"), where("restaurantId", "==", user?.uid));
+      const snap = await getDocs(q);
+      setItemCount(snap.size);
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
-    <div className="space-y-10 font-sans">
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
-        <div>
+    <div className="space-y-10 font-sans pb-20">
+      {/* Header Section */}
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">
+        <motion.div 
+          initial={{ opacity: 0, x: -20 }}
+          animate={{ opacity: 1, x: 0 }}
+        >
           <h1 className="text-4xl font-black text-primary tracking-tighter">
             Welcome, <span className="text-brand-green">{restaurantData?.restaurantName || "Chef"}</span>!
           </h1>
-          <p className="text-gray-400 font-medium mt-1">Here's what's happening with your menu today.</p>
-        </div>
-        <div className="flex gap-3">
-          <button className="bg-white border border-gray-100 px-6 py-3 rounded-2xl text-sm font-bold text-primary shadow-sm hover:bg-gray-50 transition-all">
-            Download Report
-          </button>
+          <p className="text-gray-400 font-medium mt-1">Manage your digital menu and QR presence.</p>
+        </motion.div>
+        
+        <div className="flex items-center gap-4">
+          <Link 
+            href={`/menu/${user?.uid}`}
+            target="_blank"
+            className="flex items-center gap-3 bg-white border border-gray-100 px-6 py-4 rounded-2xl text-xs font-black text-primary shadow-sm hover:bg-gray-50 transition-all uppercase tracking-widest"
+          >
+            <ExternalLink className="h-4 w-4" />
+            Live Menu
+          </Link>
           <Link 
             href="/qr" 
-            className="bg-brand-green text-white px-6 py-3 rounded-2xl text-sm font-black shadow-lg shadow-brand-green/20 hover:scale-105 transition-all"
+            className="flex items-center gap-3 bg-[#196F03] text-white px-8 py-4 rounded-2xl text-xs font-black shadow-xl shadow-brand-green/20 hover:scale-105 transition-all uppercase tracking-widest"
           >
-            Show QR Code
+            <QrCode className="h-4 w-4" />
+            QR Code
           </Link>
         </div>
       </div>
 
-      {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        <StatCard 
-          icon={<Eye className="h-6 w-6" />}
-          label="Total Scans"
-          value="1,284"
-          trend="+12%"
-          color="blue"
-        />
-        <StatCard 
-          icon={<Utensils className="h-6 w-6" />}
-          label="Menu Items"
-          value="24"
-          trend="0%"
-          color="green"
-        />
-        <StatCard 
-          icon={<Users className="h-6 w-6" />}
-          label="Active Tables"
-          value="18"
-          trend="+5%"
-          color="purple"
-        />
-        <StatCard 
-          icon={<TrendingUp className="h-6 w-6" />}
-          label="Conversion"
-          value="64%"
-          trend="+2%"
-          color="orange"
-        />
-      </div>
-
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Quick Actions */}
+        {/* Real Stats & Actions */}
         <div className="lg:col-span-2 space-y-10">
-          <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100/50 shadow-sm relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-gray-50 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
-            <div className="relative z-10">
-              <h2 className="text-2xl font-black text-primary mb-8 tracking-tight">Quick Actions</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-                <ActionLink 
-                  href="/menu"
-                  icon={<Plus className="h-6 w-6" />}
-                  title="Add New Item"
-                  description="Create a new dish for your menu"
-                  color="bg-brand-green"
-                />
-                <ActionLink 
-                  href="/qr"
-                  icon={<QrCode className="h-6 w-6" />}
-                  title="View QR Code"
-                  description="Download or print your QR code"
-                  color="bg-primary"
-                />
-              </div>
-            </div>
-          </div>
+          {/* Real Stats Card */}
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] flex items-center justify-between relative overflow-hidden group"
+          >
+             <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/5 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
+             <div className="relative z-10">
+                <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">Current Inventory</p>
+                {loading ? (
+                  <Loader2 className="h-10 w-10 animate-spin text-brand-green" />
+                ) : (
+                  <div className="flex items-baseline gap-4">
+                    <h2 className="text-7xl font-black text-primary tracking-tighter">{itemCount || 0}</h2>
+                    <span className="text-xl font-bold text-gray-400">Items Live</span>
+                  </div>
+                )}
+             </div>
+             <div className="relative z-10 h-20 w-20 bg-brand-green/10 rounded-[2rem] flex items-center justify-center">
+                <Utensils className="h-10 w-10 text-brand-green" />
+             </div>
+          </motion.div>
 
-          <div className="bg-white p-10 rounded-[2.5rem] border border-gray-100/50 shadow-sm">
-            <h2 className="text-2xl font-black text-primary mb-8 tracking-tight">Recent Activity</h2>
-            <div className="space-y-6">
-              {[1, 2, 3].map((i) => (
-                <div key={i} className="flex items-center gap-5 p-4 hover:bg-gray-50 rounded-3xl transition-all group cursor-pointer">
-                  <div className="h-12 w-12 rounded-2xl bg-blue-50 flex items-center justify-center text-blue-600 group-hover:scale-110 transition-transform">
-                    <Eye className="h-6 w-6" />
-                  </div>
-                  <div>
-                    <p className="font-bold text-primary tracking-tight">New scan from Table #4</p>
-                    <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">2 minutes ago</p>
-                  </div>
-                  <div className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity">
-                    <ArrowRight className="h-5 w-5 text-gray-300" />
-                  </div>
-                </div>
-              ))}
+          {/* Quick Actions */}
+          <div className="space-y-6">
+            <h2 className="text-xl font-black text-primary tracking-tight ml-2">Quick Management</h2>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              <ActionLink 
+                href="/menu"
+                icon={<Plus className="h-6 w-6" />}
+                title="Manage Dishes"
+                description="Update items, prices and availability"
+                color="bg-[#196F03]"
+              />
+              <ActionLink 
+                href="/qr"
+                icon={<QrCode className="h-6 w-6" />}
+                title="QR Studio"
+                description="Download and customize your menu QR"
+                color="bg-primary"
+              />
             </div>
           </div>
         </div>
 
-        {/* Tips & Resources */}
-        <div className="bg-primary text-white p-10 rounded-[2.5rem] shadow-2xl relative overflow-hidden group">
-          {/* Animated Background Element */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/20 blur-[80px] rounded-full translate-x-10 -translate-y-10 group-hover:scale-125 transition-transform duration-1000"></div>
+        {/* Status Card */}
+        <motion.div 
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="bg-primary text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col"
+        >
+          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/20 blur-[80px] rounded-full translate-x-10 -translate-y-10"></div>
           
           <div className="relative z-10 flex flex-col h-full">
-            <div className="h-14 w-14 rounded-2xl bg-brand-green flex items-center justify-center mb-8 shadow-xl shadow-brand-green/20">
-              <TrendingUp className="h-8 w-8 text-white" />
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-green/20 rounded-full border border-brand-green/30 mb-8 self-start">
+              <div className="h-2 w-2 bg-brand-green rounded-full animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-brand-green">System Live</span>
             </div>
-            <h2 className="text-3xl font-black mb-6 tracking-tight leading-tight">Increase Orders <br/><span className="text-brand-green">by 30%</span></h2>
-            <p className="text-white/60 font-medium mb-10 leading-relaxed">
-              Adding high-quality photos to your menu items can increase orders significantly. Use our built-in image optimization for faster loading.
+            
+            <h2 className="text-3xl font-black mb-6 tracking-tight leading-tight">Your Digital Menu is <br/><span className="text-brand-green">Active</span></h2>
+            <p className="text-white/40 text-sm font-medium mb-10 leading-relaxed">
+              Customers can currently scan and view your menu. All changes you make in the manager will reflect instantly.
             </p>
+            
             <div className="mt-auto">
               <Link 
                 href="/menu" 
-                className="inline-flex items-center gap-3 bg-brand-green text-white px-8 py-4 rounded-2xl font-black text-sm hover:bg-green-700 transition-all shadow-lg shadow-brand-green/20"
+                className="w-full flex items-center justify-center gap-3 bg-white text-primary py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
               >
-                Optimize Menu <ArrowRight className="h-4 w-4" />
+                Go to Menu Manager <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
           </div>
-          <div className="absolute -right-10 -bottom-10 opacity-5 rotate-12 transition-transform group-hover:scale-110 duration-1000">
-            <Utensils className="h-64 w-64" />
-          </div>
-        </div>
+        </motion.div>
       </div>
-    </div>
-  );
-}
-
-function StatCard({ icon, label, value, trend, color }: { icon: React.ReactNode, label: string, value: string, trend: string, color: string }) {
-  const colorMap: Record<string, string> = {
-    blue: "bg-blue-50 text-blue-600",
-    green: "bg-green-50 text-green-600",
-    purple: "bg-purple-50 text-purple-600",
-    orange: "bg-orange-50 text-orange-600",
-  };
-
-  return (
-    <div className="bg-white p-8 rounded-[2rem] border border-gray-100/50 shadow-sm hover:shadow-xl hover:shadow-gray-200/50 transition-all group">
-      <div className="flex items-center justify-between mb-6">
-        <div className={cn("p-3 rounded-2xl transition-transform group-hover:scale-110", colorMap[color])}>{icon}</div>
-        <div className="flex flex-col items-end">
-          <span className="text-[10px] font-black text-green-500 px-3 py-1 bg-green-50 rounded-full">{trend}</span>
-        </div>
-      </div>
-      <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-1">{label}</p>
-      <h3 className="text-3xl font-black text-primary tracking-tighter">{value}</h3>
     </div>
   );
 }
 
 function ActionLink({ href, icon, title, description, color }: { href: string, icon: React.ReactNode, title: string, description: string, color: string }) {
   return (
-    <Link href={href} className="flex items-start gap-5 p-6 border border-gray-100 rounded-3xl hover:shadow-xl hover:shadow-gray-100/50 transition-all group bg-white">
-      <div className={cn("p-3 rounded-2xl text-white shadow-lg transition-transform group-hover:scale-110", color)}>
+    <Link href={href} className="flex items-start gap-5 p-8 border border-gray-100 rounded-[2.5rem] hover:shadow-2xl hover:shadow-gray-100 transition-all group bg-white">
+      <div className={cn("p-4 rounded-2xl text-white shadow-xl transition-transform group-hover:scale-110", color)}>
         {icon}
       </div>
       <div>
-        <h4 className="font-black text-primary tracking-tight group-hover:text-brand-green transition-colors">{title}</h4>
-        <p className="text-[11px] text-gray-400 font-medium leading-relaxed mt-1">{description}</p>
+        <h4 className="text-lg font-black text-primary tracking-tight group-hover:text-brand-green transition-colors">{title}</h4>
+        <p className="text-xs text-gray-400 font-medium leading-relaxed mt-1">{description}</p>
       </div>
     </Link>
   );
 }
-
