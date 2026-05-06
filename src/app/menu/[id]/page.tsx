@@ -231,19 +231,19 @@ export default function PublicMenuPage() {
         </header>
 
         {/* Search & Filters - Dark Glass */}
-        <div className="px-8 -mt-10 relative z-30 space-y-8">
+        <div className="px-10 -mt-12 relative z-30 space-y-10">
           <div className="relative group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-white transition-colors" />
+            <Search className="absolute left-7 top-1/2 -translate-y-1/2 h-4.5 w-4.5 text-gray-500 group-focus-within:text-white transition-colors" />
             <input
               type="text"
               placeholder="Search our selection..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#1A1A1A]/80 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] py-6 pl-16 pr-8 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/50 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-2xl"
+              className="w-full bg-[#1A1A1A]/90 backdrop-blur-3xl border border-white/5 rounded-[2.5rem] py-7 pl-18 pr-10 text-base focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-2xl"
             />
           </div>
 
-          <div className="flex items-center gap-4 overflow-x-auto no-scrollbar pb-4">
+          <div className="flex items-center gap-5 overflow-x-auto no-scrollbar pb-6">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
@@ -347,14 +347,14 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 className="space-y-12"
               >
-                <div className="flex items-baseline justify-between px-2 border-b border-white/5 pb-8">
-                  <h2 className="text-4xl font-serif text-white tracking-tight flex items-center gap-4">
+                <div className="flex items-end justify-between px-2 border-b border-white/5 pb-10">
+                  <h2 className="text-5xl font-serif text-white tracking-tighter leading-none">
                     {cat.name}
                   </h2>
-                  <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.3em]">{categoryItems.length} Selection</span>
+                  <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-16">
+                <div className="grid grid-cols-1 gap-20">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -366,8 +366,8 @@ export default function PublicMenuPage() {
                         onClick={() => setSelectedItem(item)}
                         className="group cursor-pointer relative"
                       >
-                        <div className="grid grid-cols-12 gap-8 items-center">
-                          <div className="col-span-5 relative aspect-square rounded-[3rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
+                        <div className="grid grid-cols-12 gap-10 items-start">
+                          <div className="col-span-4 relative aspect-square rounded-[2.5rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
@@ -381,24 +381,26 @@ export default function PublicMenuPage() {
                             )}
                           </div>
                           
-                          <div className="col-span-7 space-y-3">
-                            <div className="flex items-center gap-3">
-                              {item.dietaryType === "veg" && (
-                                <div className="h-4 w-4 border border-green-600 rounded-[3px] flex items-center justify-center p-[2px]">
-                                  <div className="h-full w-full bg-green-600 rounded-full" />
-                                </div>
-                              )}
-                              {item.dietaryType === "non-veg" && (
-                                <div className="h-4 w-4 border border-red-600 rounded-[3px] flex items-center justify-center p-[2px]">
-                                  <div className="h-full w-full bg-red-600 rounded-full" />
-                                </div>
-                              )}
-                              <span className="text-[14px] font-bold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                          <div className="col-span-8 space-y-4 pt-2">
+                            <div className="flex items-center justify-between">
+                              <div className="flex items-center gap-3">
+                                {item.dietaryType === "veg" && (
+                                  <div className="h-4.5 w-4.5 border border-green-600 rounded-[4px] flex items-center justify-center p-[2.5px]">
+                                    <div className="h-full w-full bg-green-600 rounded-full" />
+                                  </div>
+                                )}
+                                {item.dietaryType === "non-veg" && (
+                                  <div className="h-4.5 w-4.5 border border-red-600 rounded-[4px] flex items-center justify-center p-[2.5px]">
+                                    <div className="h-full w-full bg-red-600 rounded-full" />
+                                  </div>
+                                )}
+                              </div>
+                              <span className="text-[15px] font-bold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                             </div>
-                            <h3 className="text-2xl font-serif text-white tracking-tight leading-tight group-hover:text-[#196F03] transition-colors">{item.name}</h3>
-                            <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{item.description}</p>
-                            <div className="pt-2 flex items-center gap-2 text-[8px] font-bold uppercase tracking-[0.2em] text-gray-600 opacity-0 group-hover:opacity-100 transition-all translate-x-[-10px] group-hover:translate-x-0">
-                              View Experience <ArrowRight className="h-2 w-2" />
+                            <h3 className="text-2xl font-serif text-white tracking-tight leading-snug group-hover:text-[#196F03] transition-colors">{item.name}</h3>
+                            <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
+                            <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#196F03] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
+                              Discover <ArrowRight className="h-3.5 w-3.5" />
                             </div>
                           </div>
                         </div>
