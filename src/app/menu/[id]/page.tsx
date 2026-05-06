@@ -321,33 +321,6 @@ export default function PublicMenuPage() {
           </div>
         )}
 
-        {/* Floating Premium Contact Dock */}
-        <div className="fixed bottom-10 inset-x-0 flex justify-center z-50 px-8">
-           <motion.div 
-             initial={{ y: 100 }}
-             animate={{ y: 0 }}
-             className="bg-primary/95 backdrop-blur-2xl px-8 py-4 rounded-[2.5rem] shadow-[0_20px_50px_rgba(0,0,0,0.4)] flex items-center gap-8 border border-white/10"
-           >
-              <button className="flex flex-col items-center gap-1 group">
-                 <Utensils className="h-5 w-5 text-white transition-colors" style={{ color: activeCategory === 'all' ? themeColor : 'white' }} />
-                 <span className="text-[8px] font-black text-white/50 uppercase tracking-widest">Menu</span>
-              </button>
-              <button className="flex flex-col items-center gap-1 group">
-                 <Clock className="h-5 w-5 text-white group-hover:opacity-70 transition-colors" />
-                 <span className="text-[8px] font-black text-white/50 uppercase tracking-widest">Orders</span>
-              </button>
-              <div className="h-10 w-[1px] bg-white/10"></div>
-              <a 
-                href={`https://wa.me/#`} 
-                target="_blank" 
-                className="flex items-center gap-3 px-6 py-2.5 rounded-2xl shadow-lg transition-all hover:scale-105 active:scale-95"
-                style={{ backgroundColor: themeColor }}
-              >
-                 <MessageCircle className="h-5 w-5 text-white" />
-                 <span className="text-xs font-black text-white uppercase tracking-widest">Contact</span>
-              </a>
-           </motion.div>
-        </div>
 
         {/* Footer */}
         <footer className="mt-20 py-20 px-8 text-center border-t border-gray-50 bg-gray-50/30">
