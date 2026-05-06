@@ -181,33 +181,6 @@ export default function PublicMenuPage() {
           <div className={cn("absolute inset-0 z-0 transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-white")}></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)] z-0"></div>
           <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent to-transparent z-0", isDark ? "via-white/10" : "via-black/5")}></div>
-
-          {/* Branding Content */}
-          <div className="relative flex flex-col items-center justify-center px-6 text-center z-20 w-full mt-6">
-            <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              className="relative mb-6"
-            >
-              <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
-              <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
-                <div className={cn("relative w-full h-full rounded-full overflow-hidden border-2 p-4", isDark ? "bg-white/5 border-white/10" : "bg-white border-white")}>
-                  <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-contain p-2" />
-                </div>
-              </div>
-            </motion.div>
-
-            <motion.div
-              initial={{ y: 20, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.1 }}
-              className="mt-4 mb-4"
-            >
-              <h1 className={cn("text-4xl sm:text-5xl font-serif tracking-tight leading-none drop-shadow-2xl px-2", isDark ? "text-white" : "text-gray-900")}>
-                {restaurant?.restaurantName || "Menu"}
-              </h1>
-            </motion.div>
-          </div>
         </header>
 
         {/* Search & Filters - Dark Glass */}
