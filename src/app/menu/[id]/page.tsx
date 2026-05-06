@@ -163,19 +163,18 @@ export default function PublicMenuPage() {
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
         {/* Cinematic Branding Header */}
-        <header className="relative pt-48 pb-24 w-full overflow-hidden flex flex-col items-center justify-center">
+        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-16 pb-12">
           {/* Dynamic Background Layer */}
-          <div className="absolute inset-0 bg-[#0A0A0A]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)]"></div>
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
-
+          <div className="absolute inset-0 bg-[#0A0A0A] z-0"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)] z-0"></div>
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0"></div>
 
           {/* Branding Content */}
-          <div className="absolute inset-0 flex flex-col items-center justify-center pt-20 px-8 text-center z-20">
+          <div className="relative flex flex-col items-center justify-center px-8 text-center z-20 w-full mt-12">
             <motion.div
               initial={{ y: 30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
-              className="relative mb-12"
+              className="relative mb-10"
             >
               <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
               <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
@@ -192,10 +191,10 @@ export default function PublicMenuPage() {
               className="space-y-4"
             >
               <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.5em] mb-2 block">Premium Dining Experience</span>
-              <h1 className="text-6xl font-serif text-white tracking-tight leading-none drop-shadow-2xl">
+              <h1 className="text-6xl font-serif text-white tracking-tight leading-none drop-shadow-2xl px-2">
                 {restaurant?.restaurantName || "Menu"}
               </h1>
-              <p className="text-gray-400 font-medium text-base max-w-[300px] leading-relaxed mx-auto opacity-70 italic font-serif">
+              <p className="text-gray-400 font-medium text-base max-w-[300px] leading-relaxed mx-auto opacity-70 italic font-serif mt-4">
                 "{restaurant?.description || "Experience the finest flavors and culinary excellence."}"
               </p>
             </motion.div>
@@ -204,7 +203,7 @@ export default function PublicMenuPage() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="flex items-center gap-6 mt-12"
+              className="flex items-center gap-6 mt-12 mb-8"
             >
               <div className="flex flex-col items-center gap-2">
                 <div className="h-14 w-14 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/10 flex items-center justify-center shadow-2xl">
