@@ -47,14 +47,6 @@ export default function QRPage() {
               size={256}
               level="H"
               includeMargin={true}
-              imageSettings={{
-                src: "/logo.svg", // Optional: Add a small logo in the middle if available
-                x: undefined,
-                y: undefined,
-                height: 40,
-                width: 40,
-                excavate: true,
-              }}
             />
           </div>
           <h2 className="text-2xl font-bold text-primary mb-2">{restaurantData?.restaurantName}</h2>
