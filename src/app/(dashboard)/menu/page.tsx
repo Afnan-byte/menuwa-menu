@@ -275,8 +275,6 @@ export default function MenuPage() {
 
           <div className="mt-12 pt-8 border-t border-gray-50">
             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
-              <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-3">Menu Visibility</p>
-              <h4 className="text-sm font-black text-primary mb-4 leading-tight">Your menu is live and accepting scans</h4>
               <button 
                 onClick={() => setIsPreviewOpen(true)}
                 className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all flex items-center justify-center gap-2"
