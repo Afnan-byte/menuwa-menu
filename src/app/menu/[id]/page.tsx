@@ -380,18 +380,6 @@ export default function PublicMenuPage() {
 
                     <h2 className="text-4xl font-serif text-gray-900 tracking-tight leading-tight">{selectedItem.name}</h2>
                     <p className="text-gray-500 text-lg leading-relaxed font-medium">{selectedItem.description}</p>
-                    
-                    <div className="pt-4 flex items-center gap-6">
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mb-1">Calories</span>
-                        <span className="text-sm font-bold text-gray-900">450 kcal</span>
-                      </div>
-                      <div className="h-8 w-[1px] bg-gray-100" />
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-300 uppercase tracking-widest mb-1">Preparation</span>
-                        <span className="text-sm font-bold text-gray-900">15-20 min</span>
-                      </div>
-                    </div>
                   </div>
 
                   <div className="pt-8 space-y-6 border-t border-gray-50">
