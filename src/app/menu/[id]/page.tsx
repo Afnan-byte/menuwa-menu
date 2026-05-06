@@ -56,7 +56,6 @@ export default function PublicMenuPage() {
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
-  const scrollRef = useRef<HTMLDivElement>(null);
 
   const themeColor = restaurant?.themeColor || "#000000";
 
@@ -119,47 +118,18 @@ export default function PublicMenuPage() {
            <h1 className="text-xl font-bold text-gray-900 tracking-tight">
               Welcome to our {restaurant?.restaurantName || "Restaurant"}
            </h1>
+           <p className="text-gray-400 text-[10px] uppercase font-black tracking-widest mt-2">Discover our menu</p>
         </header>
 
-        {/* Category Filter Pills */}
-        <div className="px-6 py-4 overflow-x-auto no-scrollbar">
-           <div className="flex gap-3 whitespace-nowrap min-w-max">
-              <button
-                onClick={() => setActiveCategory("all")}
-                className={cn(
-                  "px-6 py-2.5 rounded-full text-xs font-bold transition-all border",
-                  activeCategory === "all" 
-                    ? "bg-black text-white border-black" 
-                    : "bg-white text-gray-400 border-gray-100 hover:bg-gray-50"
-                )}
-              >
-                All Items
-              </button>
-              {categories.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={cn(
-                    "px-6 py-2.5 rounded-full text-xs font-bold transition-all border",
-                    activeCategory === cat.id 
-                      ? "bg-black text-white border-black" 
-                      : "bg-white text-gray-400 border-gray-100 hover:bg-gray-50"
-                  )}
-                >
-                  {cat.name}
-                </button>
-              ))}
-           </div>
-        </div>
-
-        {/* Featured Items Carousel/Grid */}
-        <div className="px-6 mt-4 flex flex-col gap-6">
+        {/* 2-Column Grid of Items */}
+        <div className="px-4 mt-4 grid grid-cols-2 gap-3 pb-20">
            {filteredItems.map((item, index) => (
              <motion.div 
                key={item.id}
-               initial={{ opacity: 0, x: index === 0 ? 0 : 50 }}
-               animate={{ opacity: 1, x: 0 }}
-               className="relative w-full h-[450px] rounded-[2.5rem] overflow-hidden shadow-2xl group cursor-pointer"
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               transition={{ delay: index * 0.05 }}
+               className="relative w-full h-72 rounded-[2rem] overflow-hidden shadow-lg group cursor-pointer"
              >
                 <Image 
                   src={item.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} 
@@ -167,44 +137,44 @@ export default function PublicMenuPage() {
                   fill 
                   className="object-cover transition-transform duration-700 group-hover:scale-110"
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-transparent to-transparent"></div>
-                <div className="absolute bottom-8 left-8 right-8">
-                   <h3 className="text-white text-lg font-bold mb-1">{item.name}</h3>
-                   <div className="flex items-center gap-2">
-                      <span className="text-white/60 text-xs font-medium">price:</span>
-                      <span className="text-white font-bold">{item.price} {restaurant?.themeColor?.includes('$') ? '' : 'B'}</span>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent"></div>
+                <div className="absolute bottom-4 left-4 right-4">
+                   <h3 className="text-white text-xs font-bold mb-1 line-clamp-1">{item.name}</h3>
+                   <div className="flex items-center gap-1">
+                      <span className="text-white font-black text-sm">{item.price}</span>
                    </div>
                 </div>
-                
-                {/* Side peek for next item effect on desktop/mobile */}
-                {index === 0 && filteredItems.length > 1 && (
-                   <div className="absolute top-10 -right-20 w-32 h-[400px] rounded-[2rem] overflow-hidden blur-[1px] opacity-40">
-                      <Image src={filteredItems[1].imageUrl} alt="Next" fill className="object-cover" />
-                   </div>
-                )}
              </motion.div>
            ))}
         </div>
 
-        {/* Floating Bottom Navigation */}
+        {/* Dynamic Bottom Category Navigation */}
         <div className="fixed bottom-6 inset-x-0 flex justify-center px-6 z-50">
-           <div className="bg-gray-100/80 backdrop-blur-xl p-2 rounded-[2.5rem] flex items-center justify-between gap-1 shadow-xl border border-white/20 w-full max-w-sm">
-              <button className="flex-1 flex flex-col items-center justify-center gap-1 py-4 bg-black text-white rounded-[2rem] transition-all">
-                 <Utensils className="h-5 w-5" />
-                 <span className="text-[10px] font-bold">Main dish</span>
+           <div className="bg-gray-100/90 backdrop-blur-xl p-2 rounded-[2.5rem] flex items-center gap-2 shadow-xl border border-white/20 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth">
+              <button 
+                onClick={() => setActiveCategory("all")}
+                className={cn(
+                  "flex-shrink-0 flex flex-col items-center justify-center gap-1 px-5 py-3 rounded-[2rem] transition-all",
+                  activeCategory === "all" ? "bg-black text-white" : "text-gray-400 hover:bg-white"
+                )}
+              >
+                 <LayoutGrid className="h-4 w-4" />
+                 <span className="text-[8px] font-black uppercase tracking-widest">All</span>
               </button>
-              <button className="flex-1 flex flex-col items-center justify-center gap-1 py-4 text-gray-400 hover:bg-white rounded-[2rem] transition-all">
-                 <Soup className="h-5 w-5" />
-                 <span className="text-[10px] font-bold">Appetizer</span>
-              </button>
-              <button className="flex-1 flex flex-col items-center justify-center gap-1 py-4 text-gray-400 hover:bg-white rounded-[2rem] transition-all">
-                 <IceCream className="h-5 w-5" />
-                 <span className="text-[10px] font-bold">Desserts</span>
-              </button>
-              <button className="flex-1 flex flex-col items-center justify-center gap-1 py-4 text-gray-400 hover:bg-white rounded-[2rem] transition-all">
-                 <Coffee className="h-5 w-5" />
-                 <span className="text-[10px] font-bold">Drink</span>
-              </button>
+              
+              {categories.map((cat) => (
+                <button 
+                  key={cat.id}
+                  onClick={() => setActiveCategory(cat.id)}
+                  className={cn(
+                    "flex-shrink-0 flex flex-col items-center justify-center gap-1 px-5 py-3 rounded-[2rem] transition-all",
+                    activeCategory === cat.id ? "bg-black text-white" : "text-gray-400 hover:bg-white"
+                  )}
+                >
+                   <Utensils className="h-4 w-4" />
+                   <span className="text-[8px] font-black uppercase tracking-widest">{cat.name}</span>
+                </button>
+              ))}
            </div>
         </div>
 
