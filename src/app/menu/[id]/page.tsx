@@ -291,8 +291,8 @@ export default function PublicMenuPage() {
                   <div className="relative aspect-[4/5] rounded-[3.5rem] overflow-hidden bg-[#1A1A1A] shadow-2xl border border-white/5 mb-4 transition-all duration-500 group-hover:border-[#196F03]/30">
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
-                    <div className="absolute top-6 right-6 bg-[#196F03] px-4 py-2 rounded-full shadow-[0_0_20px_rgba(25,111,3,0.4)] border border-white/10">
-                      <span className="text-[11px] font-bold text-white tracking-tight">{item.price}</span>
+                    <div className="absolute top-6 right-6 bg-[#196F03] px-4 py-2 rounded-full shadow-[0_0_25px_rgba(25,111,3,0.6)] border border-white/20">
+                      <span className="text-[12px] font-bold text-white tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                     </div>
                     <div className="absolute bottom-8 left-8 right-8">
                       <h3 className="font-serif text-2xl text-white mb-2 line-clamp-1">{item.name}</h3>
@@ -373,6 +373,12 @@ export default function PublicMenuPage() {
                               fill
                               className="object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000"
                             />
+                            {/* Price Tag - Highlighted in Green */}
+                          <div className="absolute top-4 right-4 z-20 bg-[#196F03] px-4 py-2 rounded-full shadow-[0_0_20px_rgba(25,111,3,0.5)] border border-white/20">
+                            <span className="text-[14px] font-bold text-white tracking-tight">
+                              ₹{item.price.replace(/[^0-9.]/g, '')}
+                            </span>
+                          </div>
                             {item.isPopular && (
                               <div className="absolute top-4 left-4 bg-yellow-400 p-2 rounded-xl shadow-lg border border-yellow-300 z-10">
                                 <Star className="h-3 w-3 text-white fill-white" />
@@ -392,7 +398,6 @@ export default function PublicMenuPage() {
                                   <div className="h-full w-full bg-red-600 rounded-full" />
                                 </div>
                               )}
-                              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-widest">{item.price}</span>
                             </div>
                             <h3 className="text-2xl font-serif text-white tracking-tight leading-tight group-hover:text-[#196F03] transition-colors">{item.name}</h3>
                             <p className="text-gray-500 text-xs leading-relaxed line-clamp-2">{item.description}</p>
@@ -477,7 +482,7 @@ export default function PublicMenuPage() {
                   <div className="pt-12 space-y-10 border-t border-white/5">
                     <div className="flex items-baseline justify-between px-2">
                       <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.4em]">Total Value</span>
-                      <span className="text-5xl font-serif text-white tracking-tight">{selectedItem.price}</span>
+                      <span className="text-5xl font-serif text-white tracking-tight">₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
                     </div>
 
                     <div className="flex gap-4">
