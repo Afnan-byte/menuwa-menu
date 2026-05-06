@@ -352,11 +352,6 @@ export default function PublicMenuPage() {
                               fill
                               className="object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000"
                             />
-                            {item.isPopular && (
-                              <div className="absolute top-4 left-4 bg-yellow-400 p-2 rounded-xl shadow-lg border border-yellow-300 z-10">
-                                <Star className="h-3 w-3 text-white fill-white" />
-                              </div>
-                            )}
                           </div>
 
                           <div className="col-span-8 space-y-4 pt-2">
@@ -376,6 +371,12 @@ export default function PublicMenuPage() {
                               <span className="text-[15px] font-bold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                             </div>
                             <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
+                            {item.isPopular && (
+                              <div className="flex items-center gap-1 text-yellow-500">
+                                <Star className="h-3 w-3 fill-yellow-500" />
+                                <span className="text-[10px] font-bold uppercase tracking-widest">Bestseller</span>
+                              </div>
+                            )}
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
                             <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#196F03] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
                               Discover <ArrowRight className="h-3.5 w-3.5" />
