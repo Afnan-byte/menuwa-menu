@@ -324,7 +324,7 @@ export default function PublicMenuPage() {
                 className="space-y-12"
               >
                 <div className={cn("flex items-end justify-between px-2 border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
-                  <h2 className={cn("text-4xl font-serif tracking-tight leading-none", isDark ? "text-white" : "text-gray-900")}>
+                  <h2 className={cn("text-4xl font-serif tracking-tight leading-none uppercase", isDark ? "text-white" : "text-gray-900")}>
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
@@ -441,16 +441,7 @@ export default function PublicMenuPage() {
                     <h2 className={cn("text-5xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
                     <p className="text-gray-500 text-lg leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
 
-                    <div className={cn("grid grid-cols-2 gap-8 pt-6 border-t", isDark ? "border-white/5" : "border-gray-100")}>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Nutrients</span>
-                        <span className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>450 Calories</span>
-                      </div>
-                      <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Delivery Time</span>
-                        <span className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>Approx. 20m</span>
-                      </div>
-                    </div>
+
                   </div>
 
                   <div className={cn("pt-12 space-y-10 border-t", isDark ? "border-white/5" : "border-gray-100")}>
