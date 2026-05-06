@@ -41,9 +41,9 @@ export default function Sidebar() {
   return (
     <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans">
       <div className="p-8 mb-4">
-        <Link href="/dashboard" className="flex items-center gap-3 group">
-          <div className="bg-primary p-2.5 rounded-2xl group-hover:rotate-12 transition-transform shadow-lg shadow-primary/10">
-            <QrCode className="h-6 w-6 text-white" />
+        <Link href="/dashboard" className="flex items-center gap-4 group">
+          <div className="relative h-10 w-10 overflow-hidden">
+             <img src="/logo.svg" alt="Menuvo" className="h-full w-full object-contain group-hover:scale-110 transition-transform" />
           </div>
           <span className="text-2xl font-black text-primary tracking-tighter">Menuvo</span>
         </Link>
