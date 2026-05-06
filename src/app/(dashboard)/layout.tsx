@@ -4,7 +4,8 @@ import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import Sidebar from "@/components/Sidebar";
-import { Loader2, Bell, Search } from "lucide-react";
+import { Loader2, Search, User as UserIcon } from "lucide-react";
+import Link from "next/link";
 
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
@@ -41,18 +42,18 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
           <div className="flex items-center gap-6">
-            <button className="p-2.5 bg-gray-50 text-gray-400 hover:text-primary rounded-xl transition-all hover:scale-110">
-              <Bell className="h-5 w-5" />
-            </button>
-            <div className="flex items-center gap-3 pl-2 border-l border-gray-100">
+            <Link 
+              href="/settings"
+              className="flex items-center gap-3 pl-2 transition-all hover:opacity-70"
+            >
               <div className="text-right hidden sm:block">
                 <p className="text-sm font-black text-primary leading-none">{user.displayName || "Restaurant Owner"}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Premium Plan</p>
+                <p className="text-[10px] text-brand-green font-bold uppercase tracking-wider mt-1">Update Profile</p>
               </div>
               <div className="h-11 w-11 rounded-2xl bg-brand-green/10 flex items-center justify-center text-brand-green font-black text-lg shadow-sm border border-brand-green/10">
-                {user.displayName?.charAt(0) || "U"}
+                {user.displayName?.charAt(0) || <UserIcon className="h-5 w-5" />}
               </div>
-            </div>
+            </Link>
           </div>
         </header>
 
