@@ -30,7 +30,8 @@ import {
   Maximize2,
   Circle,
   Leaf,
-  Flame
+  Flame,
+  Star
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
