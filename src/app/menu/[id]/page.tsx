@@ -81,8 +81,6 @@ export default function PublicMenuPage() {
 
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
-  const heroY = useTransform(scrollY, [0, 300], [0, 80]);
-  const heroOpacity = useTransform(scrollY, [0, 300], [1, 0.4]);
 
   const themeColor = restaurant?.themeColor || "#196F03";
   const themeRgb = useMemo(() => hexToRgb(themeColor), [themeColor]);
@@ -155,7 +153,6 @@ export default function PublicMenuPage() {
     window.open(`https://wa.me/${restaurant.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
-  const heroImage = restaurant?.bannerUrl || items[0]?.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070";
 
   return (
     <div
@@ -165,22 +162,12 @@ export default function PublicMenuPage() {
     >
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
 
-        {/* Cinematic Floating Hero */}
-        <header className="relative h-[600px] w-full overflow-hidden">
-          {/* Background Layer */}
-          <motion.div style={{ y: heroY, opacity: heroOpacity }} className="absolute inset-0">
-            <Image
-              src={heroImage}
-              alt="Hero"
-              fill
-              className="object-cover scale-110"
-              priority
-            />
-          </motion.div>
-          
-          {/* Dynamic Overlays */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-transparent to-[#0A0A0A]"></div>
-          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.1),transparent_70%)]"></div>
+        {/* Cinematic Branding Header */}
+        <header className="relative py-24 w-full overflow-hidden flex flex-col items-center justify-center">
+          {/* Dynamic Background Layer */}
+          <div className="absolute inset-0 bg-[#0A0A0A]"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)]"></div>
+          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent"></div>
 
           {/* Top Actions */}
           <div className="absolute top-10 right-6 flex gap-3 z-30">
@@ -250,8 +237,6 @@ export default function PublicMenuPage() {
               </div>
             </motion.div>
           </div>
-          
-          <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-[#0A0A0A] to-transparent"></div>
         </header>
 
         {/* Search & Filters - Dark Glass */}
