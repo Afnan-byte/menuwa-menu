@@ -53,7 +53,7 @@ export default function PublicMenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
-  const themeColor = restaurant?.themeColor || "#14B8A6";
+  const themeColor = restaurant?.themeColor || "#196F03";
 
   useEffect(() => {
     if (id) {
@@ -94,20 +94,17 @@ export default function PublicMenuPage() {
         <motion.div
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full"
+          className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full animate-spin"
         />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFF] font-sans selection:bg-gray-100 pb-32">
-      <style jsx global>{`
-        :root {
-          --brand-primary: ${themeColor};
-        }
-      `}</style>
-
+    <div 
+      className="min-h-screen bg-[#FAFBFF] font-sans selection:bg-gray-100 pb-32"
+      style={{ "--brand-primary": themeColor } as any}
+    >
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-[0_0_100px_rgba(0,0,0,0.05)]">
 
         {/* Header Section */}
@@ -122,12 +119,12 @@ export default function PublicMenuPage() {
               <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
             </div>
           </motion.div>
-          <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{restaurant?.restaurantName || "Menuvo"}</h1>
+          <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{restaurant?.restaurantName || "Menu"}</h1>
           <p className="text-gray-400 text-[10px] uppercase font-black tracking-[0.3em] mt-3 bg-gray-50 px-4 py-1 rounded-full">Culinary Excellence</p>
         </header>
 
         {/* 2-Column Grid */}
-        <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-12 pt-6 pb-20">
+        <div className="px-6 grid grid-cols-2 gap-x-5 gap-y-16 pt-6 pb-20">
           <AnimatePresence mode="popLayout">
             {filteredItems.map((item, index) => (
               <motion.div
@@ -137,19 +134,21 @@ export default function PublicMenuPage() {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 transition={{ delay: index * 0.05 }}
-                className="relative group cursor-pointer"
+                className="relative group cursor-pointer flex flex-col items-center"
                 onClick={() => setSelectedItem(item)}
               >
-                <div className="relative w-full h-64 rounded-[3rem] overflow-hidden shadow-2xl transition-all duration-500 border border-gray-50">
+                <div className="relative w-full aspect-square rounded-full overflow-hidden shadow-2xl transition-all duration-500 border-4 border-white ring-1 ring-gray-100 group-hover:ring-brand-primary/20">
                   <Image src={item.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} alt={item.name} fill className="object-cover transition-transform duration-1000 group-hover:scale-125" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent"></div>
-                  <div className="absolute top-4 right-4 z-10 px-3 py-1 backdrop-blur-md rounded-full border border-white/20 shadow-sm transition-transform" style={{ backgroundColor: `${themeColor}cc` }}>
-                    <span className="text-[10px] font-black text-white">{item.price}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+                  
+                  <div className="absolute top-2 right-2 z-10 px-2 py-0.5 backdrop-blur-md rounded-full border border-white/20 shadow-sm" style={{ backgroundColor: `${themeColor}cc` }}>
+                    <span className="text-[8px] font-black text-white">{item.price}</span>
                   </div>
-                  <div className="absolute bottom-6 left-6 right-6">
-                    <h3 className="text-white text-sm font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
-                    <p className="text-white/40 text-[8px] font-black uppercase tracking-widest line-clamp-1">View Details</p>
-                  </div>
+                </div>
+                
+                <div className="mt-4 text-center">
+                  <h3 className="text-gray-900 text-xs font-black tracking-tight mb-0.5 line-clamp-1">{item.name}</h3>
+                  <p className="text-gray-400 text-[7px] font-black uppercase tracking-widest">Details</p>
                 </div>
               </motion.div>
             ))}
