@@ -27,7 +27,6 @@
 @layer base {
   * {
     font-family: var(--font-outfit), 'Outfit', sans-serif;
-    color-scheme: dark;
   }
   
   .font-serif, .font-serif * {
@@ -36,9 +35,9 @@
 }
 
 :root {
-  --background: #0A0A0A;
-  --foreground: #FFFFFF;
-  --primary: #FFFFFF;
+  --background: #FFFFFF;
+  --foreground: #0A161E;
+  --primary: #0A161E;
   --accent: #196F03;
 }
 
@@ -49,6 +48,7 @@ body {
   letter-spacing: -0.01em;
   overflow-x: hidden;
 }
+
 
 .glass-card {
   background: rgba(255, 255, 255, 0.03);
