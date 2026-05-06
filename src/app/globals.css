@@ -1,11 +1,11 @@
 @import "tailwindcss";
 
 @theme {
-  --color-primary: #0A0A0A;
+  --color-primary: #0A161E;
   --color-brand-orange: #196F03;
   --color-brand-green: #196F03;
   --color-accent: #196F03;
-  --color-background-soft: #0F0F0F;
+  --color-background-soft: #F9FAFB;
 
   --radius-2xl: 1.25rem;
   --radius-3xl: 2rem;
