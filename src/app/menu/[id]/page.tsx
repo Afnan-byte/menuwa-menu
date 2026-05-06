@@ -188,43 +188,11 @@ export default function PublicMenuPage() {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: 0.1 }}
-              className="space-y-2"
+              className="mt-4 mb-4"
             >
-              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em] mb-1 block">Premium Dining</span>
               <h1 className="text-4xl sm:text-5xl font-serif text-white tracking-tight leading-none drop-shadow-2xl px-2">
                 {restaurant?.restaurantName || "Menu"}
               </h1>
-              <p className="text-gray-400 font-medium text-xs max-w-[280px] leading-relaxed mx-auto opacity-70 italic font-serif mt-2 line-clamp-1">
-                "{restaurant?.description || "Experience the finest flavors and culinary excellence."}"
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className="flex items-center gap-4 mt-6 mb-2"
-            >
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
-                  <Star className="h-4 w-4 text-yellow-400 fill-yellow-400" />
-                </div>
-                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">4.9 Rare</span>
-              </div>
-              <div className="h-8 w-[1px] bg-white/10" />
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
-                  <Clock className="h-4 w-4 text-[#196F03]" />
-                </div>
-                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Fast Prep</span>
-              </div>
-              <div className="h-8 w-[1px] bg-white/10" />
-              <div className="flex flex-col items-center gap-1.5">
-                <div className="h-10 w-10 bg-white/5 backdrop-blur-xl rounded-[14px] border border-white/10 flex items-center justify-center shadow-lg">
-                  <Info className="h-4 w-4 text-blue-400" />
-                </div>
-                <span className="text-[8px] font-bold uppercase tracking-widest text-gray-500">Fine Dine</span>
-              </div>
             </motion.div>
           </div>
         </header>
