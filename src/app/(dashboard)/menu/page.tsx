@@ -53,6 +53,7 @@ interface MenuItem {
   isAvailable: boolean;
   tags: string[];
   dietaryType?: "veg" | "non-veg" | "none";
+  isPopular?: boolean;
 }
 
 export default function MenuPage() {
