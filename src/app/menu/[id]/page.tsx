@@ -372,8 +372,7 @@ export default function PublicMenuPage() {
                             </div>
                             <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
                             {item.isPopular && (
-                              <div className="flex items-center gap-1 text-yellow-500">
-                                <Star className="h-3 w-3 fill-yellow-500" />
+                              <div className="flex items-center text-yellow-500">
                                 <span className="text-[10px] font-bold uppercase tracking-widest">Bestseller</span>
                               </div>
                             )}
