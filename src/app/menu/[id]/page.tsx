@@ -201,7 +201,7 @@ export default function PublicMenuPage() {
               animate={{ y: 0, opacity: 1 }}
               className="text-5xl font-serif text-white tracking-tight leading-tight"
             >
-              {restaurant?.restaurantName || "Menu"}
+              {(restaurant?.restaurantName || "Menu") + " (MODERN DARK)"}
             </motion.h1>
             <motion.p
               initial={{ y: 10, opacity: 0 }}
