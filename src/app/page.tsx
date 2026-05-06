@@ -3,24 +3,24 @@
 import Link from "next/link";
 import { ArrowRight, QrCode, Menu as MenuIcon, LayoutDashboard, Settings } from "lucide-react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans">
       {/* Header */}
-      <header className="px-10 h-20 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
-        <Link className="flex items-center justify-center group" href="#">
-          <div className="bg-primary p-2 rounded-xl mr-3 group-hover:rotate-12 transition-transform shadow-lg shadow-primary/10">
-            <QrCode className="h-6 w-6 text-white" />
+      <header className="px-10 h-24 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
+        <Link className="flex items-center justify-center group" href="/">
+          <div className="relative h-14 w-14 mr-3 group-hover:scale-110 transition-transform">
+            <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
           </div>
-          <span className="text-2xl font-black tracking-tighter text-primary">Menuvo</span>
         </Link>
         <nav className="ml-auto flex items-center gap-8">
-          <Link className="text-sm font-bold text-gray-500 hover:text-primary transition-colors" href="/login">
+          <Link className="text-sm font-bold text-gray-500 hover:text-[#196F03] transition-colors" href="/login">
             Login
           </Link>
           <Link 
-            className="text-sm font-black bg-brand-green text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-green/20" 
+            className="text-sm font-black bg-[#196F03] text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-[#196F03]/20" 
             href="/signup"
           >
             Get Started
@@ -32,7 +32,7 @@ export default function Home() {
         {/* Hero Section */}
         <section className="w-full py-24 md:py-32 lg:py-48 bg-background-soft relative overflow-hidden">
           {/* Background Elements */}
-          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-brand-green/5 blur-[120px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
+          <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#196F03]/5 blur-[120px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full -translate-x-1/4 translate-y-1/4"></div>
           
           <div className="container px-4 md:px-6 mx-auto relative z-10">
@@ -45,7 +45,7 @@ export default function Home() {
               >
                 <h1 className="text-5xl font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-primary">
                   Modernize Your <br />
-                  <span className="text-brand-green">Digital Experience</span>
+                  <span className="text-[#196F03]">Digital Experience</span>
                 </h1>
                 <p className="mx-auto max-w-[600px] text-gray-400 text-lg md:text-xl font-medium leading-relaxed">
                   The simplest way to create, manage, and share your menu via QR codes.
@@ -60,7 +60,7 @@ export default function Home() {
               >
                 <Link
                   href="/signup"
-                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-primary px-10 text-sm font-black text-white shadow-2xl shadow-primary/20 transition-all hover:scale-105"
+                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-[#196F03] px-10 text-sm font-black text-white shadow-2xl shadow-[#196F03]/20 transition-all hover:scale-105"
                 >
                   Create Your Menu <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
@@ -80,17 +80,17 @@ export default function Home() {
           <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-10 lg:grid-cols-3">
               <FeatureCard 
-                icon={<MenuIcon className="h-10 w-10 text-brand-green" />}
+                icon={<MenuIcon className="h-10 w-10 text-[#196F03]" />}
                 title="Smart Menu Manager"
                 description="Upload items, set prices, and manage categories with our intuitive cloud-based builder."
               />
               <FeatureCard 
-                icon={<QrCode className="h-10 w-10 text-brand-green" />}
+                icon={<QrCode className="h-10 w-10 text-[#196F03]" />}
                 title="Instant QR Export"
                 description="Get high-resolution QR codes for your restaurant instantly. Ready for print and digital use."
               />
               <FeatureCard 
-                icon={<LayoutDashboard className="h-10 w-10 text-brand-green" />}
+                icon={<LayoutDashboard className="h-10 w-10 text-[#196F03]" />}
                 title="Live Synchronization"
                 description="Update prices or availability in real-time. Changes reflect instantly on customer devices."
               />
@@ -101,16 +101,15 @@ export default function Home() {
 
       <footer className="py-20 border-t border-gray-50 bg-background-soft">
         <div className="container px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <div className="flex items-center gap-3">
-            <div className="bg-primary p-2 rounded-xl">
-              <QrCode className="h-6 w-6 text-white" />
+          <Link className="flex items-center gap-3 group" href="/">
+            <div className="relative h-12 w-12 group-hover:rotate-12 transition-transform">
+              <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
             </div>
-            <span className="text-2xl font-black text-primary tracking-tighter">Menuvo</span>
-          </div>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">© 2024 Menuvo. All rights reserved.</p>
+          </Link>
+          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">© 2026 Menuvo. All rights reserved.</p>
           <div className="flex gap-8">
-            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-primary transition-colors">Terms of Service</Link>
+            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-[#196F03] transition-colors">Privacy Policy</Link>
+            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-[#196F03] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
