@@ -125,13 +125,6 @@ export default function PublicMenuPage() {
                 placeholder="Search" 
                 className="w-full pl-14 pr-6 py-4 bg-gray-50 border-none rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none"
               />
-              <div className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white rounded-xl shadow-sm cursor-pointer">
-                <div className="h-4 w-4 text-brand-orange flex flex-col gap-0.5">
-                   <div className="h-0.5 w-full bg-brand-orange rounded-full"></div>
-                   <div className="h-0.5 w-2/3 bg-brand-orange rounded-full"></div>
-                   <div className="h-0.5 w-full bg-brand-orange rounded-full"></div>
-                </div>
-              </div>
            </div>
         </div>
 
