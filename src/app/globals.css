@@ -2,8 +2,10 @@
 
 @theme {
   --color-primary: #0A161E;
-  --color-brand-orange: #196F03; /* Primary Green */
-  --color-brand-green: #196F03; /* Primary Green */
+  --color-brand-orange: #196F03;
+  /* Primary Green */
+  --color-brand-green: #196F03;
+  /* Primary Green */
   --color-accent: #196F03;
   --color-background-soft: #FFFFFF;
 
@@ -28,6 +30,10 @@
   * {
     font-family: 'Outfit', sans-serif !important;
   }
+}
+
+.font-serif, .font-serif * {
+  font-family: var(--font-serif) !important;
 }
 
 :root {
