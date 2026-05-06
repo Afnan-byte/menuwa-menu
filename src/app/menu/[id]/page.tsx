@@ -402,40 +402,6 @@ export default function PublicMenuPage() {
           })}
         </div>
 
-        {/* Floating Category Dock - High Contrast */}
-        <div className="fixed bottom-10 inset-x-0 flex justify-center px-6 z-[60]">
-          <motion.div
-            initial={{ y: 100 }}
-            animate={{ y: 0 }}
-            className="bg-[#1A1A1A]/90 backdrop-blur-3xl p-2 rounded-[3rem] flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.5)] border border-white/10 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth"
-          >
-            <button
-              onClick={() => setActiveCategory("all")}
-              className={cn(
-                "flex-shrink-0 flex items-center gap-3 px-8 py-5 rounded-[2.5rem] transition-all duration-500",
-                activeCategory === "all" ? "text-white shadow-lg" : "text-gray-500 hover:text-gray-300"
-              )}
-              style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}
-            >
-              <LayoutGrid className="h-4 w-4" />
-              <span className="text-[10px] font-bold uppercase tracking-widest">Discover</span>
-            </button>
-            {categories.map((cat) => (
-              <button
-                key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
-                className={cn(
-                  "flex-shrink-0 flex items-center gap-3 px-8 py-5 rounded-[2.5rem] transition-all duration-500",
-                  activeCategory === cat.id ? "text-white shadow-lg" : "text-gray-500 hover:text-gray-300"
-                )}
-                style={activeCategory === cat.id ? { backgroundColor: themeColor } : {}}
-              >
-                <Utensils className="h-4 w-4" />
-                <span className="text-[10px] font-bold uppercase tracking-widest">{cat.name}</span>
-              </button>
-            ))}
-          </motion.div>
-        </div>
 
         {/* Item Details Immersive Modal - Premium Dark */}
         <AnimatePresence>
