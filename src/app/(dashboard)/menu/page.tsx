@@ -541,7 +541,7 @@ export default function MenuPage() {
             </motion.div>
           </div>
         )}
-      </div>
+      </AnimatePresence>
     </div>
   );
 }
