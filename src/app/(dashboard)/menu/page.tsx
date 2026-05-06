@@ -21,14 +21,14 @@ import {
   Search,
   Loader2,
   X,
-  Filter,
-  MoreVertical,
   Settings2,
   ChevronRight,
   LayoutGrid,
   List,
   Globe,
-  Trash2
+  Trash2,
+  Eye,
+  Maximize2
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -63,6 +63,7 @@ export default function MenuPage() {
   // Modals
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -131,24 +132,16 @@ export default function MenuPage() {
 
     setIsSaving(true);
     try {
-      // Use a batch to delete category and its items
       const batch = writeBatch(db);
-
-      // Delete Category
       batch.delete(doc(db, "categories", catId));
-
-      // Delete all items in this category
       const categoryItems = items.filter(i => i.categoryId === catId);
       categoryItems.forEach(item => {
         batch.delete(doc(db, "items", item.id));
       });
-
       await batch.commit();
-
       setCategories(categories.filter(c => c.id !== catId));
       setItems(items.filter(i => i.categoryId !== catId));
       if (activeCategory === catId) setActiveCategory("all");
-
       toast.success("Category and items removed");
     } catch (error) {
       toast.error("Deletion failed");
@@ -266,11 +259,6 @@ export default function MenuPage() {
                     </div>
                     <span className="text-xs font-black truncate max-w-[120px]">{cat.name}</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <span className={cn("text-[10px] font-black", activeCategory === cat.id ? "text-white/80" : "text-gray-300")}>
-                      {items.filter(i => i.categoryId === cat.id).length}
-                    </span>
-                  </div>
                 </button>
                 <button
                   onClick={(e) => handleDeleteCategory(cat.id, e)}
@@ -289,7 +277,11 @@ export default function MenuPage() {
             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
               <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-3">Menu Visibility</p>
               <h4 className="text-sm font-black text-primary mb-4 leading-tight">Your menu is live and accepting scans</h4>
-              <button className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all">
+              <button 
+                onClick={() => setIsPreviewOpen(true)}
+                className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all flex items-center justify-center gap-2"
+              >
+                <Eye className="h-3 w-3" />
                 View Live Menu
               </button>
             </div>
@@ -299,7 +291,6 @@ export default function MenuPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-8">
-        {/* Modern Header Section */}
         <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
           <div>
             <h1 className="text-4xl font-black text-primary tracking-tighter">Menu Manager</h1>
@@ -307,7 +298,6 @@ export default function MenuPage() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
-            {/* Search Bar */}
             <div className="relative w-full sm:w-80 group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-orange transition-colors" />
               <input
@@ -331,19 +321,13 @@ export default function MenuPage() {
                 <Plus className="h-5 w-5" />
                 Add New Item
               </button>
-              <button className="p-4 bg-white border border-gray-100 rounded-[2rem] text-gray-400 hover:text-primary hover:bg-gray-50 transition-all shadow-sm">
-                <Settings2 className="h-5 w-5" />
-              </button>
             </div>
           </div>
         </div>
 
-        {/* View Controls */}
         <div className="flex items-center justify-between border-b border-gray-100 pb-6">
           <div className="flex items-center gap-6">
             <button className="text-xs font-black text-brand-orange border-b-2 border-brand-orange pb-6 -mb-[26px]">All Dishes</button>
-            <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Available</button>
-            <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Sold Out</button>
           </div>
           <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
             <button
@@ -361,7 +345,6 @@ export default function MenuPage() {
           </div>
         </div>
 
-        {/* Items Grid */}
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
             <Loader2 className="h-12 w-12 animate-spin text-brand-orange mb-4" />
@@ -387,28 +370,9 @@ export default function MenuPage() {
             ))}
           </div>
         ) : (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50 group hover:border-brand-orange/10 transition-colors"
-          >
-            <div className="h-24 w-24 rounded-[2.5rem] bg-gray-50 flex items-center justify-center mb-8 group-hover:scale-110 group-hover:rotate-12 transition-all">
-              <Utensils className="h-12 w-12 text-gray-200" />
-            </div>
-            <p className="text-gray-400 font-black text-xl tracking-tight">No matching items found.</p>
-            <p className="text-gray-300 text-sm mt-2 max-w-[250px] text-center leading-relaxed">
-              Try adjusting your search or category filters to find what you're looking for.
-            </p>
-            <button
-              onClick={() => {
-                setSearchQuery("");
-                setActiveCategory("all");
-              }}
-              className="mt-8 bg-brand-orange text-white font-black hover:scale-105 transition-all px-8 py-3 rounded-2xl shadow-xl shadow-brand-orange/20"
-            >
-              Clear All Filters
-            </button>
-          </motion.div>
+          <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50">
+             <p className="text-gray-400 font-black text-xl tracking-tight">No items found.</p>
+          </div>
         )}
       </div>
 
@@ -422,35 +386,18 @@ export default function MenuPage() {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-[3rem] p-12 max-w-sm w-full shadow-2xl relative overflow-hidden"
             >
-              <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 rounded-full translate-x-10 -translate-y-10"></div>
-              <h2 className="text-3xl font-black text-primary mb-2 tracking-tight relative z-10">New Section</h2>
-              <p className="text-gray-400 text-sm mb-10 font-medium relative z-10">Organize your menu logically.</p>
-
-              <form onSubmit={handleAddCategory} className="space-y-8 relative z-10">
-                <div>
-                  <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Section Name</label>
-                  <input
-                    autoFocus
-                    type="text"
-                    placeholder="e.g. Signature Pizzas"
-                    className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                  />
-                </div>
+              <h2 className="text-3xl font-black text-primary mb-2 tracking-tight">New Section</h2>
+              <form onSubmit={handleAddCategory} className="space-y-8 mt-6">
+                <input
+                  type="text"
+                  placeholder="e.g. Signature Pizzas"
+                  className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary"
+                  value={newCategoryName}
+                  onChange={(e) => setNewCategoryName(e.target.value)}
+                />
                 <div className="flex gap-4">
-                  <button
-                    type="button"
-                    onClick={() => setIsCategoryModalOpen(false)}
-                    className="flex-1 py-5 font-black text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    Cancel
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSaving}
-                    className="flex-1 py-5 bg-primary text-white font-black rounded-2xl hover:bg-brand-orange transition-all shadow-xl shadow-primary/10 flex items-center justify-center disabled:opacity-70"
-                  >
+                  <button type="button" onClick={() => setIsCategoryModalOpen(false)} className="flex-1 py-5 font-black text-gray-400">Cancel</button>
+                  <button type="submit" disabled={isSaving} className="flex-1 py-5 bg-primary text-white font-black rounded-2xl shadow-xl shadow-primary/10 flex items-center justify-center">
                     {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create"}
                   </button>
                 </div>
@@ -468,101 +415,80 @@ export default function MenuPage() {
               className="bg-white rounded-[3rem] p-12 max-w-3xl w-full shadow-2xl max-h-[90vh] overflow-y-auto no-scrollbar relative"
             >
               <div className="flex justify-between items-center mb-10">
-                <div>
-                  <h2 className="text-4xl font-black text-primary tracking-tight">{editingItem ? "Edit Dish" : "Create Dish"}</h2>
-                  <p className="text-gray-400 text-sm font-medium mt-1">Perfect dishes deserve perfect descriptions.</p>
-                </div>
-                <button onClick={() => setIsItemModalOpen(false)} className="p-4 bg-gray-50 hover:bg-red-50 hover:text-red-500 rounded-2xl transition-all group">
-                  <X className="h-6 w-6 text-gray-300 group-hover:text-red-500" />
-                </button>
+                <h2 className="text-4xl font-black text-primary tracking-tight">{editingItem ? "Edit Dish" : "Create Dish"}</h2>
+                <button onClick={() => setIsItemModalOpen(false)} className="p-4 bg-gray-50 hover:bg-red-50 hover:text-red-500 rounded-2xl transition-all"><X className="h-6 w-6 text-gray-300" /></button>
               </div>
 
               <form onSubmit={handleItemSubmit} className="space-y-10">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Dish Name</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="e.g. Truffle Beef Burger"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                      value={itemForm.name}
-                      onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })}
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Price ($)</label>
-                    <input
-                      required
-                      type="text"
-                      placeholder="e.g. 18.00"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                      value={itemForm.price}
-                      onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })}
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Section / Category</label>
-                    <div className="relative">
-                      <select
-                        required
-                        className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none appearance-none cursor-pointer text-primary"
-                        value={itemForm.categoryId}
-                        onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })}
-                      >
-                        <option value="" disabled>Select a Section</option>
-                        {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
-                      </select>
-                      <ChevronRight className="absolute right-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 pointer-events-none rotate-90" />
-                    </div>
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Description</label>
-                    <textarea
-                      rows={4}
-                      placeholder="What makes this dish special? Mention key ingredients..."
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none resize-none text-primary placeholder:text-gray-300"
-                      value={itemForm.description}
-                      onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })}
-                    />
-                  </div>
-                  <div className="md:col-span-2">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Image URL</label>
-                    <div className="relative">
-                      <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                      <input
-                        type="text"
-                        className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                        placeholder="Paste image URL (Unsplash, Cloudinary, etc.)"
-                        value={itemForm.imageUrl}
-                        onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })}
-                      />
-                    </div>
-                  </div>
+                  <input required type="text" placeholder="Dish Name" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none text-primary" value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} />
+                  <input required type="text" placeholder="Price" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none text-primary" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} />
+                  <select required className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none text-primary" value={itemForm.categoryId} onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })}>
+                    <option value="" disabled>Select a Section</option>
+                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
+                  </select>
+                  <textarea rows={4} placeholder="Description" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none resize-none text-primary" value={itemForm.description} onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })} />
+                  <input type="text" placeholder="Image URL" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none text-primary" value={itemForm.imageUrl} onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })} />
                 </div>
-
                 <div className="flex gap-6 pt-6 border-t border-gray-50">
-                  <button
-                    type="button"
-                    onClick={() => setIsItemModalOpen(false)}
-                    className="flex-1 py-5 font-black text-gray-400 hover:text-gray-600 transition-colors"
-                  >
-                    Discard Changes
-                  </button>
-                  <button
-                    type="submit"
-                    disabled={isSaving}
-                    className="flex-[2] py-5 bg-brand-orange text-white font-black rounded-[1.5rem] hover:bg-orange-600 hover:scale-[1.02] transition-all shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-3 disabled:opacity-70"
-                  >
-                    {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : (
-                      <>
-                        <Plus className="h-6 w-6" />
-                        {editingItem ? "Save Changes" : "Create Menu Item"}
-                      </>
-                    )}
+                  <button type="button" onClick={() => setIsItemModalOpen(false)} className="flex-1 py-5 font-black text-gray-400">Discard</button>
+                  <button type="submit" disabled={isSaving} className="flex-[2] py-5 bg-brand-orange text-white font-black rounded-[1.5rem] shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-3">
+                    {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : (editingItem ? "Save Changes" : "Create Item")}
                   </button>
                 </div>
               </form>
+            </motion.div>
+          </div>
+        )}
+
+        {/* Live Preview Modal */}
+        {isPreviewOpen && (
+          <div className="fixed inset-0 bg-primary/90 backdrop-blur-2xl z-[200] flex flex-col items-center justify-center p-4 sm:p-10">
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.95, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 20 }}
+              className="relative w-full max-w-5xl h-full flex flex-col"
+            >
+               <div className="flex items-center justify-between mb-6 text-white">
+                  <div className="flex items-center gap-4">
+                     <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center">
+                        <Globe className="h-5 w-5 text-brand-orange" />
+                     </div>
+                     <div>
+                        <h2 className="text-xl font-black tracking-tight">Live Menu Preview</h2>
+                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Scanning this QR will show this exact view</p>
+                     </div>
+                  </div>
+                  <div className="flex items-center gap-3">
+                     <button 
+                       onClick={() => window.open(`/menu/${user?.uid}`, '_blank')}
+                       className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all group"
+                       title="Open in new tab"
+                     >
+                        <Maximize2 className="h-5 w-5 text-white/60 group-hover:text-white" />
+                     </button>
+                     <button 
+                       onClick={() => setIsPreviewOpen(false)}
+                       className="p-3 bg-white/10 hover:bg-red-500 rounded-xl transition-all group"
+                     >
+                        <X className="h-5 w-5 text-white/60 group-hover:text-white" />
+                     </button>
+                  </div>
+               </div>
+
+               <div className="flex-1 bg-white rounded-[3rem] overflow-hidden shadow-2xl relative">
+                  <iframe 
+                    src={`/menu/${user?.uid}`} 
+                    className="w-full h-full border-none"
+                    title="Menu Preview"
+                  />
+                  
+                  {/* Preview Label Overlay */}
+                  <div className="absolute bottom-10 left-1/2 -translate-x-1/2 px-8 py-3 bg-primary/80 backdrop-blur-md rounded-full text-white text-[10px] font-black uppercase tracking-[0.2em] pointer-events-none shadow-2xl border border-white/10">
+                     Interactive Preview Mode
+                  </div>
+               </div>
             </motion.div>
           </div>
         )}
