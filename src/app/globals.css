@@ -32,10 +32,6 @@
   }
 }
 
-.font-serif, .font-serif * {
-  font-family: var(--font-serif) !important;
-}
-
 :root {
   --background: #FFFFFF;
   --foreground: #0A161E;

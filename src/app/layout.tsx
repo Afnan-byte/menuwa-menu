@@ -9,11 +9,6 @@ const outfit = Outfit({
   subsets: ["latin"],
 });
 
-const playfair = Playfair_Display({
-  variable: "--font-playfair",
-  subsets: ["latin"],
-});
-
 export const metadata: Metadata = {
   title: "Menuvo - Digital Menu Solutions",
   description: "Modern QR-based digital menu for restaurants, cafes, and hotels.",
