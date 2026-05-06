@@ -15,7 +15,8 @@ import {
   Palette,
   Layout,
   CheckCircle2,
-  Star
+  Star,
+  Image as ImageIcon
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -39,6 +40,7 @@ export default function SettingsPage() {
     phone: "",
     whatsapp: "",
     logoUrl: "",
+    bannerUrl: "",
     themeColor: "#FF9F0D",
     googleReviewUrl: "",
   });
@@ -51,6 +53,7 @@ export default function SettingsPage() {
         phone: restaurantData.phone || "",
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
+        bannerUrl: restaurantData.bannerUrl || "",
         themeColor: restaurantData.themeColor || "#FF9F0D",
         googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
@@ -94,7 +97,14 @@ export default function SettingsPage() {
         {/* Left Column: Profile Card */}
         <div className="lg:col-span-1 space-y-8">
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group">
-            <div className="absolute top-0 inset-x-0 h-32 bg-gray-50 group-hover:bg-brand-orange/5 transition-colors"></div>
+            {/* Banner Preview */}
+            <div className="absolute top-0 inset-x-0 h-32 bg-gray-50 overflow-hidden">
+               {formData.bannerUrl ? (
+                 <img src={formData.bannerUrl} alt="Banner" className="h-full w-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
+               ) : (
+                 <div className="h-full w-full bg-gray-50 group-hover:bg-brand-orange/5 transition-colors"></div>
+               )}
+            </div>
 
             <div className="relative mt-12 mb-6">
               <div className="h-32 w-32 rounded-[2.5rem] bg-white p-2 shadow-2xl relative z-10 overflow-hidden">
@@ -138,7 +148,7 @@ export default function SettingsPage() {
               </div>
               <div>
                 <h3 className="text-xl font-black text-primary tracking-tight">Visual Identity</h3>
-                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-0.5">Customize your menu colors</p>
+                <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mt-0.5">Customize your menu colors & images</p>
               </div>
             </div>
 
@@ -198,17 +208,32 @@ export default function SettingsPage() {
                 </div>
               </div>
 
-              <div className="pt-8 border-t border-gray-50">
-                <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo URL</label>
-                <div className="relative">
-                  <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                  <input
-                    type="text"
-                    value={formData.logoUrl}
-                    onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                    className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                    placeholder="Paste your logo URL (e.g. from Cloudinary or Unsplash)"
-                  />
+              <div className="pt-8 border-t border-gray-50 grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo Image URL</label>
+                  <div className="relative">
+                    <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                    <input
+                      type="text"
+                      value={formData.logoUrl}
+                      onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
+                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
+                      placeholder="Paste your logo URL"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Hero Banner URL</label>
+                  <div className="relative">
+                    <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                    <input
+                      type="text"
+                      value={formData.bannerUrl}
+                      onChange={(e) => setFormData({ ...formData, bannerUrl: e.target.value })}
+                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
+                      placeholder="Paste your banner image URL"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -294,5 +319,24 @@ export default function SettingsPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+function ArrowRight({ className }: { className?: string }) {
+  return (
+    <svg 
+      className={className} 
+      xmlns="http://www.w3.org/2000/svg" 
+      width="24" 
+      height="24" 
+      viewBox="0 0 24 24" 
+      fill="none" 
+      stroke="currentColor" 
+      strokeWidth="2" 
+      strokeLinecap="round" 
+      strokeLinejoin="round"
+    >
+      <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
+    </svg>
   );
 }

@@ -51,6 +51,7 @@ interface MenuItem {
 interface Restaurant {
   restaurantName: string;
   logoUrl?: string;
+  bannerUrl?: string;
   description?: string;
   themeColor?: string;
   whatsapp?: string;
@@ -93,7 +94,6 @@ export default function PublicMenuPage() {
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id), where("isAvailable", "==", true));
       const itemSnap = await getDocs(itemQuery);
       
-      // Add some mock flags for "Attractive" UI if they don't exist
       const fetchedItems = itemSnap.docs.map((doc, idx) => ({ 
         id: doc.id, 
         ...doc.data(),
@@ -137,6 +137,8 @@ export default function PublicMenuPage() {
     window.open(`https://wa.me/${restaurant.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
   };
 
+  const heroImage = restaurant?.bannerUrl || items[0]?.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070";
+
   return (
     <div 
       className="min-h-screen bg-[#FAFAFA] font-sans selection:bg-[#196F03]/10 pb-32"
@@ -149,7 +151,7 @@ export default function PublicMenuPage() {
         <header className="relative h-[450px] w-full overflow-hidden">
           <motion.div style={{ y: heroY, scale: heroScale }} className="absolute inset-0">
             <Image 
-              src={items[0]?.imageUrl || "https://images.unsplash.com/photo-1504674900247-0877df9cc836?q=80&w=2070"} 
+              src={heroImage} 
               alt="Hero" 
               fill 
               className="object-cover"
@@ -241,7 +243,7 @@ export default function PublicMenuPage() {
                         )}
                       >
                         <div className={cn(
-                          "relative rounded-[3rem] overflow-hidden shadow-2xl bg-white border border-gray-50 transition-all duration-500",
+                          "relative rounded-[3rem] overflow-hidden shadow-2xl bg-white border border-gray-100 transition-all duration-500",
                           isFeatured ? "aspect-[16/10]" : "aspect-[4/5]"
                         )}>
                           <Image 
@@ -373,9 +375,6 @@ export default function PublicMenuPage() {
                       <span className="px-6 py-2.5 bg-gray-50 text-gray-400 text-[10px] font-black uppercase tracking-[0.25em] rounded-full border border-gray-100">
                         {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature"}
                       </span>
-                      <div className="h-10 w-10 bg-gray-50 rounded-2xl flex items-center justify-center text-gray-300">
-                        <Info className="h-5 w-5" />
-                      </div>
                     </div>
 
                     <h2 className="text-6xl font-black text-gray-900 tracking-tighter leading-[0.9]">{selectedItem.name}</h2>
@@ -395,7 +394,7 @@ export default function PublicMenuPage() {
                          onClick={() => setSelectedItem(null)}
                          className="col-span-1 h-20 bg-gray-50 text-gray-300 rounded-[2.5rem] flex items-center justify-center hover:bg-gray-100 transition-all"
                        >
-                         <ChevronRight className="h-6 w-6 rotate-180" />
+                         <ArrowRight className="h-6 w-6 rotate-180" />
                        </button>
                        {restaurant?.whatsapp && (
                          <button 
