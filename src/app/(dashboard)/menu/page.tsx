@@ -79,6 +79,7 @@ export default function MenuPage() {
     imageUrl: "",
     tags: [] as string[],
     dietaryType: "none" as "veg" | "non-veg" | "none",
+    isPopular: false,
   });
 
   useEffect(() => {
@@ -175,7 +176,7 @@ export default function MenuPage() {
       }
       setIsItemModalOpen(false);
       setEditingItem(null);
-      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none" });
+      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
     } catch (error: any) {
       toast.error("Database Error");
     } finally {
@@ -315,7 +316,7 @@ export default function MenuPage() {
               <button
                 onClick={() => {
                   setEditingItem(null);
-                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none" });
+                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
                   setIsItemModalOpen(true);
                 }}
                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-[#196F03] text-white font-bold rounded-[2rem] hover:bg-green-700 hover:scale-105 transition-all shadow-xl shadow-brand-green/30 whitespace-nowrap"
@@ -365,7 +366,8 @@ export default function MenuPage() {
                   setEditingItem(item);
                   setItemForm({ 
                     ...item, 
-                    dietaryType: item.dietaryType || "none" 
+                    dietaryType: item.dietaryType || "none",
+                    isPopular: item.isPopular || false
                   });
                   setIsItemModalOpen(true);
                 }}
@@ -488,6 +490,19 @@ export default function MenuPage() {
                         </button>
                       ))}
                     </div>
+                  </div>
+
+                  <div className="md:col-span-2 flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100">
+                    <div>
+                      <h3 className="text-sm font-bold text-primary flex items-center gap-2">
+                        <Star className="h-4 w-4 text-brand-orange" /> Mark as Top Selling Product
+                      </h3>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Display prominently at the top of your menu</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={itemForm.isPopular} onChange={(e) => setItemForm({ ...itemForm, isPopular: e.target.checked })} />
+                      <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#196F03]"></div>
+                    </label>
                   </div>
 
                   <div className="md:col-span-2">
