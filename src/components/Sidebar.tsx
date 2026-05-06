@@ -8,7 +8,7 @@ import {
   QrCode,
   Settings,
   LogOut,
-  User as UserIcon,
+  MessageCircle,
   ChevronRight
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -38,6 +38,9 @@ export default function Sidebar() {
     }
   };
 
+  const WHATSAPP_NUMBER = "918089685278";
+  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
+
   return (
     <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans">
       <div className="p-8 mb-4">
@@ -59,7 +62,7 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group",
                 isActive
-                  ? "bg-brand-green text-white shadow-xl shadow-brand-green/20 scale-[1.02]"
+                  ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/20 scale-[1.02]"
                   : "text-gray-500 hover:bg-gray-50 hover:text-primary"
               )}
             >
@@ -74,12 +77,21 @@ export default function Sidebar() {
       </nav>
 
       <div className="p-6 mt-auto">
-        <div className="bg-gray-50 rounded-3xl p-5 mb-6">
-          <p className="text-xs font-bold text-primary mb-1">Need help?</p>
-          <p className="text-[10px] text-gray-500 font-medium mb-3">Check our documentation or contact support.</p>
-          <button className="w-full py-2 bg-white border border-gray-200 rounded-xl text-[10px] font-black text-primary uppercase tracking-wider hover:bg-primary hover:text-white transition-all shadow-sm">
-            Support Center
-          </button>
+        <div className="bg-primary/5 rounded-3xl p-5 mb-6 border border-primary/5">
+          <div className="flex items-center gap-2 mb-2">
+            <div className="h-2 w-2 bg-[#196F03] rounded-full animate-pulse" />
+            <p className="text-xs font-black text-primary uppercase tracking-wider">Support Centre</p>
+          </div>
+          <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need instant help? Chat with our experts directly on WhatsApp.</p>
+          <a 
+            href={SUPPORT_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+          >
+            <MessageCircle className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
+            WhatsApp
+          </a>
         </div>
         <button
           onClick={handleLogout}
