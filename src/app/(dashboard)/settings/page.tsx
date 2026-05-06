@@ -22,7 +22,7 @@ import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 
 const THEME_COLORS = [
-  { name: "Savor Orange", color: "#FF9F0D", class: "bg-[#FF9F0D]" },
+  { name: "Eco Green", color: "#196F03", class: "bg-[#196F03]" },
   { name: "Emerald Green", color: "#10B981", class: "bg-[#10B981]" },
   { name: "Ocean Blue", color: "#3B82F6", class: "bg-[#3B82F6]" },
   { name: "Sunset Red", color: "#F43F5E", class: "bg-[#F43F5E]" },
@@ -39,7 +39,7 @@ export default function SettingsPage() {
     phone: "",
     whatsapp: "",
     logoUrl: "",
-    themeColor: "#FF9F0D",
+    themeColor: "#196F03",
     googleReviewUrl: "",
   });
 
@@ -51,7 +51,7 @@ export default function SettingsPage() {
         phone: restaurantData.phone || "",
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
-        themeColor: restaurantData.themeColor || "#FF9F0D",
+        themeColor: restaurantData.themeColor || "#196F03",
         googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
     }
@@ -181,7 +181,7 @@ export default function SettingsPage() {
                                 }
                               }}
                               className="w-full pl-10 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary uppercase"
-                              placeholder="FF9F0D"
+                              placeholder="196F03"
                             />
                           </div>
                        </div>

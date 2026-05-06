@@ -53,7 +53,7 @@ export default function PublicMenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
 
-  const themeColor = restaurant?.themeColor || "#14B8A6";
+  const themeColor = restaurant?.themeColor || "#196F03";
 
   useEffect(() => {
     if (id) {
@@ -94,20 +94,17 @@ export default function PublicMenuPage() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full"
+          className="h-12 w-12 border-4 border-gray-100 border-t-primary rounded-full animate-spin"
         />
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#FAFBFF] font-sans selection:bg-gray-100 pb-32">
-      <style jsx global>{`
-        :root {
-          --brand-primary: ${themeColor};
-        }
-      `}</style>
-
+    <div 
+      className="min-h-screen bg-[#FAFBFF] font-sans selection:bg-gray-100 pb-32"
+      style={{ "--brand-primary": themeColor } as any}
+    >
       <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-[0_0_100px_rgba(0,0,0,0.05)]">
         
         {/* Header Section */}
@@ -122,7 +119,7 @@ export default function PublicMenuPage() {
                  <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-cover" />
               </div>
            </motion.div>
-           <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{restaurant?.restaurantName || "Menuvo"}</h1>
+           <h1 className="text-3xl font-black text-gray-900 tracking-tighter">{restaurant?.restaurantName || "Menu"}</h1>
            <p className="text-gray-400 text-[10px] uppercase font-black tracking-[0.3em] mt-3 bg-gray-50 px-4 py-1 rounded-full">Culinary Excellence</p>
         </header>
 
@@ -202,7 +199,9 @@ export default function PublicMenuPage() {
 
         {/* Floating Dock */}
         <div className="fixed bottom-8 inset-x-0 flex justify-center px-6 z-50">
-           <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="bg-white/70 backdrop-blur-3xl p-2 rounded-[3rem] flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/50 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth">
+           <motion.div initial={{ y: 100 }} animate={{ y: 0 }} className="bg-white/70 backdrop-blur-3xl p-2 rounded-[3rem] flex items-center gap-2 shadow-[0_20px_50px_rgba(0,0,0,0.1)] border border-white/50 w-full max-w-sm overflow-x-auto no-scrollbar scroll-smooth"
+             style={{ borderBottom: `4px solid ${themeColor}10` }}
+           >
               <button onClick={() => setActiveCategory("all")} className={cn("flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-[2.5rem] transition-all", activeCategory === "all" ? "text-white shadow-xl scale-105" : "text-gray-400 hover:bg-gray-50")} style={activeCategory === "all" ? { backgroundColor: themeColor } : {}}>
                  <LayoutGrid className="h-4 w-4" /> <span className="text-[10px] font-black uppercase tracking-widest">All</span>
               </button>

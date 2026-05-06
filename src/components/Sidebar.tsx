@@ -59,7 +59,7 @@ export default function Sidebar() {
               className={cn(
                 "flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group",
                 isActive
-                  ? "bg-brand-green text-white shadow-xl shadow-brand-green/20 scale-[1.02]"
+                  ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/20 scale-[1.02]"
                   : "text-gray-500 hover:bg-gray-50 hover:text-primary"
               )}
             >
