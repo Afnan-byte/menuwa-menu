@@ -266,7 +266,9 @@ export default function PublicMenuPage() {
                      <div className="grid grid-cols-2 gap-6 mb-12">
                         <div className="p-7 rounded-[3rem] border border-gray-100 flex flex-col items-center text-center gap-3" style={{ backgroundColor: `${themeColor}05` }}>
                            <Clock className="h-6 w-6" style={{ color: themeColor }} />
-                           <span className="text-xs font-black text-gray-900 uppercase tracking-widest">15 Mins</span>
+                           <span className="text-xs font-black text-gray-900 uppercase tracking-widest">
+                             {(selectedItem as any).prepTime || "Classic Prep"}
+                           </span>
                         </div>
                         <div className="p-7 rounded-[3rem] border border-gray-100 flex flex-col items-center text-center gap-3" style={{ backgroundColor: `${themeColor}05` }}>
                            <Heart className="h-6 w-6" style={{ color: themeColor }} />
