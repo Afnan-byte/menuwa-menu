@@ -20,10 +20,7 @@ import {
   ChevronRight,
   Utensils,
   Star,
-  Search,
-  LayoutDashboard,
-  Users,
-  Plus
+  Search
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -66,18 +63,15 @@ export default function PublicMenuPage() {
 
   const fetchMenu = async () => {
     try {
-      // Fetch restaurant
       const resSnap = await getDoc(doc(db, "restaurants", id as string));
       if (resSnap.exists()) {
         setRestaurant(resSnap.data() as Restaurant);
       }
 
-      // Fetch categories
       const catQuery = query(collection(db, "categories"), where("restaurantId", "==", id));
       const catSnap = await getDocs(catQuery);
       setCategories(catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category)));
 
-      // Fetch items
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id), where("isAvailable", "==", true));
       const itemSnap = await getDocs(itemQuery);
       setItems(itemSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as MenuItem)));
@@ -112,7 +106,7 @@ export default function PublicMenuPage() {
 
   return (
     <div className="min-h-screen bg-[#F8FAFC] font-sans">
-      <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl overflow-hidden pb-24">
+      <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl overflow-hidden pb-12">
         
         {/* Header */}
         <div className="p-8 pt-10 pb-4">
@@ -141,14 +135,14 @@ export default function PublicMenuPage() {
            </div>
         </div>
 
-        {/* Categories Chips */}
-        <div className="flex gap-3 overflow-x-auto no-scrollbar px-8 mb-8">
+        {/* Categories Chips (Wrapped, not scrollable) */}
+        <div className="flex flex-wrap gap-2.5 px-8 mb-8">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "px-8 py-3.5 rounded-2xl font-black text-xs transition-all whitespace-nowrap shadow-sm",
+                "px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all shadow-sm",
                 activeCategory === "all" 
-                  ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30 scale-105" 
+                  ? "bg-brand-orange text-white shadow-lg shadow-brand-orange/30 scale-105" 
                   : "bg-gray-100 text-gray-400 hover:bg-gray-200"
               )}
             >
@@ -159,7 +153,7 @@ export default function PublicMenuPage() {
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "px-8 py-3.5 rounded-2xl font-black text-xs transition-all whitespace-nowrap shadow-sm",
+                  "px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-wider transition-all shadow-sm",
                   activeCategory === cat.id 
                     ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30 scale-105" 
                     : "bg-gray-100 text-gray-400 hover:bg-gray-200"
@@ -225,23 +219,16 @@ export default function PublicMenuPage() {
           </div>
         )}
 
-        {/* Bottom Navigation */}
-        <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-24 bg-white/80 backdrop-blur-2xl border-t border-gray-100/50 flex items-center justify-around px-8 z-50">
-            <button className="p-3 text-brand-orange transition-all hover:scale-110">
-               <LayoutDashboard className="h-6 w-6" />
-            </button>
-            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
-               <Users className="h-6 w-6" />
-            </button>
-            <button className="h-16 w-16 bg-brand-orange text-white rounded-full flex items-center justify-center shadow-xl shadow-brand-orange/30 -translate-y-6 hover:scale-110 transition-all">
-               <Plus className="h-8 w-8" />
-            </button>
-            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
-               <MessageCircle className="h-6 w-6" />
-            </button>
-            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
-               <Info className="h-6 w-6" />
-            </button>
+        {/* WhatsApp/Call Buttons Moved to Floating instead of Bottom Nav */}
+        <div className="fixed bottom-8 right-8 z-40 flex flex-col gap-4">
+          <motion.a 
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            href={`https://wa.me/#`}
+            className="h-16 w-16 bg-brand-orange text-white rounded-full shadow-2xl flex items-center justify-center"
+          >
+            <MessageCircle className="h-8 w-8" />
+          </motion.a>
         </div>
       </div>
     </div>
