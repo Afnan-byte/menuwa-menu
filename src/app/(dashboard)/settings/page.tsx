@@ -173,6 +173,37 @@ export default function SettingsPage() {
                          </button>
                        ))}
                     </div>
+
+                    <div className="mt-8 pt-6 border-t border-gray-50 flex flex-col sm:flex-row sm:items-center gap-6">
+                       <div className="flex-1">
+                          <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Custom Color Code</label>
+                          <div className="relative">
+                            <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-gray-400">#</span>
+                            <input 
+                              type="text" 
+                              value={formData.themeColor.replace('#', '')}
+                              onChange={(e) => {
+                                const val = e.target.value.trim();
+                                if (val.length <= 6) {
+                                  setFormData({...formData, themeColor: `#${val}`});
+                                }
+                              }}
+                              className="w-full pl-10 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary uppercase"
+                              placeholder="FF9F0D"
+                            />
+                          </div>
+                       </div>
+                       <div className="flex items-center gap-4 px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100">
+                          <div 
+                            className="h-10 w-10 rounded-full shadow-lg border-4 border-white" 
+                            style={{ backgroundColor: formData.themeColor }}
+                          ></div>
+                          <div>
+                             <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Preview</p>
+                             <p className="text-xs font-black text-primary uppercase">{formData.themeColor}</p>
+                          </div>
+                       </div>
+                    </div>
                  </div>
 
                  <div className="pt-8 border-t border-gray-50">
