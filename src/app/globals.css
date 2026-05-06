@@ -3,11 +3,14 @@
 @theme {
   --color-primary: #0A161E;
   --color-brand-green: #196F01;
-  --color-accent: #22C55E;
-  --color-background-soft: #F8FAFC;
+  --color-brand-orange: #FF9F0D;
+  --color-accent: #FF9F0D;
+  --color-background-light: #F8FBFF;
+  --color-background-soft: #F1F5F9;
   
-  --radius-2xl: 1.25rem;
-  --radius-3xl: 2rem;
+  --radius-2xl: 1.5rem;
+  --radius-3xl: 2.5rem;
+  --radius-4xl: 3.5rem;
   
   --font-sans: var(--font-plus-jakarta), ui-sans-serif, system-ui;
   
@@ -26,10 +29,10 @@
 }
 
 :root {
-  --background: #F8FAFC;
+  --background: #F8FBFF;
   --foreground: #0A161E;
   --primary: #0A161E;
-  --accent: #196F01;
+  --accent: #FF9F0D;
 }
 
 body {
@@ -40,16 +43,20 @@ body {
 }
 
 .glass-card {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(10, 22, 30, 0.05);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
 }
 
-.glow-green {
-  box-shadow: 0 0 20px rgba(25, 111, 1, 0.15);
+.glow-orange {
+  box-shadow: 0 0 25px rgba(255, 159, 13, 0.2);
 }
 
 .card-shadow {
-  box-shadow: 0 10px 40px -10px rgba(10, 22, 30, 0.08);
+  box-shadow: 0 20px 50px -12px rgba(10, 22, 30, 0.05);
+}
+
+.sidebar-shadow {
+  box-shadow: 10px 0 50px -10px rgba(10, 22, 30, 0.03);
 }

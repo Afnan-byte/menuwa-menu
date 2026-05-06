@@ -169,99 +169,175 @@ export default function MenuPage() {
     : items.filter(i => i.categoryId === activeCategory);
 
   return (
-    <div className="space-y-10 font-sans">
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
-        <div>
-          <h1 className="text-4xl font-black text-primary tracking-tighter">Menu Manager</h1>
-          <p className="text-gray-400 font-medium mt-1">Organize your dishes and categories.</p>
-        </div>
-        <div className="flex gap-4">
-          <button 
-            onClick={() => setIsCategoryModalOpen(true)}
-            className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 text-primary font-black rounded-2xl hover:bg-gray-50 transition-all shadow-sm group"
-          >
-            <FolderPlus className="h-5 w-5 text-gray-400 group-hover:text-primary" />
-            Add Category
-          </button>
-          <button 
-            onClick={() => {
-              setEditingItem(null);
-              setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
-              setIsItemModalOpen(true);
-            }}
-            className="flex items-center gap-2 px-6 py-3 bg-brand-green text-white font-black rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-green/20"
-          >
-            <Plus className="h-5 w-5" />
-            Add Item
-          </button>
+    <div className="flex gap-10 font-sans">
+      {/* Filters Sidebar */}
+      <div className="w-64 flex-shrink-0 space-y-10 hidden xl:block">
+        <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50">
+          <div className="flex items-center justify-between mb-8">
+            <h2 className="text-xs font-black text-primary uppercase tracking-widest">Filter</h2>
+            <button 
+              onClick={() => setActiveCategory("all")}
+              className="text-[10px] font-black text-brand-green hover:text-brand-orange transition-colors uppercase tracking-widest"
+            >
+              Reset All
+            </button>
+          </div>
+          
+          <div className="space-y-4">
+            <button
+              onClick={() => setActiveCategory("all")}
+              className={cn(
+                "flex items-center gap-3 w-full text-left transition-all group",
+                activeCategory === "all" ? "text-brand-orange" : "text-gray-400 hover:text-primary"
+              )}
+            >
+              <div className={cn(
+                "h-4 w-4 rounded-md border-2 flex items-center justify-center transition-all",
+                activeCategory === "all" ? "border-brand-orange bg-brand-orange text-white" : "border-gray-200 group-hover:border-gray-400"
+              )}>
+                {activeCategory === "all" && <Plus className="h-3 w-3 rotate-45" />}
+              </div>
+              <span className="text-xs font-bold">All Items</span>
+            </button>
+            
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={cn(
+                  "flex items-center gap-3 w-full text-left transition-all group",
+                  activeCategory === cat.id ? "text-brand-orange" : "text-gray-400 hover:text-primary"
+                )}
+              >
+                <div className={cn(
+                  "h-4 w-4 rounded-md border-2 flex items-center justify-center transition-all",
+                  activeCategory === cat.id ? "border-brand-orange bg-brand-orange text-white" : "border-gray-200 group-hover:border-gray-400"
+                )}>
+                  {activeCategory === cat.id && <Plus className="h-3 w-3 rotate-45" />}
+                </div>
+                <span className="text-xs font-bold">{cat.name}</span>
+                <span className="ml-auto text-[10px] font-black text-gray-300">
+                  {items.filter(i => i.categoryId === cat.id).length}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="mt-12 pt-8 border-t border-gray-50">
+             <h2 className="text-xs font-black text-primary uppercase tracking-widest mb-6">Price Range</h2>
+             <div className="flex items-center justify-between gap-2 mb-4">
+                <div className="flex-1 bg-gray-50 rounded-xl p-3 text-center text-[10px] font-black text-primary border border-transparent focus-within:border-brand-orange/20 transition-all">
+                   $10
+                </div>
+                <span className="text-[10px] font-bold text-gray-300">to</span>
+                <div className="flex-1 bg-gray-50 rounded-xl p-3 text-center text-[10px] font-black text-primary border border-transparent focus-within:border-brand-orange/20 transition-all">
+                   $120
+                </div>
+             </div>
+             <div className="h-1.5 w-full bg-gray-100 rounded-full relative overflow-hidden">
+                <div className="absolute inset-y-0 left-4 right-12 bg-brand-orange rounded-full"></div>
+                <div className="absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4 bg-white border-4 border-brand-orange rounded-full shadow-md cursor-pointer"></div>
+                <div className="absolute right-12 top-1/2 -translate-y-1/2 h-4 w-4 bg-white border-4 border-brand-orange rounded-full shadow-md cursor-pointer"></div>
+             </div>
+          </div>
         </div>
       </div>
 
-      {/* Category Tabs */}
-      <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-        <button
-          onClick={() => setActiveCategory("all")}
-          className={cn(
-            "px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap",
-            activeCategory === "all" 
-              ? "bg-primary text-white shadow-xl shadow-primary/20" 
-              : "bg-white text-gray-400 border border-gray-100 hover:border-primary/20"
-          )}
-        >
-          All Items
-        </button>
-        {categories.map((cat) => (
+      {/* Main Content */}
+      <div className="flex-1 space-y-10">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+          <div>
+            <h1 className="text-4xl font-black text-primary tracking-tighter">Menu Manager</h1>
+            <p className="text-gray-400 font-medium mt-1">Organize your dishes and categories.</p>
+          </div>
+          <div className="flex gap-4">
+            <button 
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="flex items-center gap-2 px-6 py-3 bg-white border border-gray-100 text-primary font-black rounded-2xl hover:bg-gray-50 transition-all shadow-sm group"
+            >
+              <FolderPlus className="h-5 w-5 text-gray-400 group-hover:text-primary" />
+              Add Category
+            </button>
+            <button 
+              onClick={() => {
+                setEditingItem(null);
+                setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
+                setIsItemModalOpen(true);
+              }}
+              className="flex items-center gap-2 px-6 py-3 bg-brand-orange text-white font-black rounded-2xl hover:scale-105 transition-all shadow-xl shadow-brand-orange/30"
+            >
+              <Plus className="h-5 w-5" />
+              Add Item
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Category Tabs (Visible only on small screens) */}
+        <div className="xl:hidden flex gap-3 overflow-x-auto pb-4 no-scrollbar">
           <button
-            key={cat.id}
-            onClick={() => setActiveCategory(cat.id)}
+            onClick={() => setActiveCategory("all")}
             className={cn(
               "px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap",
-              activeCategory === cat.id 
-                ? "bg-primary text-white shadow-xl shadow-primary/20" 
+              activeCategory === "all" 
+                ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" 
                 : "bg-white text-gray-400 border border-gray-100 hover:border-primary/20"
             )}
           >
-            {cat.name}
+            All Items
           </button>
-        ))}
-      </div>
-
-      {/* Items Grid */}
-      {loading ? (
-        <div className="flex justify-center py-32">
-          <Loader2 className="h-12 w-12 animate-spin text-brand-green" />
-        </div>
-      ) : filteredItems.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8">
-          {filteredItems.map((item) => (
-            <MenuItemCard 
-              key={item.id}
-              item={item}
-              onEdit={() => {
-                setEditingItem(item);
-                setItemForm({ ...item });
-                setIsItemModalOpen(true);
-              }}
-              onDelete={() => deleteItem(item.id)}
-              onToggleAvailability={() => toggleAvailability(item)}
-            />
+          {categories.map((cat) => (
+            <button
+              key={cat.id}
+              onClick={() => setActiveCategory(cat.id)}
+              className={cn(
+                "px-8 py-3 rounded-2xl font-black text-xs uppercase tracking-widest transition-all whitespace-nowrap",
+                activeCategory === cat.id 
+                  ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" 
+                  : "bg-white text-gray-400 border border-gray-100 hover:border-primary/20"
+              )}
+            >
+              {cat.name}
+            </button>
           ))}
         </div>
-      ) : (
-        <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50 group hover:border-brand-green/10 transition-colors">
-          <div className="h-20 w-20 rounded-3xl bg-gray-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
-            <Utensils className="h-10 w-10 text-gray-200" />
+
+        {/* Items Grid */}
+        {loading ? (
+          <div className="flex justify-center py-32">
+            <Loader2 className="h-12 w-12 animate-spin text-brand-orange" />
           </div>
-          <p className="text-gray-400 font-black text-lg tracking-tight">No items found.</p>
-          <p className="text-gray-300 text-sm mt-1">Start by adding your first delicious dish.</p>
-          <button 
-            onClick={() => setIsItemModalOpen(true)}
-            className="mt-8 text-brand-green font-black hover:scale-105 transition-all bg-brand-green/5 px-8 py-3 rounded-2xl"
-          >
-            + Add New Item
-          </button>
-        </div>
-      )}
+        ) : filteredItems.length > 0 ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8">
+            {filteredItems.map((item) => (
+              <MenuItemCard 
+                key={item.id}
+                item={item}
+                onEdit={() => {
+                  setEditingItem(item);
+                  setItemForm({ ...item });
+                  setIsItemModalOpen(true);
+                }}
+                onDelete={() => deleteItem(item.id)}
+                onToggleAvailability={() => toggleAvailability(item)}
+              />
+            ))}
+          </div>
+        ) : (
+          <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50 group hover:border-brand-orange/10 transition-colors">
+            <div className="h-20 w-20 rounded-3xl bg-gray-50 flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
+              <Utensils className="h-10 w-10 text-gray-200" />
+            </div>
+            <p className="text-gray-400 font-black text-lg tracking-tight">No items found.</p>
+            <p className="text-gray-300 text-sm mt-1">Start by adding your first delicious dish.</p>
+            <button 
+              onClick={() => setIsItemModalOpen(true)}
+              className="mt-8 text-brand-orange font-black hover:scale-105 transition-all bg-brand-orange/5 px-8 py-3 rounded-2xl"
+            >
+              + Add New Item
+            </button>
+          </div>
+        )}
+      </div>
 
       {/* Category Modal */}
       {isCategoryModalOpen && (

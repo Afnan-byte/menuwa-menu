@@ -18,7 +18,12 @@ import {
   MessageCircle, 
   Info,
   ChevronRight,
-  Utensils
+  Utensils,
+  Star,
+  Search,
+  LayoutDashboard,
+  Users,
+  Plus
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -108,204 +113,136 @@ export default function PublicMenuPage() {
   }
 
   return (
-    <div className="min-h-screen bg-background-soft font-sans pb-20">
-      {/* Container for the entire page to allow centered layout on desktop */}
-      <div className="max-w-screen-2xl mx-auto min-h-screen flex flex-col bg-white lg:bg-background-soft shadow-2xl lg:shadow-none relative overflow-hidden">
+    <div className="min-h-screen bg-[#F8FAFC] font-sans">
+      <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-white shadow-2xl overflow-hidden pb-24">
         
-        {/* Header / Banner - Re-styled for better desktop presence */}
-        <div className="bg-primary text-white p-8 md:p-16 rounded-b-[2.5rem] md:rounded-b-[4rem] shadow-xl relative overflow-hidden">
-          {/* Decorative Background Patterns */}
-          <div className="absolute top-0 right-0 w-[400px] h-[400px] bg-brand-green/10 blur-[100px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
-          <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-brand-green/5 blur-[100px] rounded-full -translate-x-1/4 translate-y-1/4"></div>
-          
-          <div className="relative z-10 flex flex-col items-center text-center py-6">
-            <motion.div 
-              initial={{ scale: 0.8, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              transition={{ duration: 0.6 }}
-              className="group cursor-pointer"
-            >
-              {restaurant.logoUrl ? (
-                <div className="h-28 w-28 md:h-36 md:w-36 rounded-[2.5rem] mb-8 relative overflow-hidden bg-white p-5 shadow-2xl border-8 border-white/5 group-hover:scale-105 transition-transform">
-                  <div className="relative w-full h-full">
-                    <Image 
-                      src={restaurant.logoUrl} 
-                      alt={restaurant.restaurantName} 
-                      fill 
-                      className="object-contain"
-                    />
-                  </div>
-                </div>
-              ) : (
-                <div className="h-24 w-24 md:h-32 md:w-32 rounded-[2.5rem] bg-white/10 flex items-center justify-center mb-8 border-4 border-dashed border-white/20 group-hover:bg-white/15 transition-all">
-                  <Utensils className="h-12 w-12 text-white/50" />
-                </div>
-              )}
-            </motion.div>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tighter leading-tight mb-4">
-              {restaurant.restaurantName}
-            </h1>
-            <p className="text-white/40 text-sm md:text-base max-w-xl font-medium leading-relaxed px-6">
-              {restaurant.description || "Indulge in a curated selection of our finest dishes, prepared with passion and served with a modern digital touch."}
-            </p>
-            
-            <div className="mt-10 flex gap-4">
-              <div className="px-5 py-2 bg-white/5 rounded-full border border-white/10 text-[10px] md:text-xs font-black uppercase tracking-widest">
-                Digital Menu v2.0
-              </div>
-              <div className="px-5 py-2 bg-brand-green/20 text-brand-green rounded-full border border-brand-green/20 text-[10px] md:text-xs font-black uppercase tracking-widest">
-                Available Now
-              </div>
-            </div>
-          </div>
+        {/* Header */}
+        <div className="p-8 pt-10 pb-4">
+          <h1 className="text-4xl font-black tracking-tight text-primary mb-1">
+             {restaurant.restaurantName}
+          </h1>
+          <p className="text-gray-400 text-sm font-medium">Order your favourite food!</p>
         </div>
 
-        {/* Sticky Category Navigation */}
-        <div className="sticky top-0 bg-white/80 backdrop-blur-2xl z-30 py-6 px-4 md:px-10 shadow-sm border-b border-gray-100 flex justify-center">
-          <div className="flex gap-3 overflow-x-auto no-scrollbar max-w-full lg:justify-center">
+        {/* Search Bar */}
+        <div className="px-8 mb-6">
+           <div className="relative group">
+              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-400 group-focus-within:text-brand-orange transition-colors" />
+              <input 
+                type="text" 
+                placeholder="Search" 
+                className="w-full pl-14 pr-6 py-4 bg-gray-50 border-none rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none"
+              />
+              <div className="absolute right-4 top-1/2 -translate-y-1/2 p-2 bg-white rounded-xl shadow-sm cursor-pointer">
+                <div className="h-4 w-4 text-brand-orange flex flex-col gap-0.5">
+                   <div className="h-0.5 w-full bg-brand-orange rounded-full"></div>
+                   <div className="h-0.5 w-2/3 bg-brand-orange rounded-full"></div>
+                   <div className="h-0.5 w-full bg-brand-orange rounded-full"></div>
+                </div>
+              </div>
+           </div>
+        </div>
+
+        {/* Categories Chips */}
+        <div className="flex gap-3 overflow-x-auto no-scrollbar px-8 mb-8">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all whitespace-nowrap",
+                "px-8 py-3.5 rounded-2xl font-black text-xs transition-all whitespace-nowrap shadow-sm",
                 activeCategory === "all" 
-                  ? "bg-brand-green text-white shadow-xl shadow-brand-green/20 scale-105" 
-                  : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                  ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30 scale-105" 
+                  : "bg-gray-100 text-gray-400 hover:bg-gray-200"
               )}
             >
-              All Delicacies
+              All
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "px-8 py-3 rounded-2xl font-black text-[11px] uppercase tracking-widest transition-all whitespace-nowrap",
+                  "px-8 py-3.5 rounded-2xl font-black text-xs transition-all whitespace-nowrap shadow-sm",
                   activeCategory === cat.id 
-                    ? "bg-brand-green text-white shadow-xl shadow-brand-green/20 scale-105" 
-                    : "bg-gray-100 text-gray-500 hover:bg-gray-200"
+                    ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30 scale-105" 
+                    : "bg-gray-100 text-gray-400 hover:bg-gray-200"
                 )}
               >
                 {cat.name}
               </button>
             ))}
-          </div>
         </div>
 
-        {/* Menu Items Grid - Optimized for Laptop/Desktop */}
-        <div className="flex-1 px-6 md:px-10 py-12 md:py-20 lg:max-w-7xl lg:mx-auto w-full">
-          <div className="flex items-center gap-4 mb-12">
-            <div className="h-px flex-1 bg-gray-100"></div>
-            <h2 className="text-xs font-black text-gray-300 uppercase tracking-[0.4em]">Our Selection</h2>
-            <div className="h-px flex-1 bg-gray-100"></div>
-          </div>
+        {/* Food Grid */}
+        <div className="px-8 grid grid-cols-2 gap-x-6 gap-y-16 pt-8">
+           {filteredItems.map((item) => (
+             <motion.div
+               key={item.id}
+               initial={{ opacity: 0, y: 20 }}
+               animate={{ opacity: 1, y: 0 }}
+               className="bg-white rounded-[2rem] p-4 shadow-xl shadow-gray-200/50 relative group cursor-pointer"
+             >
+                {/* Heart Icon */}
+                <div className="absolute top-4 right-4 z-10 p-2 bg-white/80 backdrop-blur-sm rounded-full shadow-sm text-gray-300 hover:text-red-500 transition-colors">
+                   <div className="h-4 w-4">
+                      <svg fill="currentColor" viewBox="0 0 24 24"><path d="M11.645 20.91l-.007-.003-.022-.012a15.247 15.247 0 01-.383-.218 25.18 25.18 0 01-4.244-3.17C4.688 15.36 2.25 12.174 2.25 8.25 2.25 5.322 4.714 3 7.5 3c1.557 0 3.046.727 4 2.015C12.454 3.727 13.943 3 15.5 3c2.786 0 5.25 2.322 5.25 5.25 0 3.924-2.438 7.11-4.74 9.27a25.176 25.176 0 01-4.244 3.17 15.247 15.247 0 01-.383.219l-.022.012-.007.004-.003.001a.752.752 0 01-.704 0l-.003-.001z" /></svg>
+                   </div>
+                </div>
 
-          <AnimatePresence mode="popLayout">
-            <motion.div 
-              layout
-              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 gap-8 md:gap-10"
-            >
-              {filteredItems.map((item) => (
-                <motion.div
-                  layout
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.9 }}
-                  key={item.id}
-                  className="bg-white rounded-[2.5rem] p-6 shadow-sm border border-gray-100/50 flex flex-col md:flex-row gap-6 hover:shadow-2xl hover:shadow-gray-200/50 transition-all duration-500 group/item"
-                >
-                  <div className="h-40 w-full md:h-32 md:w-32 rounded-3xl bg-background-soft overflow-hidden flex-shrink-0 relative">
-                    {item.imageUrl ? (
-                      <Image 
+                {/* Overlapping Image */}
+                <div className="absolute -top-12 left-1/2 -translate-x-1/2 w-32 h-32 md:w-36 md:h-36 pointer-events-none">
+                   {item.imageUrl ? (
+                     <div className="relative w-full h-full">
+                       <Image 
                         src={item.imageUrl} 
                         alt={item.name} 
                         fill 
-                        className="object-cover group-hover/item:scale-110 transition-transform duration-700" 
-                        sizes="(max-width: 768px) 100vw, 128px"
+                        className="object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500" 
                       />
-                    ) : (
-                      <div className="h-full w-full flex items-center justify-center text-gray-200">
-                        <Utensils className="h-12 w-12" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-black/5 to-transparent"></div>
-                  </div>
-                  
-                  <div className="flex-1 flex flex-col justify-between">
-                    <div>
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="font-black text-primary text-lg md:text-base tracking-tight group-hover/item:text-brand-green transition-colors leading-tight">
-                          {item.name}
-                        </h3>
-                        <span className="font-black text-brand-green text-sm bg-brand-green/5 px-3 py-1 rounded-lg">
-                          ${item.price}
-                        </span>
-                      </div>
-                      <p className="text-[11px] text-gray-400 font-medium line-clamp-3 leading-relaxed mb-4">
-                        {item.description}
-                      </p>
-                    </div>
-                    
-                    <div className="flex items-center justify-between">
-                      <div className="flex gap-2 flex-wrap">
-                        {item.tags?.slice(0, 3).map(tag => (
-                          <span key={tag} className="text-[8px] font-black uppercase tracking-wider px-3 py-1 bg-gray-50 text-gray-400 rounded-lg">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <motion.button 
-                        whileTap={{ scale: 0.9 }}
-                        className="h-10 w-10 rounded-2xl bg-primary text-white flex items-center justify-center shadow-xl shadow-primary/10 hover:bg-brand-green transition-all group/btn"
-                      >
-                        <ChevronRight className="h-5 w-5 group-hover/btn:translate-x-0.5 transition-transform" />
-                      </motion.button>
-                    </div>
-                  </div>
-                </motion.div>
-              ))}
-            </motion.div>
-          </AnimatePresence>
+                     </div>
+                   ) : (
+                     <div className="h-full w-full bg-gray-50 rounded-full flex items-center justify-center border-4 border-white shadow-xl">
+                        <Utensils className="h-8 w-8 text-gray-200" />
+                     </div>
+                   )}
+                </div>
 
-          {filteredItems.length === 0 && (
-            <div className="py-32 text-center">
-              <p className="text-gray-300 font-black text-lg tracking-tight uppercase italic opacity-50">Nothing found in this section</p>
-            </div>
-          )}
+                <div className="pt-20 pb-2 text-center">
+                   <h3 className="text-sm font-black text-primary mb-1 line-clamp-1">{item.name}</h3>
+                   <div className="flex items-center justify-center gap-1 mb-2">
+                      <Star className="h-3 w-3 fill-yellow-400 text-yellow-400" />
+                      <span className="text-[10px] font-black text-gray-400">4.9</span>
+                   </div>
+                   <p className="text-brand-orange font-black text-sm">${item.price}</p>
+                </div>
+             </motion.div>
+           ))}
         </div>
 
-        {/* Laptop View Footer */}
-        <footer className="py-24 px-10 text-center border-t border-gray-100 bg-white lg:bg-background-soft">
-          <div className="flex items-center justify-center gap-4 mb-8">
-            <div className="h-1 w-1 rounded-full bg-gray-200"></div>
-            <div className="h-1 w-20 bg-gray-100 rounded-full"></div>
-            <div className="h-1 w-1 rounded-full bg-gray-200"></div>
+        {/* Empty State */}
+        {filteredItems.length === 0 && (
+          <div className="flex-1 flex flex-col items-center justify-center p-12 text-center opacity-50">
+             <Utensils className="h-16 w-16 mb-4 text-gray-300" />
+             <p className="text-sm font-black text-gray-400 uppercase tracking-widest">Nothing here yet</p>
           </div>
-          <div className="flex flex-col items-center gap-2">
-            <p className="text-xs font-black text-primary tracking-[0.2em] uppercase">Powered by Menuvo</p>
-            <p className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">Premium Digital Dining Experience</p>
-          </div>
-        </footer>
+        )}
 
-        {/* Floating Action Buttons */}
-        <div className="fixed bottom-10 right-10 z-40 flex flex-col gap-5">
-          <motion.a 
-            whileHover={{ scale: 1.1, y: -5 }}
-            whileTap={{ scale: 0.9 }}
-            href={`tel:${restaurant.phone || "#"}`}
-            className="h-14 w-14 bg-white text-primary rounded-[1.5rem] shadow-2xl border border-gray-100 flex items-center justify-center group"
-          >
-            <Phone className="h-6 w-6 group-hover:rotate-12 transition-transform" />
-          </motion.a>
-          <motion.a 
-            whileHover={{ scale: 1.1, y: -5, rotate: 3 }}
-            whileTap={{ scale: 0.9 }}
-            href={`https://wa.me/${restaurant.whatsapp || "#"}`}
-            target="_blank"
-            className="h-20 w-20 bg-brand-green text-white rounded-[2rem] shadow-2xl shadow-brand-green/30 flex items-center justify-center relative overflow-hidden group"
-          >
-            <div className="absolute inset-0 bg-white/20 animate-ping opacity-20 group-hover:animate-none"></div>
-            <MessageCircle className="h-10 w-10 relative z-10" />
-          </motion.a>
+        {/* Bottom Navigation */}
+        <div className="fixed bottom-0 left-0 right-0 max-w-md mx-auto h-24 bg-white/80 backdrop-blur-2xl border-t border-gray-100/50 flex items-center justify-around px-8 z-50">
+            <button className="p-3 text-brand-orange transition-all hover:scale-110">
+               <LayoutDashboard className="h-6 w-6" />
+            </button>
+            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
+               <Users className="h-6 w-6" />
+            </button>
+            <button className="h-16 w-16 bg-brand-orange text-white rounded-full flex items-center justify-center shadow-xl shadow-brand-orange/30 -translate-y-6 hover:scale-110 transition-all">
+               <Plus className="h-8 w-8" />
+            </button>
+            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
+               <MessageCircle className="h-6 w-6" />
+            </button>
+            <button className="p-3 text-gray-300 hover:text-brand-orange transition-all hover:scale-110">
+               <Info className="h-6 w-6" />
+            </button>
         </div>
       </div>
     </div>
