@@ -37,16 +37,16 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
           <div className="absolute inset-0 bg-gray-50 rounded-full scale-90 group-hover:scale-100 transition-transform duration-500 shadow-inner"></div>
 
           {item.imageUrl ? (
-            <div className="relative w-full h-full p-2">
+            <div className="relative w-full h-full p-1 overflow-hidden rounded-full border-4 border-white shadow-2xl">
               <Image
                 src={item.imageUrl}
                 alt={item.name}
                 fill
-                className="object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500"
+                className="object-cover group-hover:scale-110 transition-transform duration-500"
               />
             </div>
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-200 bg-white rounded-full border-4 border-gray-50">
+            <div className="w-full h-full flex items-center justify-center text-gray-200 bg-white rounded-full border-4 border-gray-50 overflow-hidden shadow-inner">
               <Utensils className="h-10 w-10 opacity-20" />
             </div>
           )}
