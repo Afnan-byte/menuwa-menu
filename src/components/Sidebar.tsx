@@ -46,7 +46,7 @@ export default function Sidebar() {
       <div className="p-8 mb-4">
         <Link href="/dashboard" className="flex items-center justify-center w-full">
           <div className="relative h-28 w-28 overflow-hidden">
-            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain hover:scale-110 transition-transform" />
+            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain transition-transform" />
           </div>
         </Link>
       </div>
