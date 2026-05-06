@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import { useAuth } from "@/components/auth-provider";
 import { db, auth } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
