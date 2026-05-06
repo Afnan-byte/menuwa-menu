@@ -25,7 +25,10 @@ import {
   Leaf,
   Info,
   Share2,
-  Heart
+  Heart,
+  Search,
+  Filter,
+  Flame as SpicyIcon
 } from "lucide-react";
 import { motion, AnimatePresence, useScroll, useTransform } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -66,6 +69,8 @@ export default function PublicMenuPage() {
   const [loading, setLoading] = useState(true);
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [dietaryFilter, setDietaryFilter] = useState<"all" | "veg" | "non-veg">("all");
 
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
@@ -109,9 +114,18 @@ export default function PublicMenuPage() {
 
   const filteredItems = useMemo(() => {
     return items.filter(item => {
-      return activeCategory === "all" || item.categoryId === activeCategory;
+      const matchesCategory = activeCategory === "all" || item.categoryId === activeCategory;
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
+                           item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesDietary = dietaryFilter === "all" || item.dietaryType === dietaryFilter;
+      
+      return matchesCategory && matchesSearch && matchesDietary;
     });
-  }, [items, activeCategory]);
+  }, [items, activeCategory, searchQuery, dietaryFilter]);
+
+  const featuredItems = useMemo(() => {
+    return items.filter(item => item.isPopular).slice(0, 5);
+  }, [items]);
 
   if (loading) {
     return (
@@ -183,6 +197,14 @@ export default function PublicMenuPage() {
             >
               {restaurant?.restaurantName || "Menu"}
             </motion.h1>
+            <motion.p
+              initial={{ y: 10, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              transition={{ delay: 0.1 }}
+              className="mt-4 text-gray-500 font-medium text-sm max-w-[280px] leading-relaxed"
+            >
+              {restaurant?.description || "Experience the finest flavors and culinary excellence."}
+            </motion.p>
             <motion.div
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
@@ -202,8 +224,101 @@ export default function PublicMenuPage() {
           </div>
         </header>
 
+        {/* Search & Filters */}
+        <div className="px-6 pt-12 space-y-6">
+          <div className="relative group">
+            <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-400 group-focus-within:text-gray-900 transition-colors" />
+            <input
+              type="text"
+              placeholder="Search dishes..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-gray-50 border border-gray-100 rounded-full py-5 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-black/5 focus:bg-white transition-all font-medium"
+            />
+          </div>
+
+          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-2">
+            {[
+              { id: "all", label: "All Items", icon: LayoutGrid },
+              { id: "veg", label: "Veg Only", icon: Leaf },
+              { id: "non-veg", label: "Non-Veg", icon: Flame }
+            ].map((filter) => (
+              <button
+                key={filter.id}
+                onClick={() => setDietaryFilter(filter.id as any)}
+                className={cn(
+                  "flex-shrink-0 flex items-center gap-2 px-6 py-3 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
+                  dietaryFilter === filter.id
+                    ? "bg-black text-white border-black shadow-lg"
+                    : "bg-white text-gray-400 border-gray-100 hover:border-gray-200"
+                )}
+              >
+                <filter.icon className="h-3.5 w-3.5" />
+                {filter.label}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Featured Section */}
+        {featuredItems.length > 0 && searchQuery === "" && (
+          <section className="pt-16 pb-4">
+            <div className="px-6 mb-8 flex items-baseline justify-between">
+              <h2 className="text-3xl font-serif text-gray-900 tracking-tight">Best Sellers</h2>
+              <span className="text-[10px] font-bold text-gray-300 uppercase tracking-widest">⭐ Top Rated</span>
+            </div>
+            <div className="flex gap-6 overflow-x-auto no-scrollbar px-6 pb-4">
+              {featuredItems.map((item) => (
+                <motion.div
+                  key={item.id}
+                  onClick={() => setSelectedItem(item)}
+                  className="flex-shrink-0 w-64 group cursor-pointer"
+                >
+                  <div className="relative aspect-[4/5] rounded-[3rem] overflow-hidden bg-white shadow-xl border border-gray-100 mb-4 transition-transform duration-500 group-hover:-translate-y-2">
+                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent"></div>
+                    <div className="absolute top-4 right-4 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm">
+                      <span className="text-[10px] font-bold text-gray-900 tracking-tight">{item.price}</span>
+                    </div>
+                    <div className="absolute bottom-6 left-6 right-6 text-white">
+                      <h3 className="font-serif text-xl mb-1 line-clamp-1">{item.name}</h3>
+                      <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-widest opacity-60">
+                        Explore <ArrowRight className="h-2.5 w-2.5" />
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+          </section>
+        )}
+
         {/* Menu Content */}
-        <div className="px-6 py-16 space-y-20">
+        <div className="px-6 py-16 space-y-20 min-h-[400px]">
+          {filteredItems.length === 0 && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col items-center justify-center py-20 text-center"
+            >
+              <div className="h-20 w-20 bg-gray-50 rounded-full flex items-center justify-center mb-6">
+                <Utensils className="h-8 w-8 text-gray-200" />
+              </div>
+              <h3 className="text-xl font-serif text-gray-900 mb-2">No dishes found</h3>
+              <p className="text-gray-400 text-sm max-w-[200px]">Try adjusting your filters or search query.</p>
+              <button
+                onClick={() => {
+                  setSearchQuery("");
+                  setDietaryFilter("all");
+                  setActiveCategory("all");
+                }}
+                className="mt-8 text-[10px] font-bold uppercase tracking-[0.2em] text-[#196F03]"
+              >
+                Clear all filters
+              </button>
+            </motion.div>
+          )}
+
           {/* Categories Sections */}
           {(activeCategory === "all" ? categories : categories.filter(c => c.id === activeCategory)).map((cat, catIdx) => {
             const categoryItems = items.filter(item => item.categoryId === cat.id);
@@ -256,21 +371,35 @@ export default function PublicMenuPage() {
 
                           {/* Top Left Icons */}
                           <div className="absolute top-4 left-4 flex flex-col gap-2 z-20">
+                            {item.isPopular && (
+                              <div className="bg-yellow-400 p-2 rounded-xl shadow-sm border border-yellow-300">
+                                <Star className="h-3.5 w-3.5 text-white fill-white" />
+                              </div>
+                            )}
                             {item.dietaryType === "veg" && (
                               <div className="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-white/50">
-                                <Leaf className="h-3.5 w-3.5 text-green-600 fill-green-600/10" />
+                                <div className="h-3.5 w-3.5 border-2 border-green-600 rounded-sm flex items-center justify-center p-0.5">
+                                  <div className="h-full w-full bg-green-600 rounded-full" />
+                                </div>
                               </div>
                             )}
                             {item.dietaryType === "non-veg" && (
                               <div className="bg-white/80 backdrop-blur-md p-2 rounded-xl shadow-sm border border-white/50">
-                                <Flame className="h-3.5 w-3.5 text-red-500 fill-red-500/10" />
+                                <div className="h-3.5 w-3.5 border-2 border-red-600 rounded-sm flex items-center justify-center p-0.5">
+                                  <div className="h-full w-full bg-red-600 rounded-full" />
+                                </div>
+                              </div>
+                            )}
+                            {item.tags?.includes("spicy") && (
+                              <div className="bg-red-500 p-2 rounded-xl shadow-sm border border-red-400">
+                                <SpicyIcon className="h-3.5 w-3.5 text-white fill-white" />
                               </div>
                             )}
                           </div>
 
-                          {/* Price Tag - Minimalist */}
-                          <div className="absolute top-4 right-4 z-20 bg-white/90 backdrop-blur-md px-3 py-1.5 rounded-full shadow-sm border border-white/50">
-                            <span className="text-[12px] font-bold text-gray-900 tracking-tight">
+                          {/* Price Tag - Highlighted in Green */}
+                          <div className="absolute top-4 right-4 z-20 bg-[#196F03] px-3 py-1.5 rounded-full shadow-lg border border-white/20">
+                            <span className="text-[12px] font-bold text-white tracking-tight">
                               {item.price}
                             </span>
                           </div>
