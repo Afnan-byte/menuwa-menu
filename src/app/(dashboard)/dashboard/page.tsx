@@ -10,7 +10,8 @@ import {
   ArrowRight,
   QrCode,
   Loader2,
-  ExternalLink
+  ExternalLink,
+  MessageCircle
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -39,6 +40,9 @@ export default function DashboardPage() {
     }
   };
 
+  const WHATSAPP_NUMBER = "918089685278";
+  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
+
   return (
     <div className="space-y-10 font-sans pb-20">
       {/* Header Section */}
@@ -48,7 +52,7 @@ export default function DashboardPage() {
           animate={{ opacity: 1, x: 0 }}
         >
           <h1 className="text-4xl font-black text-primary tracking-tighter">
-            Welcome, <span className="text-brand-green">{restaurantData?.restaurantName || "Chef"}</span>!
+            Welcome, <span className="text-[#196F03]">{restaurantData?.restaurantName || "Chef"}</span>!
           </h1>
           <p className="text-gray-400 font-medium mt-1">Manage your digital menu and QR presence.</p>
         </motion.div>
@@ -85,7 +89,7 @@ export default function DashboardPage() {
              <div className="relative z-10">
                 <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">Current Inventory</p>
                 {loading ? (
-                  <Loader2 className="h-10 w-10 animate-spin text-brand-green" />
+                  <Loader2 className="h-10 w-10 animate-spin text-[#196F03]" />
                 ) : (
                   <div className="flex items-baseline gap-4">
                     <h2 className="text-7xl font-black text-primary tracking-tighter">{itemCount || 0}</h2>
@@ -94,7 +98,7 @@ export default function DashboardPage() {
                 )}
              </div>
              <div className="relative z-10 h-20 w-20 bg-brand-green/10 rounded-[2rem] flex items-center justify-center">
-                <Utensils className="h-10 w-10 text-brand-green" />
+                <Utensils className="h-10 w-10 text-[#196F03]" />
              </div>
           </motion.div>
 
@@ -110,11 +114,12 @@ export default function DashboardPage() {
                 color="bg-[#196F03]"
               />
               <ActionLink 
-                href="/qr"
-                icon={<QrCode className="h-6 w-6" />}
-                title="QR Studio"
-                description="Download and customize your menu QR"
+                href={SUPPORT_URL}
+                icon={<MessageCircle className="h-6 w-6" />}
+                title="Support Centre"
+                description="Chat with us directly on WhatsApp"
                 color="bg-primary"
+                isExternal
               />
             </div>
           </div>
@@ -126,15 +131,15 @@ export default function DashboardPage() {
           animate={{ opacity: 1, scale: 1 }}
           className="bg-primary text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col"
         >
-          <div className="absolute top-0 right-0 w-64 h-64 bg-brand-green/20 blur-[80px] rounded-full translate-x-10 -translate-y-10"></div>
+          <div className="absolute top-0 right-0 w-64 h-64 bg-[#196F03]/20 blur-[80px] rounded-full translate-x-10 -translate-y-10"></div>
           
           <div className="relative z-10 flex flex-col h-full">
-            <div className="inline-flex items-center gap-2 px-4 py-2 bg-brand-green/20 rounded-full border border-brand-green/30 mb-8 self-start">
-              <div className="h-2 w-2 bg-brand-green rounded-full animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-brand-green">System Live</span>
+            <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#196F03]/20 rounded-full border border-[#196F03]/30 mb-8 self-start">
+              <div className="h-2 w-2 bg-[#196F03] rounded-full animate-pulse" />
+              <span className="text-[10px] font-black uppercase tracking-widest text-[#196F03]">System Live</span>
             </div>
             
-            <h2 className="text-3xl font-black mb-6 tracking-tight leading-tight">Your Digital Menu is <br/><span className="text-brand-green">Active</span></h2>
+            <h2 className="text-3xl font-black mb-6 tracking-tight leading-tight">Your Digital Menu is <br/><span className="text-[#196F03]">Active</span></h2>
             <p className="text-white/40 text-sm font-medium mb-10 leading-relaxed">
               Customers can currently scan and view your menu. All changes you make in the manager will reflect instantly.
             </p>
@@ -154,16 +159,22 @@ export default function DashboardPage() {
   );
 }
 
-function ActionLink({ href, icon, title, description, color }: { href: string, icon: React.ReactNode, title: string, description: string, color: string }) {
-  return (
-    <Link href={href} className="flex items-start gap-5 p-8 border border-gray-100 rounded-[2.5rem] hover:shadow-2xl hover:shadow-gray-100 transition-all group bg-white">
+function ActionLink({ href, icon, title, description, color, isExternal }: { href: string, icon: React.ReactNode, title: string, description: string, color: string, isExternal?: boolean }) {
+  const content = (
+    <div className="flex items-start gap-5 p-8 border border-gray-100 rounded-[2.5rem] hover:shadow-2xl hover:shadow-gray-100 transition-all group bg-white h-full">
       <div className={cn("p-4 rounded-2xl text-white shadow-xl transition-transform group-hover:scale-110", color)}>
         {icon}
       </div>
       <div>
-        <h4 className="text-lg font-black text-primary tracking-tight group-hover:text-brand-green transition-colors">{title}</h4>
+        <h4 className="text-lg font-black text-primary tracking-tight group-hover:text-[#196F03] transition-colors">{title}</h4>
         <p className="text-xs text-gray-400 font-medium leading-relaxed mt-1">{description}</p>
       </div>
-    </Link>
+    </div>
   );
+
+  if (isExternal) {
+    return <a href={href} target="_blank" rel="noopener noreferrer" className="block h-full">{content}</a>;
+  }
+
+  return <Link href={href} className="block h-full">{content}</Link>;
 }
