@@ -193,7 +193,7 @@ export default function MenuPage() {
             </div>
             <button 
               onClick={() => setIsCategoryModalOpen(true)}
-              className="p-3 bg-gray-50 text-brand-orange rounded-2xl hover:bg-brand-orange hover:text-white transition-all shadow-sm"
+              className="p-3 bg-gray-100 text-brand-orange rounded-2xl hover:bg-brand-orange hover:text-white transition-all shadow-sm group"
             >
               <FolderPlus className="h-5 w-5" />
             </button>
@@ -204,16 +204,16 @@ export default function MenuPage() {
               onClick={() => setActiveCategory("all")}
               className={cn(
                 "w-full flex items-center justify-between p-4 rounded-2xl transition-all group",
-                activeCategory === "all" ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/20" : "hover:bg-gray-50 text-gray-400"
+                activeCategory === "all" ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" : "hover:bg-gray-50 text-gray-500"
               )}
             >
               <div className="flex items-center gap-3">
-                 <div className={cn("p-2 rounded-xl", activeCategory === "all" ? "bg-white/20" : "bg-gray-100 group-hover:bg-white")}>
+                 <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
                     <LayoutGrid className="h-4 w-4" />
                  </div>
                  <span className="text-xs font-black">All Items</span>
               </div>
-              <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "block" : "hidden")} />
+              <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
             </button>
 
             {categories.map((cat) => (
@@ -222,30 +222,30 @@ export default function MenuPage() {
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
                   "w-full flex items-center justify-between p-4 rounded-2xl transition-all group",
-                  activeCategory === cat.id ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/20" : "hover:bg-gray-50 text-gray-400"
+                  activeCategory === cat.id ? "bg-brand-orange text-white shadow-xl shadow-brand-orange/30" : "hover:bg-gray-50 text-gray-500"
                 )}
               >
                 <div className="flex items-center gap-3">
-                   <div className={cn("p-2 rounded-xl", activeCategory === cat.id ? "bg-white/20" : "bg-gray-100 group-hover:bg-white")}>
+                   <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
                       <Utensils className="h-4 w-4" />
                    </div>
                    <span className="text-xs font-black">{cat.name}</span>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className={cn("text-[10px] font-black", activeCategory === cat.id ? "text-white/60" : "text-gray-300")}>
+                  <span className={cn("text-[10px] font-black", activeCategory === cat.id ? "text-white/80" : "text-gray-300")}>
                     {items.filter(i => i.categoryId === cat.id).length}
                   </span>
-                  <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === cat.id ? "block" : "hidden")} />
+                  <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === cat.id ? "text-white" : "text-gray-300")} />
                 </div>
               </button>
             ))}
           </div>
 
           <div className="mt-12 pt-8 border-t border-gray-50">
-             <div className="bg-brand-orange/5 rounded-[2rem] p-6 text-center">
-                <p className="text-[10px] font-black text-brand-orange uppercase tracking-widest mb-3">Menu Visibility</p>
+             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
+                <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-3">Menu Visibility</p>
                 <h4 className="text-sm font-black text-primary mb-4 leading-tight">Your menu is live and accepting scans</h4>
-                <button className="w-full py-3 bg-white text-primary font-black text-[10px] uppercase tracking-widest rounded-xl shadow-sm hover:shadow-md transition-all">
+                <button className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all">
                    View Live Menu
                 </button>
              </div>
@@ -271,7 +271,7 @@ export default function MenuPage() {
                 placeholder="Search anything..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none"
+                className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-sm font-bold focus:ring-4 focus:ring-brand-orange/5 transition-all outline-none text-primary"
               />
               <div className="absolute right-4 top-1/2 -translate-y-1/2 px-2 py-1 bg-gray-50 border border-gray-100 rounded-lg text-[9px] font-black text-gray-300 hidden sm:block">
                  ⌘K
@@ -285,12 +285,12 @@ export default function MenuPage() {
                    setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
                    setIsItemModalOpen(true);
                  }}
-                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-brand-orange text-white font-black rounded-[2rem] hover:scale-105 transition-all shadow-xl shadow-brand-orange/30 whitespace-nowrap"
+                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-brand-orange text-white font-black rounded-[2rem] hover:bg-orange-600 hover:scale-105 transition-all shadow-xl shadow-brand-orange/30 whitespace-nowrap"
                >
                  <Plus className="h-5 w-5" />
                  Add New Item
                </button>
-               <button className="p-4 bg-white border border-gray-100 rounded-[2rem] text-primary hover:bg-gray-50 transition-all shadow-sm">
+               <button className="p-4 bg-white border border-gray-100 rounded-[2rem] text-gray-400 hover:text-primary hover:bg-gray-50 transition-all shadow-sm">
                   <Settings2 className="h-5 w-5" />
                </button>
             </div>
@@ -363,7 +363,7 @@ export default function MenuPage() {
                 setSearchQuery("");
                 setActiveCategory("all");
               }}
-              className="mt-8 text-brand-orange font-black hover:scale-105 transition-all bg-brand-orange/5 px-8 py-3 rounded-2xl"
+              className="mt-8 bg-brand-orange text-white font-black hover:scale-105 transition-all px-8 py-3 rounded-2xl shadow-xl shadow-brand-orange/20"
             >
               Clear All Filters
             </button>
@@ -392,7 +392,7 @@ export default function MenuPage() {
                     autoFocus
                     type="text"
                     placeholder="e.g. Signature Pizzas"
-                    className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none"
+                    className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                     value={newCategoryName}
                     onChange={(e) => setNewCategoryName(e.target.value)}
                   />
@@ -444,7 +444,7 @@ export default function MenuPage() {
                       required
                       type="text"
                       placeholder="e.g. Truffle Beef Burger"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none"
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       value={itemForm.name}
                       onChange={(e) => setItemForm({...itemForm, name: e.target.value})}
                     />
@@ -455,7 +455,7 @@ export default function MenuPage() {
                       required
                       type="text"
                       placeholder="e.g. 18.00"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none"
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       value={itemForm.price}
                       onChange={(e) => setItemForm({...itemForm, price: e.target.value})}
                     />
@@ -465,7 +465,7 @@ export default function MenuPage() {
                     <div className="relative">
                       <select 
                         required
-                        className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none appearance-none cursor-pointer"
+                        className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none appearance-none cursor-pointer text-primary"
                         value={itemForm.categoryId}
                         onChange={(e) => setItemForm({...itemForm, categoryId: e.target.value})}
                       >
@@ -480,7 +480,7 @@ export default function MenuPage() {
                     <textarea 
                       rows={4}
                       placeholder="What makes this dish special? Mention key ingredients..."
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none resize-none"
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none resize-none text-primary placeholder:text-gray-300"
                       value={itemForm.description}
                       onChange={(e) => setItemForm({...itemForm, description: e.target.value})}
                     />
@@ -489,7 +489,7 @@ export default function MenuPage() {
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Image URL (High Quality)</label>
                     <input 
                       type="text"
-                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none"
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       placeholder="https://images.unsplash.com/photo-..."
                       value={itemForm.imageUrl}
                       onChange={(e) => setItemForm({...itemForm, imageUrl: e.target.value})}
