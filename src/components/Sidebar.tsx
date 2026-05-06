@@ -43,16 +43,16 @@ export default function Sidebar() {
 
   return (
     <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans">
-      <div className="p-8 mb-4">
+      <div className="p-6 pt-10 mb-2">
         <Link href="/dashboard" className="flex items-center justify-center w-full">
-          <div className="relative h-28 w-28 overflow-hidden">
-            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain transition-transform" />
+          <div className="relative h-14 w-full">
+            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain" />
           </div>
         </Link>
       </div>
 
       <nav className="flex-1 px-6 space-y-2">
-        <p className="px-4 text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">Main Menu</p>
+        <p className="px-4 text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6">Main Menu</p>
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
