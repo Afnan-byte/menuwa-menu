@@ -252,16 +252,16 @@ export default function PublicMenuPage() {
                           />
                           <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/20 to-transparent"></div>
                           
-                          {/* Top Left Icons (Dietary) */}
+                          {/* Top Left Icons (Dietary - Light Background) */}
                           <div className="absolute top-5 left-5 flex flex-col gap-2 z-20">
                             {item.dietaryType === "veg" && (
-                              <div className="bg-[#196F03] p-2.5 rounded-2xl shadow-lg border border-white/20">
-                                <Leaf className="h-4 w-4 text-white fill-white" />
+                              <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-lg border border-white/20">
+                                <Leaf className="h-4 w-4 text-[#196F03] fill-[#196F03]/20" />
                               </div>
                             )}
                             {item.dietaryType === "non-veg" && (
-                              <div className="bg-red-500 p-2.5 rounded-2xl shadow-lg border border-white/20">
-                                <Flame className="h-4 w-4 text-white fill-white" />
+                              <div className="bg-white/90 backdrop-blur-md p-2.5 rounded-2xl shadow-lg border border-white/20">
+                                <Flame className="h-4 w-4 text-red-500 fill-red-500/20" />
                               </div>
                             )}
                           </div>
@@ -357,13 +357,13 @@ export default function PublicMenuPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
                      {selectedItem.dietaryType === "veg" && (
-                       <div className="px-5 py-3 bg-[#196F03] text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-green-400">
-                         <Leaf className="h-4 w-4 fill-white" /> Vegetarian
+                       <div className="px-5 py-3 bg-white text-[#196F03] text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-green-100">
+                         <Leaf className="h-4 w-4 fill-[#196F03]/20" /> Vegetarian
                        </div>
                      )}
                      {selectedItem.dietaryType === "non-veg" && (
-                       <div className="px-5 py-3 bg-red-500 text-white text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-red-400">
-                         <Flame className="h-4 w-4 fill-white" /> Non-Veg
+                       <div className="px-5 py-3 bg-white text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-2xl shadow-xl flex items-center gap-2 border border-red-100">
+                         <Flame className="h-4 w-4 fill-red-500/20" /> Non-Veg
                        </div>
                      )}
                   </div>
