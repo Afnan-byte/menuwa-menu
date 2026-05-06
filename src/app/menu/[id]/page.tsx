@@ -141,7 +141,7 @@ export default function PublicMenuPage() {
         <motion.div 
           animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="h-16 w-16 border-t-2 border-r-2 border-[#196F03] rounded-full"
+          className="h-16 w-16 border-t-2 border-r-2 border-[color:var(--brand-primary)] rounded-full"
         />
       </div>
     );
@@ -158,7 +158,7 @@ export default function PublicMenuPage() {
 
   return (
     <div
-      className={cn("min-h-screen font-sans selection:bg-[#196F03]/30 pb-32 transition-colors duration-500", isDark ? "bg-[#0A0A0A] text-white" : "bg-gray-50 text-gray-900")}
+      className={cn("min-h-screen font-sans selection:bg-[rgba(var(--brand-primary-rgb),0.3)] pb-32 transition-colors duration-500", isDark ? "bg-[#0A0A0A] text-white" : "bg-gray-50 text-gray-900")}
       style={{ "--brand-primary": themeColor, "--brand-primary-rgb": themeRgb } as any}
       ref={containerRef}
     >
@@ -178,8 +178,8 @@ export default function PublicMenuPage() {
               animate={{ y: 0, opacity: 1 }}
               className="relative mb-6"
             >
-              <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
-              <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
+              <div className="absolute -inset-4 bg-[rgba(var(--brand-primary-rgb),0.2)] blur-3xl rounded-full animate-pulse"></div>
+              <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[color:var(--brand-primary)] via-white/20 to-[color:var(--brand-primary)] shadow-2xl">
                 <div className={cn("relative w-full h-full rounded-full overflow-hidden border-2 p-4", isDark ? "bg-white/5 border-white/10" : "bg-white border-white")}>
                   <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-contain p-2" />
                 </div>
@@ -209,7 +209,7 @@ export default function PublicMenuPage() {
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "w-full backdrop-blur-3xl border rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 transition-all font-medium shadow-xl",
+                "w-full backdrop-blur-3xl border rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[rgba(var(--brand-primary-rgb),0.4)] transition-all font-medium shadow-xl",
                 isDark 
                   ? "bg-[#1A1A1A]/90 border-white/5 text-white placeholder:text-gray-600 focus:bg-[#1A1A1A]" 
                   : "bg-white/90 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:bg-white"
@@ -223,7 +223,7 @@ export default function PublicMenuPage() {
               className={cn(
                 "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
                 activeCategory === "all"
-                  ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
+                  ? "bg-[color:var(--brand-primary)] text-white border-[color:var(--brand-primary)] shadow-[0_0_20px_rgba(var(--brand-primary-rgb),0.3)]"
                   : isDark 
                     ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
                     : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
@@ -239,7 +239,7 @@ export default function PublicMenuPage() {
                 className={cn(
                   "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
                   activeCategory === cat.id
-                    ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
+                    ? "bg-[color:var(--brand-primary)] text-white border-[color:var(--brand-primary)] shadow-[0_0_20px_rgba(var(--brand-primary-rgb),0.3)]"
                     : isDark 
                       ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
                       : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
@@ -257,7 +257,7 @@ export default function PublicMenuPage() {
           <section className="pt-8 pb-4">
             <div className="px-6 mb-6 flex items-baseline justify-between">
               <h2 className={cn("text-3xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>Best Sellers</h2>
-              <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em]">Signature</span>
+              <span className="text-[10px] font-bold text-[color:var(--brand-primary)] uppercase tracking-[0.4em]">Signature</span>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
               {featuredItems.map((item) => (
@@ -267,16 +267,16 @@ export default function PublicMenuPage() {
                   whileHover={{ scale: 1.02 }}
                   className="flex-shrink-0 w-72 group cursor-pointer"
                 >
-                  <div className={cn("relative aspect-[4/5] rounded-[3.5rem] overflow-hidden shadow-2xl border mb-4 transition-all duration-500 group-hover:border-[#196F03]/30", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}>
+                  <div className={cn("relative aspect-[4/5] rounded-[3.5rem] overflow-hidden shadow-2xl border mb-4 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}>
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
                     <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
                     <div className="absolute bottom-8 left-8 right-8">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-serif text-2xl text-white line-clamp-1">{item.name}</h3>
-                        <span className="text-[12px] font-bold text-[#196F03] bg-white px-3 py-1 rounded-full shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                        <span className="text-[12px] font-bold text-[color:var(--brand-primary)] bg-white px-3 py-1 rounded-full shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                       </div>
                       <div className="flex items-center gap-2 text-[9px] font-bold uppercase tracking-[0.25em] text-gray-400">
-                        Explore Selection <ArrowRight className="h-3 w-3 text-[#196F03]" />
+                        Explore Selection <ArrowRight className="h-3 w-3 text-[color:var(--brand-primary)]" />
                       </div>
                     </div>
                   </div>
@@ -305,7 +305,7 @@ export default function PublicMenuPage() {
                   setDietaryFilter("all");
                   setActiveCategory("all");
                 }}
-                className={cn("mt-10 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-[#196F03] rounded-full border transition-all", isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm")}
+                className={cn("mt-10 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-[color:var(--brand-primary)] rounded-full border transition-all", isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm")}
               >
                 Clear all filters
               </button>
@@ -345,7 +345,7 @@ export default function PublicMenuPage() {
                         className="group cursor-pointer relative"
                       >
                         <div className="grid grid-cols-12 gap-6 items-start">
-                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
+                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[rgba(var(--brand-primary-rgb),0.3)] transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
@@ -373,11 +373,11 @@ export default function PublicMenuPage() {
                                   </div>
                                 )}
                               </div>
-                              <span className="text-[15px] font-bold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                              <span className="text-[15px] font-bold text-[color:var(--brand-primary)] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                             </div>
-                            <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
+                            <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[color:var(--brand-primary)] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
-                            <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#196F03] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
+                            <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[color:var(--brand-primary)] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
                               Discover <ArrowRight className="h-3.5 w-3.5" />
                             </div>
                           </div>
