@@ -44,8 +44,8 @@ interface MenuItem {
   imageUrl: string;
   isAvailable: boolean;
   tags?: string[];
+  dietaryType?: "veg" | "non-veg" | "none";
   isPopular?: boolean;
-  isVegetarian?: boolean;
 }
 
 interface Restaurant {
@@ -97,8 +97,7 @@ export default function PublicMenuPage() {
       const fetchedItems = itemSnap.docs.map((doc, idx) => ({ 
         id: doc.id, 
         ...doc.data(),
-        isPopular: idx % 3 === 0,
-        isVegetarian: idx % 2 === 0
+        isPopular: idx % 4 === 0,
       } as MenuItem));
       
       setItems(fetchedItems);
@@ -120,9 +119,9 @@ export default function PublicMenuPage() {
       <div className="min-h-screen flex items-center justify-center bg-white">
         <div className="relative h-24 w-24">
           <div className="absolute inset-0 border-[6px] border-gray-100 rounded-full" />
-          <div className="absolute inset-0 border-[6px] border-t-brand-green rounded-full animate-spin" />
+          <div className="absolute inset-0 border-[6px] border-t-[#196F03] rounded-full animate-spin" />
           <div className="absolute inset-0 flex items-center justify-center">
-             <Utensils className="h-8 w-8 text-brand-green animate-pulse" />
+             <Utensils className="h-8 w-8 text-[#196F03] animate-pulse" />
           </div>
         </div>
       </div>
@@ -261,9 +260,14 @@ export default function PublicMenuPage() {
                                 <Flame className="h-3 w-3 text-white" />
                               </div>
                             )}
-                            {item.isVegetarian && (
+                            {item.dietaryType === "veg" && (
                               <div className="bg-green-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
                                 <Leaf className="h-3 w-3 text-white" />
+                              </div>
+                            )}
+                            {item.dietaryType === "non-veg" && (
+                              <div className="bg-red-500/90 backdrop-blur-md p-2 rounded-xl border border-white/20 shadow-lg">
+                                <Flame className="h-3 w-3 text-white rotate-180" />
                               </div>
                             )}
                           </div>
@@ -279,9 +283,8 @@ export default function PublicMenuPage() {
                           {/* Info Overlay */}
                           <div className="absolute bottom-6 left-6 right-6">
                             <div className="flex items-center gap-2 mb-1.5">
-                               {item.tags?.slice(0, 1).map(tag => (
-                                 <span key={tag} className="text-[8px] font-black text-white/40 uppercase tracking-[0.2em]">{tag}</span>
-                               ))}
+                               {item.dietaryType === "veg" && <span className="text-[8px] font-black text-green-400 uppercase tracking-[0.2em]">Vegetarian</span>}
+                               {item.dietaryType === "non-veg" && <span className="text-[8px] font-black text-red-400 uppercase tracking-[0.2em]">Non-Veg</span>}
                             </div>
                             <h3 className={cn(
                               "text-white font-black tracking-tight line-clamp-1 mb-1",
@@ -365,7 +368,8 @@ export default function PublicMenuPage() {
                   <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
                   <div className="absolute bottom-10 left-10 flex gap-3">
                      {selectedItem.isPopular && <div className="px-4 py-2 bg-orange-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Popular Choice</div>}
-                     {selectedItem.isVegetarian && <div className="px-4 py-2 bg-green-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Leaf className="h-3 w-3" /> Fresh Veg</div>}
+                     {selectedItem.dietaryType === "veg" && <div className="px-4 py-2 bg-green-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Leaf className="h-3 w-3" /> Fresh Veg</div>}
+                     {selectedItem.dietaryType === "non-veg" && <div className="px-4 py-2 bg-red-500 text-white text-[10px] font-black uppercase tracking-widest rounded-xl shadow-xl flex items-center gap-2"><Flame className="h-3 w-3" /> Non-Veg</div>}
                   </div>
                 </div>
 
