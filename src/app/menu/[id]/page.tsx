@@ -166,6 +166,17 @@ export default function PublicMenuPage() {
 
         {/* Cinematic Branding Header */}
         <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-8 pb-8">
+          {/* Co-branding Bar */}
+          <div className="absolute top-8 left-6 flex items-center gap-3 z-30">
+            <div className={cn("relative h-10 w-10 rounded-full overflow-hidden border", isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white shadow-sm")}>
+              <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Restaurant" fill className="object-contain p-1" />
+            </div>
+            <X className={cn("h-2.5 w-2.5", isDark ? "text-white/20" : "text-gray-400")} />
+            <div className="flex items-center">
+              <Image src="/logo.svg" alt="Menuwo" width={60} height={16} className={cn("object-contain", isDark ? "opacity-30 brightness-0 invert" : "opacity-30")} />
+            </div>
+          </div>
+
           {/* Dynamic Background Layer */}
           <div className={cn("absolute inset-0 z-0 transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-white")}></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)] z-0"></div>
