@@ -14,13 +14,13 @@ import {
   doc,
   writeBatch
 } from "firebase/firestore";
-import { 
-  Plus, 
-  FolderPlus, 
-  Utensils, 
-  Search, 
-  Loader2, 
-  X, 
+import {
+  Plus,
+  FolderPlus,
+  Utensils,
+  Search,
+  Loader2,
+  X,
   Filter,
   MoreVertical,
   Settings2,
@@ -128,27 +128,27 @@ export default function MenuPage() {
   const handleDeleteCategory = async (catId: string, e: React.MouseEvent) => {
     e.stopPropagation();
     if (!confirm("Are you sure? This will delete the category and ALL items inside it.")) return;
-    
+
     setIsSaving(true);
     try {
       // Use a batch to delete category and its items
       const batch = writeBatch(db);
-      
+
       // Delete Category
       batch.delete(doc(db, "categories", catId));
-      
+
       // Delete all items in this category
       const categoryItems = items.filter(i => i.categoryId === catId);
       categoryItems.forEach(item => {
         batch.delete(doc(db, "items", item.id));
       });
-      
+
       await batch.commit();
-      
+
       setCategories(categories.filter(c => c.id !== catId));
       setItems(items.filter(i => i.categoryId !== catId));
       if (activeCategory === catId) setActiveCategory("all");
-      
+
       toast.success("Category and items removed");
     } catch (error) {
       toast.error("Deletion failed");
@@ -210,8 +210,8 @@ export default function MenuPage() {
   const filteredItems = useMemo(() => {
     return items.filter(item => {
       const matchesCategory = activeCategory === "all" || item.categoryId === activeCategory;
-      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) || 
-                           item.description.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        item.description.toLowerCase().includes(searchQuery.toLowerCase());
       return matchesCategory && matchesSearch;
     });
   }, [items, activeCategory, searchQuery]);
@@ -226,7 +226,7 @@ export default function MenuPage() {
               <h2 className="text-xl font-black text-primary tracking-tight">Catalogue</h2>
               <p className="text-[10px] font-black text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
             </div>
-            <button 
+            <button
               onClick={() => setIsCategoryModalOpen(true)}
               className="p-3 bg-gray-100 text-brand-orange rounded-2xl hover:bg-brand-orange hover:text-white transition-all shadow-sm group"
             >
@@ -243,10 +243,10 @@ export default function MenuPage() {
               )}
             >
               <div className="flex items-center gap-3">
-                 <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
-                    <LayoutGrid className="h-4 w-4" />
-                 </div>
-                 <span className="text-xs font-black">All Items</span>
+                <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
+                  <LayoutGrid className="h-4 w-4" />
+                </div>
+                <span className="text-xs font-black">All Items</span>
               </div>
               <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
             </button>
@@ -262,7 +262,7 @@ export default function MenuPage() {
                 >
                   <div className="flex items-center gap-3">
                     <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-brand-orange")}>
-                        <Utensils className="h-4 w-4" />
+                      <Utensils className="h-4 w-4" />
                     </div>
                     <span className="text-xs font-black truncate max-w-[120px]">{cat.name}</span>
                   </div>
@@ -272,7 +272,7 @@ export default function MenuPage() {
                     </span>
                   </div>
                 </button>
-                <button 
+                <button
                   onClick={(e) => handleDeleteCategory(cat.id, e)}
                   className={cn(
                     "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
@@ -286,13 +286,13 @@ export default function MenuPage() {
           </div>
 
           <div className="mt-12 pt-8 border-t border-gray-50">
-             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
-                <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-3">Menu Visibility</p>
-                <h4 className="text-sm font-black text-primary mb-4 leading-tight">Your menu is live and accepting scans</h4>
-                <button className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all">
-                   View Live Menu
-                </button>
-             </div>
+            <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
+              <p className="text-[10px] font-black text-primary/40 uppercase tracking-widest mb-3">Menu Visibility</p>
+              <h4 className="text-sm font-black text-primary mb-4 leading-tight">Your menu is live and accepting scans</h4>
+              <button className="w-full py-3 bg-primary text-white font-black text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-brand-orange hover:shadow-brand-orange/20 transition-all">
+                View Live Menu
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -305,12 +305,12 @@ export default function MenuPage() {
             <h1 className="text-4xl font-black text-primary tracking-tighter">Menu Manager</h1>
             <p className="text-gray-400 font-medium mt-1">Found {filteredItems.length} items in your collection.</p>
           </div>
-          
+
           <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
             {/* Search Bar */}
             <div className="relative w-full sm:w-80 group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-orange transition-colors" />
-              <input 
+              <input
                 type="text"
                 placeholder="Search anything..."
                 value={searchQuery}
@@ -320,45 +320,45 @@ export default function MenuPage() {
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
-               <button 
-                 onClick={() => {
-                   setEditingItem(null);
-                   setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
-                   setIsItemModalOpen(true);
-                 }}
-                 className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-brand-orange text-white font-black rounded-[2rem] hover:bg-orange-600 hover:scale-105 transition-all shadow-xl shadow-brand-orange/30 whitespace-nowrap"
-               >
-                 <Plus className="h-5 w-5" />
-                 Add New Item
-               </button>
-               <button className="p-4 bg-white border border-gray-100 rounded-[2rem] text-gray-400 hover:text-primary hover:bg-gray-50 transition-all shadow-sm">
-                  <Settings2 className="h-5 w-5" />
-               </button>
+              <button
+                onClick={() => {
+                  setEditingItem(null);
+                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [] });
+                  setIsItemModalOpen(true);
+                }}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-brand-orange text-white font-black rounded-[2rem] hover:bg-orange-600 hover:scale-105 transition-all shadow-xl shadow-brand-orange/30 whitespace-nowrap"
+              >
+                <Plus className="h-5 w-5" />
+                Add New Item
+              </button>
+              <button className="p-4 bg-white border border-gray-100 rounded-[2rem] text-gray-400 hover:text-primary hover:bg-gray-50 transition-all shadow-sm">
+                <Settings2 className="h-5 w-5" />
+              </button>
             </div>
           </div>
         </div>
 
         {/* View Controls */}
         <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-           <div className="flex items-center gap-6">
-              <button className="text-xs font-black text-brand-orange border-b-2 border-brand-orange pb-6 -mb-[26px]">All Dishes</button>
-              <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Available</button>
-              <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Sold Out</button>
-           </div>
-           <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
-              <button 
-                onClick={() => setViewMode("grid")}
-                className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-brand-orange" : "text-gray-400")}
-              >
-                 <LayoutGrid className="h-4 w-4" />
-              </button>
-              <button 
-                onClick={() => setViewMode("list")}
-                className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-brand-orange" : "text-gray-400")}
-              >
-                 <List className="h-4 w-4" />
-              </button>
-           </div>
+          <div className="flex items-center gap-6">
+            <button className="text-xs font-black text-brand-orange border-b-2 border-brand-orange pb-6 -mb-[26px]">All Dishes</button>
+            <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Available</button>
+            <button className="text-xs font-black text-gray-300 hover:text-primary transition-colors pb-6 -mb-[26px]">Sold Out</button>
+          </div>
+          <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
+            <button
+              onClick={() => setViewMode("grid")}
+              className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-brand-orange" : "text-gray-400")}
+            >
+              <LayoutGrid className="h-4 w-4" />
+            </button>
+            <button
+              onClick={() => setViewMode("list")}
+              className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-brand-orange" : "text-gray-400")}
+            >
+              <List className="h-4 w-4" />
+            </button>
+          </div>
         </div>
 
         {/* Items Grid */}
@@ -373,7 +373,7 @@ export default function MenuPage() {
             viewMode === "grid" ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" : "grid-cols-1"
           )}>
             {filteredItems.map((item) => (
-              <MenuItemCard 
+              <MenuItemCard
                 key={item.id}
                 item={item}
                 onEdit={() => {
@@ -387,7 +387,7 @@ export default function MenuPage() {
             ))}
           </div>
         ) : (
-          <motion.div 
+          <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50 group hover:border-brand-orange/10 transition-colors"
@@ -397,9 +397,9 @@ export default function MenuPage() {
             </div>
             <p className="text-gray-400 font-black text-xl tracking-tight">No matching items found.</p>
             <p className="text-gray-300 text-sm mt-2 max-w-[250px] text-center leading-relaxed">
-               Try adjusting your search or category filters to find what you're looking for.
+              Try adjusting your search or category filters to find what you're looking for.
             </p>
-            <button 
+            <button
               onClick={() => {
                 setSearchQuery("");
                 setActiveCategory("all");
@@ -416,7 +416,7 @@ export default function MenuPage() {
       <AnimatePresence>
         {isCategoryModalOpen && (
           <div className="fixed inset-0 bg-primary/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.9, opacity: 0 }}
@@ -425,11 +425,11 @@ export default function MenuPage() {
               <div className="absolute top-0 right-0 w-32 h-32 bg-brand-orange/5 rounded-full translate-x-10 -translate-y-10"></div>
               <h2 className="text-3xl font-black text-primary mb-2 tracking-tight relative z-10">New Section</h2>
               <p className="text-gray-400 text-sm mb-10 font-medium relative z-10">Organize your menu logically.</p>
-              
+
               <form onSubmit={handleAddCategory} className="space-y-8 relative z-10">
                 <div>
                   <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Section Name</label>
-                  <input 
+                  <input
                     autoFocus
                     type="text"
                     placeholder="e.g. Signature Pizzas"
@@ -439,14 +439,14 @@ export default function MenuPage() {
                   />
                 </div>
                 <div className="flex gap-4">
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setIsCategoryModalOpen(false)}
                     className="flex-1 py-5 font-black text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     Cancel
                   </button>
-                  <button 
+                  <button
                     type="submit"
                     disabled={isSaving}
                     className="flex-1 py-5 bg-primary text-white font-black rounded-2xl hover:bg-brand-orange transition-all shadow-xl shadow-primary/10 flex items-center justify-center disabled:opacity-70"
@@ -461,7 +461,7 @@ export default function MenuPage() {
 
         {isItemModalOpen && (
           <div className="fixed inset-0 bg-primary/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.9, opacity: 0, y: 20 }}
               animate={{ scale: 1, opacity: 1, y: 0 }}
               exit={{ scale: 0.9, opacity: 0, y: 20 }}
@@ -481,34 +481,34 @@ export default function MenuPage() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                   <div>
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Dish Name</label>
-                    <input 
+                    <input
                       required
                       type="text"
                       placeholder="e.g. Truffle Beef Burger"
                       className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       value={itemForm.name}
-                      onChange={(e) => setItemForm({...itemForm, name: e.target.value})}
+                      onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })}
                     />
                   </div>
                   <div>
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Price ($)</label>
-                    <input 
+                    <input
                       required
                       type="text"
                       placeholder="e.g. 18.00"
                       className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       value={itemForm.price}
-                      onChange={(e) => setItemForm({...itemForm, price: e.target.value})}
+                      onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })}
                     />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Section / Category</label>
                     <div className="relative">
-                      <select 
+                      <select
                         required
                         className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none appearance-none cursor-pointer text-primary"
                         value={itemForm.categoryId}
-                        onChange={(e) => setItemForm({...itemForm, categoryId: e.target.value})}
+                        onChange={(e) => setItemForm({ ...itemForm, categoryId: e.target.value })}
                       >
                         <option value="" disabled>Select a Section</option>
                         {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
@@ -518,39 +518,39 @@ export default function MenuPage() {
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Description</label>
-                    <textarea 
+                    <textarea
                       rows={4}
                       placeholder="What makes this dish special? Mention key ingredients..."
                       className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none resize-none text-primary placeholder:text-gray-300"
                       value={itemForm.description}
-                      onChange={(e) => setItemForm({...itemForm, description: e.target.value})}
+                      onChange={(e) => setItemForm({ ...itemForm, description: e.target.value })}
                     />
                   </div>
                   <div className="md:col-span-2">
                     <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Image URL</label>
                     <div className="relative">
-                       <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                       <input 
-                         type="text"
-                         className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                         placeholder="Paste image URL (Unsplash, Cloudinary, etc.)"
-                         value={itemForm.imageUrl}
-                         onChange={(e) => setItemForm({...itemForm, imageUrl: e.target.value})}
-                       />
+                      <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                      <input
+                        type="text"
+                        className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
+                        placeholder="Paste image URL (Unsplash, Cloudinary, etc.)"
+                        value={itemForm.imageUrl}
+                        onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })}
+                      />
                     </div>
                   </div>
                 </div>
 
                 <div className="flex gap-6 pt-6 border-t border-gray-50">
-                  <button 
+                  <button
                     type="button"
                     onClick={() => setIsItemModalOpen(false)}
                     className="flex-1 py-5 font-black text-gray-400 hover:text-gray-600 transition-colors"
                   >
                     Discard Changes
                   </button>
-                  <button 
-                    type="submit" 
+                  <button
+                    type="submit"
                     disabled={isSaving}
                     className="flex-[2] py-5 bg-brand-orange text-white font-black rounded-[1.5rem] hover:bg-orange-600 hover:scale-[1.02] transition-all shadow-xl shadow-brand-orange/20 flex items-center justify-center gap-3 disabled:opacity-70"
                   >

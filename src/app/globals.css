@@ -2,10 +2,10 @@
 
 @theme {
   --color-primary: #0A161E;
-  --color-brand-orange: #14B8A6; /* Teal - The new Green-Blue primary */
-  --color-brand-green: #0D9488; /* Darker Teal */
-  --color-accent: #0EA5E9; /* Cyan Blue */
-  --color-background-soft: #F0F9FF; /* Very light blue background */
+  --color-brand-orange: #14B8A6; /* Teal */
+  --color-brand-green: #0D9488;
+  --color-accent: #0EA5E9; /* Cyan */
+  --color-background-soft: #FFFFFF;
 
   --radius-2xl: 1.25rem;
   --radius-3xl: 2rem;
@@ -23,7 +23,7 @@
 }
 
 :root {
-  --background: #F0F9FF;
+  --background: #FFFFFF;
   --foreground: #0A161E;
   --primary: #0A161E;
   --accent: #14B8A6;
@@ -40,7 +40,7 @@ body {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(20, 184, 166, 0.1);
+  border: 1px solid rgba(10, 22, 30, 0.05);
 }
 
 .glow-orange {
@@ -53,4 +53,10 @@ body {
 
 .sidebar-shadow {
   box-shadow: 10px 0 50px -10px rgba(10, 22, 30, 0.03);
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 0px;
+  height: 0px;
 }
