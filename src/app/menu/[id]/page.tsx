@@ -59,6 +59,7 @@ interface Restaurant {
   themeColor?: string;
   whatsapp?: string;
   phone?: string;
+  menuTheme?: "dark" | "light";
 }
 
 const hexToRgb = (hex: string) => {
@@ -84,6 +85,7 @@ export default function PublicMenuPage() {
 
   const themeColor = restaurant?.themeColor || "#196F03";
   const themeRgb = useMemo(() => hexToRgb(themeColor), [themeColor]);
+  const isDark = restaurant?.menuTheme !== "light";
 
   useEffect(() => {
     if (id) {
@@ -156,18 +158,18 @@ export default function PublicMenuPage() {
 
   return (
     <div
-      className="min-h-screen bg-[#0A0A0A] text-white font-sans selection:bg-[#196F03]/30 pb-32"
+      className={cn("min-h-screen font-sans selection:bg-[#196F03]/30 pb-32 transition-colors duration-500", isDark ? "bg-[#0A0A0A] text-white" : "bg-gray-50 text-gray-900")}
       style={{ "--brand-primary": themeColor, "--brand-primary-rgb": themeRgb } as any}
       ref={containerRef}
     >
-      <div className="max-w-md mx-auto min-h-screen flex flex-col relative bg-[#0A0A0A]">
+      <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
         {/* Cinematic Branding Header */}
         <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-8 pb-8">
           {/* Dynamic Background Layer */}
-          <div className="absolute inset-0 bg-[#0A0A0A] z-0"></div>
+          <div className={cn("absolute inset-0 z-0 transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-white")}></div>
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_50%_50%,rgba(var(--brand-primary-rgb),0.15),transparent_70%)] z-0"></div>
-          <div className="absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent via-white/10 to-transparent z-0"></div>
+          <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent to-transparent z-0", isDark ? "via-white/10" : "via-black/5")}></div>
 
           {/* Branding Content */}
           <div className="relative flex flex-col items-center justify-center px-6 text-center z-20 w-full mt-6">
@@ -178,7 +180,7 @@ export default function PublicMenuPage() {
             >
               <div className="absolute -inset-4 bg-[#196F03]/20 blur-3xl rounded-full animate-pulse"></div>
               <div className="relative h-32 w-32 rounded-full p-1 bg-gradient-to-tr from-[#196F03] via-white/20 to-[#196F03] shadow-2xl">
-                <div className="relative w-full h-full rounded-full overflow-hidden bg-white/5 border-2 border-white/10 p-4">
+                <div className={cn("relative w-full h-full rounded-full overflow-hidden border-2 p-4", isDark ? "bg-white/5 border-white/10" : "bg-white border-white")}>
                   <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Logo" fill className="object-contain p-2" />
                 </div>
               </div>
@@ -190,7 +192,7 @@ export default function PublicMenuPage() {
               transition={{ delay: 0.1 }}
               className="mt-4 mb-4"
             >
-              <h1 className="text-4xl sm:text-5xl font-serif text-white tracking-tight leading-none drop-shadow-2xl px-2">
+              <h1 className={cn("text-4xl sm:text-5xl font-serif tracking-tight leading-none drop-shadow-2xl px-2", isDark ? "text-white" : "text-gray-900")}>
                 {restaurant?.restaurantName || "Menu"}
               </h1>
             </motion.div>
@@ -200,13 +202,18 @@ export default function PublicMenuPage() {
         {/* Search & Filters - Dark Glass */}
         <div className="px-6 -mt-6 relative z-30 space-y-4">
           <div className="relative group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-500 group-focus-within:text-white transition-colors" />
+            <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
             <input
               type="text"
               placeholder="Search our selection..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-[#1A1A1A]/90 backdrop-blur-3xl border border-white/5 rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 focus:bg-[#1A1A1A] transition-all font-medium text-white placeholder:text-gray-600 shadow-xl"
+              className={cn(
+                "w-full backdrop-blur-3xl border rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 transition-all font-medium shadow-xl",
+                isDark 
+                  ? "bg-[#1A1A1A]/90 border-white/5 text-white placeholder:text-gray-600 focus:bg-[#1A1A1A]" 
+                  : "bg-white/90 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:bg-white"
+              )}
             />
           </div>
 
@@ -217,7 +224,9 @@ export default function PublicMenuPage() {
                 "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
                 activeCategory === "all"
                   ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
-                  : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
+                  : isDark 
+                    ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
+                    : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
               )}
             >
               <LayoutGrid className="h-3.5 w-3.5" />
@@ -231,7 +240,9 @@ export default function PublicMenuPage() {
                   "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-bold uppercase tracking-widest transition-all",
                   activeCategory === cat.id
                     ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
-                    : "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
+                    : isDark 
+                      ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
+                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
                 )}
               >
                 <Utensils className="h-3.5 w-3.5" />
@@ -241,11 +252,11 @@ export default function PublicMenuPage() {
           </div>
         </div>
 
-        {/* Featured Section - Dark Mode */}
+        {/* Featured Section */}
         {featuredItems.length > 0 && searchQuery === "" && (
           <section className="pt-8 pb-4">
             <div className="px-6 mb-6 flex items-baseline justify-between">
-              <h2 className="text-3xl font-serif text-white tracking-tight">Best Sellers</h2>
+              <h2 className={cn("text-3xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>Best Sellers</h2>
               <span className="text-[10px] font-bold text-[#196F03] uppercase tracking-[0.4em]">Signature</span>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
@@ -256,9 +267,9 @@ export default function PublicMenuPage() {
                   whileHover={{ scale: 1.02 }}
                   className="flex-shrink-0 w-72 group cursor-pointer"
                 >
-                  <div className="relative aspect-[4/5] rounded-[3.5rem] overflow-hidden bg-[#1A1A1A] shadow-2xl border border-white/5 mb-4 transition-all duration-500 group-hover:border-[#196F03]/30">
+                  <div className={cn("relative aspect-[4/5] rounded-[3.5rem] overflow-hidden shadow-2xl border mb-4 transition-all duration-500 group-hover:border-[#196F03]/30", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}>
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-opacity" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-transparent to-transparent"></div>
+                    <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
                     <div className="absolute bottom-8 left-8 right-8">
                       <div className="flex items-center justify-between mb-2">
                         <h3 className="font-serif text-2xl text-white line-clamp-1">{item.name}</h3>
@@ -283,10 +294,10 @@ export default function PublicMenuPage() {
               animate={{ opacity: 1 }}
               className="flex flex-col items-center justify-center py-20 text-center"
             >
-              <div className="h-24 w-24 bg-white/5 rounded-full flex items-center justify-center mb-8 border border-white/10">
-                <Utensils className="h-8 w-8 text-gray-700" />
+              <div className={cn("h-24 w-24 rounded-full flex items-center justify-center mb-8 border", isDark ? "bg-white/5 border-white/10" : "bg-gray-100 border-gray-200")}>
+                <Utensils className="h-8 w-8 text-gray-500" />
               </div>
-              <h3 className="text-2xl font-serif text-white mb-3">No matches found</h3>
+              <h3 className={cn("text-2xl font-serif mb-3", isDark ? "text-white" : "text-gray-900")}>No matches found</h3>
               <p className="text-gray-500 text-sm max-w-[240px] leading-relaxed">We couldn't find any dishes matching your current selection.</p>
               <button
                 onClick={() => {
@@ -294,7 +305,7 @@ export default function PublicMenuPage() {
                   setDietaryFilter("all");
                   setActiveCategory("all");
                 }}
-                className="mt-10 px-8 py-4 bg-white/5 text-[10px] font-bold uppercase tracking-[0.25em] text-[#196F03] rounded-full border border-white/10 hover:bg-white/10 transition-all"
+                className={cn("mt-10 px-8 py-4 text-[10px] font-bold uppercase tracking-[0.25em] text-[#196F03] rounded-full border transition-all", isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-gray-200 hover:bg-gray-50 shadow-sm")}
               >
                 Clear all filters
               </button>
@@ -314,8 +325,8 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 className="space-y-12"
               >
-                <div className="flex items-end justify-between px-2 border-b border-white/5 pb-4">
-                  <h2 className="text-4xl font-serif text-white tracking-tight leading-none">
+                <div className={cn("flex items-end justify-between px-2 border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
+                  <h2 className={cn("text-4xl font-serif tracking-tight leading-none", isDark ? "text-white" : "text-gray-900")}>
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
@@ -334,7 +345,7 @@ export default function PublicMenuPage() {
                         className="group cursor-pointer relative"
                       >
                         <div className="grid grid-cols-12 gap-6 items-start">
-                          <div className="col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden bg-[#1A1A1A] border border-white/5 group-hover:border-[#196F03]/30 transition-all duration-500">
+                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
@@ -364,7 +375,7 @@ export default function PublicMenuPage() {
                               </div>
                               <span className="text-[15px] font-bold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                             </div>
-                            <h3 className="text-2xl font-serif text-white tracking-tight leading-snug group-hover:text-[#196F03] transition-colors">{item.name}</h3>
+                            <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
                             <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#196F03] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
                               Discover <ArrowRight className="h-3.5 w-3.5" />
@@ -381,33 +392,33 @@ export default function PublicMenuPage() {
         </div>
 
 
-        {/* Item Details Immersive Modal - Premium Dark */}
+        {/* Item Details Immersive Modal */}
         <AnimatePresence>
           {selectedItem && (
             <div className="fixed inset-0 z-[100] flex items-end sm:items-center justify-center p-0 sm:p-6 overflow-hidden">
-              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedItem(null)} className="absolute inset-0 bg-black/95 backdrop-blur-3xl" />
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setSelectedItem(null)} className={cn("absolute inset-0 backdrop-blur-3xl", isDark ? "bg-black/95" : "bg-black/60")} />
               <motion.div
                 layoutId={selectedItem.id}
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
-                className="relative w-full max-w-md bg-[#0F0F0F] rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[95vh] flex flex-col border-t border-white/10"
+                className={cn("relative w-full max-w-md rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[95vh] flex flex-col border-t", isDark ? "bg-[#0F0F0F] border-white/10" : "bg-white border-white")}
               >
                 <div className="absolute top-6 inset-x-0 flex justify-center z-[110]">
-                  <div className="w-12 h-1.5 bg-white/10 rounded-full" />
+                  <div className={cn("w-12 h-1.5 rounded-full", isDark ? "bg-white/10" : "bg-black/20")} />
                 </div>
 
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className="absolute top-8 right-8 z-[110] h-12 w-12 bg-white/5 backdrop-blur-xl rounded-full flex items-center justify-center text-white border border-white/10 hover:bg-white/10 transition-all"
+                  className={cn("absolute top-8 right-8 z-[110] h-12 w-12 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/5 text-white border-white/20 hover:bg-black/20 shadow-lg")}
                 >
                   <X className="h-5 w-5" />
                 </button>
 
                 <div className="relative h-[40vh] w-full shrink-0">
                   <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
-                  <div className="absolute inset-0 bg-gradient-to-t from-[#0F0F0F] via-transparent to-transparent"></div>
-                  <div className="absolute bottom-8 left-10 flex gap-3">
+                  <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0F0F0F]" : "from-black/70")}></div>
+                  <div className="absolute bottom-8 left-10 flex gap-3 z-10">
                     {selectedItem.dietaryType === "veg" && (
                       <div className="px-5 py-2.5 bg-green-600/10 backdrop-blur-xl text-green-500 text-[10px] font-bold uppercase tracking-widest rounded-2xl border border-green-500/20 shadow-lg">
                         Vegetarian
@@ -421,7 +432,7 @@ export default function PublicMenuPage() {
                   </div>
                 </div>
 
-                <div className="px-12 pb-12 -mt-16 relative z-10 bg-[#0F0F0F] rounded-t-[4rem] flex-1 flex flex-col">
+                <div className={cn("px-12 pb-12 -mt-16 relative z-10 rounded-t-[4rem] flex-1 flex flex-col", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
                   <div className="pt-12 space-y-8 flex-1 overflow-y-auto no-scrollbar">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">
@@ -429,31 +440,31 @@ export default function PublicMenuPage() {
                       </span>
                     </div>
 
-                    <h2 className="text-5xl font-serif text-white tracking-tight leading-tight">{selectedItem.name}</h2>
-                    <p className="text-gray-400 text-lg leading-relaxed font-medium opacity-80">{selectedItem.description}</p>
+                    <h2 className={cn("text-5xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                    <p className="text-gray-500 text-lg leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
                     
-                    <div className="grid grid-cols-2 gap-8 pt-6 border-t border-white/5">
+                    <div className={cn("grid grid-cols-2 gap-8 pt-6 border-t", isDark ? "border-white/5" : "border-gray-100")}>
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest mb-2">Nutrients</span>
-                        <span className="text-sm font-bold text-white">450 Calories</span>
+                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Nutrients</span>
+                        <span className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>450 Calories</span>
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[9px] font-bold text-gray-600 uppercase tracking-widest mb-2">Delivery Time</span>
-                        <span className="text-sm font-bold text-white">Approx. 20m</span>
+                        <span className="text-[9px] font-bold text-gray-500 uppercase tracking-widest mb-2">Delivery Time</span>
+                        <span className={cn("text-sm font-bold", isDark ? "text-white" : "text-gray-900")}>Approx. 20m</span>
                       </div>
                     </div>
                   </div>
 
-                  <div className="pt-12 space-y-10 border-t border-white/5">
+                  <div className={cn("pt-12 space-y-10 border-t", isDark ? "border-white/5" : "border-gray-100")}>
                     <div className="flex items-baseline justify-between px-2">
-                      <span className="text-[10px] font-bold text-gray-600 uppercase tracking-[0.4em]">Total Value</span>
-                      <span className="text-5xl font-serif text-white tracking-tight">₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
+                      <span className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.4em]">Total Value</span>
+                      <span className={cn("text-5xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
                     </div>
 
                     <div className="flex gap-4">
                       <button
                         onClick={() => setSelectedItem(null)}
-                        className="h-20 w-20 bg-white/5 text-gray-500 rounded-[2rem] flex items-center justify-center hover:bg-white/10 transition-all shrink-0 border border-white/5"
+                        className={cn("h-20 w-20 rounded-[2rem] flex items-center justify-center transition-all shrink-0 border", isDark ? "bg-white/5 text-gray-500 hover:bg-white/10 border-white/5" : "bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-200")}
                       >
                         <ArrowRight className="h-6 w-6 rotate-180" />
                       </button>
@@ -476,12 +487,12 @@ export default function PublicMenuPage() {
         </AnimatePresence>
 
         {/* Footer */}
-        <footer className="mt-20 py-32 px-10 text-center bg-[#0F0F0F] rounded-t-[5rem] border-t border-white/5">
+        <footer className={cn("mt-20 py-32 px-10 text-center rounded-t-[5rem] border-t", isDark ? "bg-[#0F0F0F] border-white/5" : "bg-gray-100 border-gray-200")}>
           <div className="mb-12">
-            <Image src="/logo.svg" alt="Menuvo" width={140} height={60} className="mx-auto brightness-200 grayscale opacity-20" />
+            <Image src="/logo.svg" alt="Menuvo" width={140} height={60} className={cn("mx-auto grayscale", isDark ? "brightness-200 opacity-20" : "opacity-30")} />
           </div>
-          <p className="text-[10px] font-bold text-gray-700 uppercase tracking-[0.5em] mb-6">Designed by Menuvo Digital</p>
-          <div className="h-1 w-12 bg-white/5 mx-auto rounded-full" />
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuvo Digital</p>
+          <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/5" : "bg-gray-300")} />
         </footer>
       </div>
     </div>

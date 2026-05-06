@@ -22,13 +22,9 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 
-const THEME_COLORS = [
-  { name: "Savor Orange", color: "#FF9F0D", class: "bg-[#FF9F0D]" },
-  { name: "Emerald Green", color: "#10B981", class: "bg-[#10B981]" },
-  { name: "Ocean Blue", color: "#3B82F6", class: "bg-[#3B82F6]" },
-  { name: "Sunset Red", color: "#F43F5E", class: "bg-[#F43F5E]" },
-  { name: "Midnight Purple", color: "#8B5CF6", class: "bg-[#8B5CF6]" },
-  { name: "Classic Black", color: "#0F172A", class: "bg-[#0F172A]" },
+const MENU_THEMES = [
+  { name: "Dark Mode", value: "dark", class: "bg-[#0A0A0A] border-gray-700" },
+  { name: "Light Mode", value: "light", class: "bg-white border-gray-200" },
 ];
 
 export default function SettingsPage() {
@@ -40,8 +36,7 @@ export default function SettingsPage() {
     phone: "",
     whatsapp: "",
     logoUrl: "",
-    bannerUrl: "",
-    themeColor: "#FF9F0D",
+    menuTheme: "dark",
     googleReviewUrl: "",
   });
 
@@ -53,8 +48,7 @@ export default function SettingsPage() {
         phone: restaurantData.phone || "",
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
-        bannerUrl: restaurantData.bannerUrl || "",
-        themeColor: restaurantData.themeColor || "#FF9F0D",
+        menuTheme: restaurantData.menuTheme || "dark",
         googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
     }
@@ -97,13 +91,8 @@ export default function SettingsPage() {
         {/* Left Column: Profile Card */}
         <div className="lg:col-span-1 space-y-8">
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group">
-            {/* Banner Preview */}
             <div className="absolute top-0 inset-x-0 h-32 bg-gray-50 overflow-hidden">
-               {formData.bannerUrl ? (
-                 <img src={formData.bannerUrl} alt="Banner" className="h-full w-full object-cover opacity-50 group-hover:opacity-100 transition-opacity" />
-               ) : (
-                 <div className="h-full w-full bg-gray-50 group-hover:bg-brand-orange/5 transition-colors"></div>
-               )}
+               <div className={cn("h-full w-full transition-colors", formData.menuTheme === 'dark' ? "bg-[#0A0A0A]" : "bg-white border-b border-gray-100")}></div>
             </div>
 
             <div className="relative mt-12 mb-6">
@@ -131,8 +120,8 @@ export default function SettingsPage() {
                 </span>
               </div>
               <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-gray-300">
-                <span>Theme Color</span>
-                <div className={cn("h-4 w-4 rounded-full shadow-sm", THEME_COLORS.find(c => c.color === formData.themeColor)?.class || "bg-brand-orange")} style={{ backgroundColor: !THEME_COLORS.find(c => c.color === formData.themeColor) ? formData.themeColor : undefined }}></div>
+                <span>Menu Theme</span>
+                <div className={cn("h-4 w-4 rounded-full shadow-sm border", formData.menuTheme === 'dark' ? "bg-[#0A0A0A] border-gray-700" : "bg-white border-gray-300")}></div>
               </div>
             </div>
           </div>
@@ -154,61 +143,30 @@ export default function SettingsPage() {
 
             <div className="space-y-8">
               <div>
-                <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Choose Theme Color</label>
-                <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                  {THEME_COLORS.map((theme) => (
+                <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Choose Menu Theme</label>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  {MENU_THEMES.map((theme) => (
                     <button
-                      key={theme.color}
+                      key={theme.value}
                       type="button"
-                      onClick={() => setFormData({ ...formData, themeColor: theme.color })}
+                      onClick={() => setFormData({ ...formData, menuTheme: theme.value })}
                       className={cn(
                         "flex items-center gap-3 p-4 rounded-2xl border-2 transition-all group",
-                        formData.themeColor === theme.color
+                        formData.menuTheme === theme.value
                           ? "border-primary bg-primary/5 ring-4 ring-primary/5"
                           : "border-gray-100 hover:border-gray-200"
                       )}
                     >
-                      <div className={cn("h-6 w-6 rounded-full shadow-inner", theme.class)}></div>
-                      <span className={cn("text-xs font-black transition-colors", formData.themeColor === theme.color ? "text-primary" : "text-gray-400 group-hover:text-gray-600")}>
+                      <div className={cn("h-6 w-6 rounded-full shadow-sm border", theme.class)}></div>
+                      <span className={cn("text-xs font-black transition-colors", formData.menuTheme === theme.value ? "text-primary" : "text-gray-400 group-hover:text-gray-600")}>
                         {theme.name}
                       </span>
                     </button>
                   ))}
                 </div>
-
-                <div className="mt-8 pt-6 border-t border-gray-50 flex flex-col sm:flex-row sm:items-center gap-6">
-                  <div className="flex-1">
-                    <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-3 ml-1">Custom Color Code</label>
-                    <div className="relative">
-                      <span className="absolute left-6 top-1/2 -translate-y-1/2 font-bold text-gray-400">#</span>
-                      <input
-                        type="text"
-                        value={formData.themeColor.replace('#', '')}
-                        onChange={(e) => {
-                          const val = e.target.value.trim();
-                          if (val.length <= 6) {
-                            setFormData({ ...formData, themeColor: `#${val}` });
-                          }
-                        }}
-                        className="w-full pl-10 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary uppercase"
-                        placeholder="FF9F0D"
-                      />
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-4 px-6 py-4 bg-gray-50 rounded-2xl border border-gray-100">
-                    <div
-                      className="h-10 w-10 rounded-full shadow-lg border-4 border-white"
-                      style={{ backgroundColor: formData.themeColor }}
-                    ></div>
-                    <div>
-                      <p className="text-[10px] font-black text-gray-400 uppercase tracking-widest">Live Preview</p>
-                      <p className="text-xs font-black text-primary uppercase">{formData.themeColor}</p>
-                    </div>
-                  </div>
-                </div>
               </div>
 
-              <div className="pt-8 border-t border-gray-50 grid grid-cols-1 md:grid-cols-2 gap-8">
+              <div className="pt-8 border-t border-gray-50">
                 <div>
                   <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo Image URL</label>
                   <div className="relative">
@@ -219,19 +177,6 @@ export default function SettingsPage() {
                       onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
                       className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
                       placeholder="Paste your logo URL"
-                    />
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Hero Banner URL</label>
-                  <div className="relative">
-                    <ImageIcon className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                    <input
-                      type="text"
-                      value={formData.bannerUrl}
-                      onChange={(e) => setFormData({ ...formData, bannerUrl: e.target.value })}
-                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold outline-none text-primary placeholder:text-gray-300"
-                      placeholder="Paste your banner image URL"
                     />
                   </div>
                 </div>
