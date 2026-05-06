@@ -2,10 +2,10 @@
 
 @theme {
   --color-primary: #0A161E;
-  --color-brand-orange: #FF9F0D;
-  --color-brand-green: #196F01;
-  --color-accent: #22C55E;
-  --color-background-soft: #F8FAFC;
+  --color-brand-orange: #14B8A6; /* Teal - The new Green-Blue primary */
+  --color-brand-green: #0D9488; /* Darker Teal */
+  --color-accent: #0EA5E9; /* Cyan Blue */
+  --color-background-soft: #F0F9FF; /* Very light blue background */
 
   --radius-2xl: 1.25rem;
   --radius-3xl: 2rem;
@@ -23,10 +23,10 @@
 }
 
 :root {
-  --background: #F8FAFC;
+  --background: #F0F9FF;
   --foreground: #0A161E;
   --primary: #0A161E;
-  --accent: #FF9F0D;
+  --accent: #14B8A6;
 }
 
 body {
@@ -40,11 +40,11 @@ body {
   background: rgba(255, 255, 255, 0.7);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(10, 22, 30, 0.05);
+  border: 1px solid rgba(20, 184, 166, 0.1);
 }
 
 .glow-orange {
-  box-shadow: 0 0 20px rgba(255, 159, 13, 0.15);
+  box-shadow: 0 0 20px rgba(20, 184, 166, 0.15);
 }
 
 .card-shadow {
