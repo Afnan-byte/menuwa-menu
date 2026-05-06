@@ -3,18 +3,18 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { db } from "@/lib/firebase";
-import { 
-  collection, 
-  query, 
-  where, 
-  getDocs, 
-  addDoc, 
-  updateDoc, 
-  deleteDoc, 
+import {
+  collection,
+  query,
+  where,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
   doc,
   orderBy
 } from "firebase/firestore";
-import { Plus, FolderPlus, Utensils, Search, Loader2, X } from "lucide-react";
+import { Plus, FolderPlus, Utensils, Search, Loader2, X, Tag } from "lucide-react";
 import { motion } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
 import toast from "react-hot-toast";
@@ -356,7 +356,7 @@ export default function MenuPage() {
                   autoFocus
                   type="text"
                   placeholder="e.g. Italian Specials"
-                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold"
+                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold"
                   value={newCategoryName}
                   onChange={(e) => setNewCategoryName(e.target.value)}
                 />
@@ -372,7 +372,7 @@ export default function MenuPage() {
                 <button 
                   type="submit"
                   disabled={isSaving}
-                  className="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-brand-green transition-all shadow-xl shadow-primary/10 flex items-center justify-center disabled:opacity-70"
+                  className="flex-1 py-4 bg-primary text-white font-black rounded-2xl hover:bg-brand-orange transition-all shadow-xl shadow-primary/10 flex items-center justify-center disabled:opacity-70"
                 >
                   {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create"}
                 </button>
@@ -407,7 +407,7 @@ export default function MenuPage() {
                     required
                     type="text"
                     placeholder="e.g. Signature Truffle Pizza"
-                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold"
+                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold"
                     value={itemForm.name}
                     onChange={(e) => setItemForm({...itemForm, name: e.target.value})}
                   />
@@ -418,7 +418,7 @@ export default function MenuPage() {
                     required
                     type="text"
                     placeholder="e.g. 24.99"
-                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold"
+                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold"
                     value={itemForm.price}
                     onChange={(e) => setItemForm({...itemForm, price: e.target.value})}
                   />
@@ -427,7 +427,7 @@ export default function MenuPage() {
                   <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-2 ml-1">Category</label>
                   <select 
                     required
-                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold appearance-none cursor-pointer"
+                    className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold appearance-none cursor-pointer"
                     value={itemForm.categoryId}
                     onChange={(e) => setItemForm({...itemForm, categoryId: e.target.value})}
                   >
@@ -441,7 +441,7 @@ export default function MenuPage() {
                 <textarea 
                   rows={3}
                   placeholder="Describe your dish to make it irresistible..."
-                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold resize-none"
+                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold resize-none"
                   value={itemForm.description}
                   onChange={(e) => setItemForm({...itemForm, description: e.target.value})}
                 />
@@ -450,7 +450,7 @@ export default function MenuPage() {
                 <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-2 ml-1">Image URL</label>
                 <input 
                   type="text"
-                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-bold"
+                  className="w-full px-5 py-4 bg-gray-50 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-bold"
                   placeholder="https://images.unsplash.com/photo-..."
                   value={itemForm.imageUrl}
                   onChange={(e) => setItemForm({...itemForm, imageUrl: e.target.value})}
@@ -465,9 +465,9 @@ export default function MenuPage() {
                   Discard Changes
                 </button>
                 <button 
-                  type="submit"
+                  type="submit" 
                   disabled={isSaving}
-                  className="flex-2 py-4 bg-brand-green text-white font-black rounded-2xl hover:bg-green-700 transition-all shadow-xl shadow-brand-green/20 flex items-center justify-center disabled:opacity-70"
+                  className="flex-2 py-4 bg-brand-orange text-white font-black rounded-2xl hover:bg-orange-600 transition-all shadow-xl shadow-brand-orange/20 flex items-center justify-center disabled:opacity-70"
                 >
                   {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : (editingItem ? "Update Menu Item" : "Create Dish")}
                 </button>
