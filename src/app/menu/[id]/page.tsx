@@ -258,7 +258,7 @@ export default function PublicMenuPage() {
                       <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
                       <div className="flex items-center justify-between">
                          <span className="text-[13px] font-black text-[#196F03] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
-                         <ArrowRight className="h-4 w-4 text-white opacity-0 group-hover:opacity-100 transition-opacity translate-x-[-10px] group-hover:translate-x-0 duration-300" />
+
                       </div>
                     </div>
                   </div>
@@ -359,9 +359,7 @@ export default function PublicMenuPage() {
                               </div>
                             )}
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
-                            <div className="pt-2 flex items-center gap-3 text-[9px] font-bold uppercase tracking-[0.3em] text-[#196F03] opacity-0 group-hover:opacity-100 transition-all -translate-x-4 group-hover:translate-x-0">
-                              Discover <ArrowRight className="h-3.5 w-3.5" />
-                            </div>
+
                           </div>
                         </div>
                       </motion.div>
