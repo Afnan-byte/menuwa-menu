@@ -398,18 +398,7 @@ export default function PublicMenuPage() {
                 <div className="relative h-[40vh] w-full shrink-0">
                   <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
                   <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0F0F0F]" : "from-black/70")}></div>
-                  <div className="absolute bottom-8 left-10 flex gap-3 z-10">
-                    {selectedItem.dietaryType === "veg" && (
-                      <div className="px-5 py-2.5 bg-green-600/10 backdrop-blur-xl text-green-500 text-[10px] font-bold uppercase tracking-widest rounded-2xl border border-green-500/20 shadow-lg">
-                        Vegetarian
-                      </div>
-                    )}
-                    {selectedItem.dietaryType === "non-veg" && (
-                      <div className="px-5 py-2.5 bg-red-600/10 backdrop-blur-xl text-red-500 text-[10px] font-bold uppercase tracking-widest rounded-2xl border border-red-500/20 shadow-lg">
-                        Non-Veg
-                      </div>
-                    )}
-                  </div>
+
                 </div>
 
                 <div className={cn("px-12 pb-12 -mt-16 relative z-10 rounded-t-[4rem] flex-1 flex flex-col", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
@@ -420,7 +409,14 @@ export default function PublicMenuPage() {
                       </span>
                     </div>
 
-                    <h2 className={cn("text-5xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                    <div className="flex items-center justify-between gap-4">
+                      <h2 className={cn("text-5xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                      {selectedItem.dietaryType && selectedItem.dietaryType !== "none" && (
+                        <div className={cn("shrink-0 h-6 w-6 border-2 rounded-md flex items-center justify-center p-[4px]", selectedItem.dietaryType === 'veg' ? "border-green-600" : "border-red-600")}>
+                          <div className={cn("h-full w-full rounded-full", selectedItem.dietaryType === 'veg' ? "bg-green-600" : "bg-red-600")} />
+                        </div>
+                      )}
+                    </div>
                     <p className="text-gray-500 text-lg leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
 
 
