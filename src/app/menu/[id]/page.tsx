@@ -382,7 +382,7 @@ export default function PublicMenuPage() {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
-                className={cn("relative w-full max-w-md rounded-t-[4rem] sm:rounded-[4rem] overflow-hidden shadow-2xl h-[95vh] flex flex-col border-t", isDark ? "bg-[#0F0F0F] border-white/10" : "bg-white border-white")}
+                className={cn("relative w-full max-w-md overflow-hidden shadow-2xl h-full flex flex-col border-t", isDark ? "bg-[#0F0F0F] border-white/10" : "bg-white border-white")}
               >
                 <div className="absolute top-6 inset-x-0 flex justify-center z-[110]">
                   <div className={cn("w-12 h-1.5 rounded-full", isDark ? "bg-white/10" : "bg-black/20")} />
