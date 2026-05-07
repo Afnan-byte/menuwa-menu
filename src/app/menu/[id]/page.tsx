@@ -85,7 +85,7 @@ export default function PublicMenuPage() {
 
   const themeColor = restaurant?.themeColor || "#196F03";
   const themeRgb = useMemo(() => hexToRgb(themeColor), [themeColor]);
-  const isDark = restaurant?.menuTheme !== "light";
+  const isDark = true;
 
   useEffect(() => {
     if (id) {

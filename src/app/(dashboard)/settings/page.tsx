@@ -22,10 +22,7 @@ import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 
-const MENU_THEMES = [
-  { name: "Dark Mode", value: "dark", class: "bg-[#0A0A0A] border-gray-700" },
-  { name: "Light Mode", value: "light", class: "bg-white border-gray-200" },
-];
+
 
 export default function SettingsPage() {
   const { user, restaurantData } = useAuth();
@@ -92,7 +89,7 @@ export default function SettingsPage() {
         <div className="lg:col-span-1 space-y-8">
           <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100 flex flex-col items-center text-center relative overflow-hidden group">
             <div className="absolute top-0 inset-x-0 h-32 bg-gray-50 overflow-hidden">
-              <div className={cn("h-full w-full transition-colors", formData.menuTheme === 'dark' ? "bg-[#0A0A0A]" : "bg-white border-b border-gray-100")}></div>
+              <div className="h-full w-full bg-[#0A0A0A]"></div>
             </div>
 
             <div className="relative mt-12 mb-6">
@@ -121,7 +118,7 @@ export default function SettingsPage() {
               </div>
               <div className="flex items-center justify-between text-xs font-black uppercase tracking-widest text-gray-300">
                 <span>Menu Theme</span>
-                <div className={cn("h-4 w-4 rounded-full shadow-sm border", formData.menuTheme === 'dark' ? "bg-[#0A0A0A] border-gray-700" : "bg-white border-gray-300")}></div>
+                <div className="h-4 w-4 rounded-full shadow-sm border bg-[#0A0A0A] border-gray-700"></div>
               </div>
             </div>
           </div>
@@ -142,29 +139,7 @@ export default function SettingsPage() {
             </div>
 
             <div className="space-y-8">
-              <div>
-                <label className="block text-[10px] font-black text-gray-300 uppercase tracking-widest mb-4 ml-1">Choose Menu Theme</label>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {MENU_THEMES.map((theme) => (
-                    <button
-                      key={theme.value}
-                      type="button"
-                      onClick={() => setFormData({ ...formData, menuTheme: theme.value })}
-                      className={cn(
-                        "flex items-center gap-3 p-4 rounded-2xl border-2 transition-all group",
-                        formData.menuTheme === theme.value
-                          ? "border-primary bg-primary/5 ring-4 ring-primary/5"
-                          : "border-gray-100 hover:border-gray-200"
-                      )}
-                    >
-                      <div className={cn("h-6 w-6 rounded-full shadow-sm border", theme.class)}></div>
-                      <span className={cn("text-xs font-black transition-colors", formData.menuTheme === theme.value ? "text-primary" : "text-gray-400 group-hover:text-gray-600")}>
-                        {theme.name}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              </div>
+
 
               <div className="pt-8 border-t border-gray-50">
                 <div>
