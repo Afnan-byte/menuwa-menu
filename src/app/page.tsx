@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, QrCode, Menu as MenuIcon, LayoutDashboard, Settings, Phone, Mail, Instagram } from "lucide-react";
+import { ArrowRight, QrCode, Menu as MenuIcon, LayoutDashboard, Settings, Phone, Mail, Globe } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -122,7 +122,7 @@ export default function Home() {
               </a>
               <a href="https://www.instagram.com/menuw.o/?hl=en" target="_blank" className="flex items-center gap-3 hover:text-[#196F03] transition-colors group">
                 <div className="h-8 w-8 rounded-full bg-white border border-gray-100 flex items-center justify-center group-hover:bg-[#196F03]/5 group-hover:border-[#196F03]/20 transition-all">
-                  <Instagram className="h-4 w-4" />
+                  <Globe className="h-4 w-4" />
                 </div>
                 Instagram
               </a>
