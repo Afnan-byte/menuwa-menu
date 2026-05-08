@@ -9,9 +9,9 @@ export default function Home() {
   return (
     <div className="flex flex-col min-h-screen font-sans">
       {/* Header */}
-      <header className="px-10 h-36 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
+      <header className="px-10 h-20 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
         <Link className="flex items-center justify-center" href="/">
-          <div className="relative h-28 w-28 mr-3 transition-transform">
+          <div className="relative h-18 w-28 mr-3 transition-transform">
             <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
           </div>
         </Link>
@@ -19,8 +19,8 @@ export default function Home() {
           <Link className="text-sm font-bold text-gray-500 hover:text-[#196F03] transition-colors" href="/login">
             Login
           </Link>
-          <Link 
-            className="text-sm font-black bg-[#196F03] text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-[#196F03]/20" 
+          <Link
+            className="text-sm font-black bg-[#196F03] text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-[#196F03]/20"
             href="/signup"
           >
             Get Started
@@ -34,10 +34,10 @@ export default function Home() {
           {/* Background Elements */}
           <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[#196F03]/5 blur-[120px] rounded-full translate-x-1/4 -translate-y-1/4"></div>
           <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-primary/5 blur-[100px] rounded-full -translate-x-1/4 translate-y-1/4"></div>
-          
+
           <div className="container px-4 md:px-6 mx-auto relative z-10">
             <div className="flex flex-col items-center space-y-10 text-center">
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
@@ -52,7 +52,7 @@ export default function Home() {
                   Provide a touchless, premium experience for your customers.
                 </p>
               </motion.div>
-              <motion.div 
+              <motion.div
                 initial={{ opacity: 0, scale: 0.9 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.5 }}
@@ -79,17 +79,17 @@ export default function Home() {
         <section className="w-full py-32 bg-white">
           <div className="container px-4 md:px-6 mx-auto">
             <div className="grid gap-10 lg:grid-cols-3">
-              <FeatureCard 
+              <FeatureCard
                 icon={<MenuIcon className="h-10 w-10 text-[#196F03]" />}
                 title="Smart Menu Manager"
                 description="Upload items, set prices, and manage categories with our intuitive cloud-based builder."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<QrCode className="h-10 w-10 text-[#196F03]" />}
                 title="Instant QR Export"
                 description="Get high-resolution QR codes for your restaurant instantly. Ready for print and digital use."
               />
-              <FeatureCard 
+              <FeatureCard
                 icon={<LayoutDashboard className="h-10 w-10 text-[#196F03]" />}
                 title="Live Synchronization"
                 description="Update prices or availability in real-time. Changes reflect instantly on customer devices."
