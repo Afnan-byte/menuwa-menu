@@ -258,33 +258,41 @@ export default function MenuPage() {
           return;
         }
 
-        // 1. Identify unique categories and create missing ones
+        // 1. Identify unique categories and create missing ones in a batch
         const uniqueCatNames = Array.from(new Set(dataRows.map(row => row[catIdx]).filter(Boolean)));
         const existingCatMap = new Map(categories.map(c => [c.name.toLowerCase(), c.id]));
 
         const currentCategories = [...categories];
+        let catBatch = writeBatch(db);
+        let catCount = 0;
+        
         for (const catName of uniqueCatNames) {
-          if (!existingCatMap.has(catName.toLowerCase())) {
-            const docRef = await addDoc(collection(db, "categories"), {
-              name: catName,
+          if (!existingCatMap.has(catName.toLowerCase().trim())) {
+            const newCatRef = doc(collection(db, "categories"));
+            catBatch.set(newCatRef, {
+              name: catName.trim(),
               restaurantId: user.uid,
               createdAt: new Date().toISOString(),
             });
-            const newCat = { id: docRef.id, name: catName };
-            currentCategories.push(newCat);
-            existingCatMap.set(catName.toLowerCase(), docRef.id);
+            existingCatMap.set(catName.toLowerCase().trim(), newCatRef.id);
+            currentCategories.push({ id: newCatRef.id, name: catName.trim() });
+            catCount++;
           }
         }
-        setCategories(currentCategories);
+        
+        if (catCount > 0) {
+          await catBatch.commit();
+          setCategories(currentCategories);
+        }
 
-        // 2. Batch create items
+        // 2. Batch create items with real-time progress
         const batchSize = 500;
-        let batch = writeBatch(db);
-        let count = 0;
-        const newItems: MenuItem[] = [];
+        let itemBatch = writeBatch(db);
+        let itemCount = 0;
+        let totalProcessed = 0;
 
         for (const row of dataRows) {
-          const categoryId = existingCatMap.get(row[catIdx]?.toLowerCase());
+          const categoryId = existingCatMap.get(row[catIdx]?.toLowerCase().trim());
           if (!categoryId) continue;
 
           const rawDietary = row[dietIdx]?.toLowerCase().trim() || "none";
@@ -309,23 +317,25 @@ export default function MenuPage() {
             createdAt: new Date().toISOString(),
           };
 
-          const newDocRef = doc(collection(db, "items"));
-          batch.set(newDocRef, itemData);
-          newItems.push({ id: newDocRef.id, ...itemData } as MenuItem);
+          const itemRef = doc(collection(db, "items"));
+          itemBatch.set(itemRef, itemData);
+          itemCount++;
+          totalProcessed++;
 
-          count++;
-          if (count % batchSize === 0) {
-            await batch.commit();
-            batch = writeBatch(db);
+          if (itemCount === batchSize) {
+            await itemBatch.commit();
+            itemBatch = writeBatch(db);
+            itemCount = 0;
+            toast.loading(`Imported ${totalProcessed} items...`, { id: toastId });
           }
         }
 
-        if (count % batchSize !== 0) {
-          await batch.commit();
+        if (itemCount > 0) {
+          await itemBatch.commit();
         }
 
-        setItems([...items, ...newItems]);
-        toast.success(`Successfully imported ${count} items!`, { id: toastId });
+        toast.success(`Successfully imported ${totalProcessed} items!`, { id: toastId });
+        fetchMenu();
       } catch (error) {
         console.error(error);
         toast.error("Import failed. Please check your CSV format.", { id: toastId });
