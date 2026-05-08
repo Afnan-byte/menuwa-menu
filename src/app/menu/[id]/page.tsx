@@ -132,7 +132,7 @@ export default function PublicMenuPage() {
   }, [items, activeCategory, searchQuery, dietaryFilter]);
 
   const featuredItems = useMemo(() => {
-    return items.filter(item => item.isPopular).slice(0, 5);
+    return items.filter(item => item.isPopular);
   }, [items]);
 
   if (loading) {
