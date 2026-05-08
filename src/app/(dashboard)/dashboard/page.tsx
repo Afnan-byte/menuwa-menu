@@ -11,7 +11,8 @@ import {
   QrCode,
   Loader2,
   ExternalLink,
-  MessageCircle
+  MessageCircle,
+  Mail
 } from "lucide-react";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -114,10 +115,10 @@ export default function DashboardPage() {
                 color="bg-[#196F03]"
               />
               <ActionLink 
-                href={SUPPORT_URL}
-                icon={<MessageCircle className="h-6 w-6" />}
+                href="mailto:info@menuwo.in"
+                icon={<Mail className="h-6 w-6" />}
                 title="Support Centre"
-                description="Chat with us directly on WhatsApp"
+                description="Get assistance via info@menuwo.in"
                 color="bg-primary"
                 isExternal
               />

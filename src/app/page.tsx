@@ -101,12 +101,19 @@ export default function Home() {
 
       <footer className="py-20 border-t border-gray-50 bg-background-soft">
         <div className="container px-6 mx-auto flex flex-col md:flex-row justify-between items-center gap-10">
-          <Link className="flex items-center gap-3" href="/">
-            <div className="relative h-24 w-24 transition-transform">
-              <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
+          <div className="flex flex-col gap-6">
+            <Link className="flex items-center gap-3" href="/">
+              <div className="relative h-24 w-24 transition-transform">
+                <Image src="/logo.svg" alt="Menuwo Logo" fill className="object-contain" />
+              </div>
+            </Link>
+            <div className="flex flex-col gap-3 text-sm font-medium text-gray-500">
+              <a href="tel:+918089685278" className="hover:text-[#196F03] transition-colors">+91 80896 85278</a>
+              <a href="mailto:info@menuwo.in" className="hover:text-[#196F03] transition-colors">info@menuwo.in</a>
+              <a href="https://www.instagram.com/menuw.o/?hl=en" target="_blank" className="hover:text-[#196F03] transition-colors">Instagram</a>
             </div>
-          </Link>
-          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest">© 2026 Menuvo. All rights reserved.</p>
+          </div>
+          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest">© 2026 Menuwo. All rights reserved.</p>
           <div className="flex gap-8">
             <Link href="#" className="text-xs font-semibold text-gray-400 hover:text-[#196F03] transition-colors">Privacy Policy</Link>
             <Link href="#" className="text-xs font-semibold text-gray-400 hover:text-[#196F03] transition-colors">Terms of Service</Link>

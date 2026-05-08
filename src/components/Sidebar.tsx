@@ -9,7 +9,8 @@ import {
   Settings,
   LogOut,
   MessageCircle,
-  ChevronRight
+  ChevronRight,
+  Mail
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -83,15 +84,24 @@ export default function Sidebar() {
             <p className="text-xs font-bold text-primary uppercase tracking-wider">Support Centre</p>
           </div>
           <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need instant help? Chat with our experts directly on WhatsApp.</p>
-          <a 
-            href={SUPPORT_URL}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
-          >
-            <MessageCircle className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
-            WhatsApp
-          </a>
+          <div className="flex flex-col gap-2">
+            <a 
+              href={SUPPORT_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+            >
+              <MessageCircle className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
+              WhatsApp
+            </a>
+            <a 
+              href="mailto:info@menuwo.in"
+              className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+            >
+              <Mail className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
+              Email Support
+            </a>
+          </div>
         </div>
         <button
           onClick={handleLogout}
