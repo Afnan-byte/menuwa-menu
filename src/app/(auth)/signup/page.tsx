@@ -76,14 +76,14 @@ export default function SignupPage() {
                 priority
               />
             </motion.div>
-            <h1 className="text-3xl font-black text-primary tracking-tighter mb-2">Join Menuvo</h1>
+            <h1 className="text-3xl font-bold text-primary tracking-tighter mb-2">Join Menuvo</h1>
             <p className="text-gray-400 text-sm font-medium">Launch your digital menu in seconds</p>
           </div>
 
           <form onSubmit={handleSignup} className="space-y-6">
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest ml-1">Full Name</label>
+                <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Full Name</label>
                 <div className="relative group">
                   <User className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-green transition-colors" />
                   <input
@@ -91,14 +91,14 @@ export default function SignupPage() {
                     required
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
+                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
                     placeholder="John Doe"
                   />
                 </div>
               </div>
 
               <div className="space-y-2">
-                <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest ml-1">Restaurant</label>
+                <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Restaurant</label>
                 <div className="relative group">
                   <Store className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-green transition-colors" />
                   <input
@@ -106,7 +106,7 @@ export default function SignupPage() {
                     required
                     value={restaurantName}
                     onChange={(e) => setRestaurantName(e.target.value)}
-                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
+                    className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
                     placeholder="Grand Cafe"
                   />
                 </div>
@@ -114,7 +114,7 @@ export default function SignupPage() {
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest ml-1">Email Address</label>
+              <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Email Address</label>
               <div className="relative group">
                 <Mail className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-green transition-colors" />
                 <input
@@ -122,14 +122,14 @@ export default function SignupPage() {
                   required
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
+                  className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
                   placeholder="hello@restaurant.com"
                 />
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="text-[10px] font-black text-gray-300 uppercase tracking-widest ml-1">Secure Password</label>
+              <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Secure Password</label>
               <div className="relative group">
                 <Lock className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-brand-green transition-colors" />
                 <input
@@ -137,7 +137,7 @@ export default function SignupPage() {
                   required
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-bold focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
+                  className="w-full pl-14 pr-6 py-4 bg-gray-50 border-transparent rounded-2xl text-sm font-medium focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary placeholder:text-gray-300"
                   placeholder="••••••••"
                 />
               </div>
@@ -146,7 +146,7 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full bg-[#196F03] text-white py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:bg-[#155a02] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-brand-green/20 flex items-center justify-center gap-3 disabled:opacity-70"
+              className="w-full bg-[#196F03] text-white py-5 rounded-2xl font-bold text-xs uppercase tracking-widest hover:bg-[#155a02] hover:scale-[1.02] active:scale-[0.98] transition-all shadow-xl shadow-brand-green/20 flex items-center justify-center gap-3 disabled:opacity-70"
             >
               {loading ? (
                 <Loader2 className="h-5 w-5 animate-spin" />
@@ -162,14 +162,14 @@ export default function SignupPage() {
           <div className="mt-10 pt-8 border-t border-gray-50 text-center">
             <p className="text-sm text-gray-400 font-medium">
               Already have an account?{" "}
-              <Link href="/login" className="text-[#196F03] font-black hover:underline underline-offset-4">
+              <Link href="/login" className="text-[#196F03] font-bold hover:underline underline-offset-4">
                 Login here
               </Link>
             </p>
           </div>
         </div>
         
-        <p className="mt-8 text-center text-[10px] font-black text-gray-300 uppercase tracking-[0.3em]">
+        <p className="mt-8 text-center text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">
           Join 100+ premium restaurants globally
         </p>
       </motion.div>
