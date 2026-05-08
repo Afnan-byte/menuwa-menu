@@ -347,6 +347,42 @@ export default function MenuPage() {
     reader.readAsText(file);
   };
 
+  const handleExportCSV = () => {
+    if (items.length === 0) {
+      toast.error("No items to export");
+      return;
+    }
+
+    const headers = ["Category", "Name", "Price", "Description", "Image", "Dietary", "Popular"];
+    const csvRows = [headers.join(",")];
+
+    items.forEach(item => {
+      const categoryName = categories.find(c => c.id === item.categoryId)?.name || "";
+      const row = [
+        `"${categoryName.replace(/"/g, '""')}"`,
+        `"${item.name.replace(/"/g, '""')}"`,
+        `"${item.price.replace(/"/g, '""')}"`,
+        `"${(item.description || "").replace(/"/g, '""')}"`,
+        `"${(item.imageUrl || "").replace(/"/g, '""')}"`,
+        `"${item.dietaryType || "none"}"`,
+        item.isPopular ? "true" : "false"
+      ];
+      csvRows.push(row.join(","));
+    });
+
+    const csvContent = csvRows.join("\n");
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const link = document.createElement("a");
+    const url = URL.createObjectURL(blob);
+    link.setAttribute("href", url);
+    link.setAttribute("download", `menu_export_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = "hidden";
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    toast.success("Menu exported successfully!");
+  };
+
   const [isSaving, setIsSaving] = useState(false);
 
   const handleAddCategory = async (e: React.FormEvent) => {
@@ -607,6 +643,13 @@ export default function MenuPage() {
             >
               <FileUp className="h-5 w-5 text-[#196F03]" />
               Bulk Import (Drag & Drop)
+            </button>
+            <button
+              onClick={handleExportCSV}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+            >
+              <Download className="h-5 w-5 text-blue-500" />
+              Export Menu
             </button>
             <div className="sm:ml-auto w-full sm:w-auto">
               <button
