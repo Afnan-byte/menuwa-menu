@@ -174,7 +174,7 @@ export default function SettingsPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">WhatsApp Orders</label>
+                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Phone Number</label>
                 <div className="relative">
                   <MessageCircle className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
                   <input
@@ -182,7 +182,7 @@ export default function SettingsPage() {
                     value={formData.whatsapp}
                     onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                     className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
-                    placeholder="e.g. 919876543210"
+                    placeholder="e.g. 918089685278"
                   />
                 </div>
               </div>
