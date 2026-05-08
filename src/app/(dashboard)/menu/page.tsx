@@ -559,8 +559,23 @@ export default function MenuPage() {
             />
           </div>
 
-          {/* Buttons Row */}
-          <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+          {/* Buttons Row with Drag & Drop */}
+          <div 
+            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-brand-green/5', 'border-brand-green'); }}
+            onDragLeave={(e) => { e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green'); }}
+            onDrop={(e) => {
+              e.preventDefault();
+              e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green');
+              const file = e.dataTransfer.files?.[0];
+              if (file && file.name.endsWith('.csv')) {
+                const mockEvent = { target: { files: [file] } } as any;
+                handleCSVImport(mockEvent);
+              } else {
+                toast.error("Please drop a valid CSV file");
+              }
+            }}
+            className="flex flex-col sm:flex-row items-center gap-3 w-full p-4 rounded-[2.5rem] border-2 border-transparent transition-all"
+          >
             <input
               type="file"
               accept=".csv"
@@ -581,7 +596,7 @@ export default function MenuPage() {
               className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
             >
               <FileUp className="h-5 w-5 text-[#196F03]" />
-              Bulk Import
+              Bulk Import (Drag & Drop)
             </button>
             <div className="sm:ml-auto w-full sm:w-auto">
               <button

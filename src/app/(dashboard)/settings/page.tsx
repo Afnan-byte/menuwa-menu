@@ -47,6 +47,32 @@ export default function SettingsPage() {
     }
   }, [restaurantData]);
 
+  const [isDragging, setIsDragging] = useState(false);
+
+  const handleFileUpload = async (file: File) => {
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    const toastId = toast.loading("Uploading logo...");
+    try {
+      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+      const { storage } = await import("@/lib/firebase");
+      
+      const storageRef = ref(storage, `logos/${user.uid}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      
+      setFormData(prev => ({ ...prev, logoUrl: url }));
+      toast.success("Logo uploaded successfully!", { id: toastId });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to upload logo", { id: toastId });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -161,50 +187,52 @@ export default function SettingsPage() {
 
               <div className="md:col-span-2">
                 <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Restaurant Logo</label>
-                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-gray-50 rounded-[1.5rem] border-2 border-dashed border-gray-100 hover:border-brand-orange/20 transition-all group">
-                  <div className="h-20 w-20 rounded-2xl bg-white shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                <div 
+                  onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
+                  onDragLeave={() => setIsDragging(false)}
+                  onDrop={(e) => {
+                    e.preventDefault();
+                    setIsDragging(false);
+                    const file = e.dataTransfer.files?.[0];
+                    if (file) handleFileUpload(file);
+                  }}
+                  className={cn(
+                    "flex flex-col sm:flex-row items-center gap-6 p-8 bg-gray-50 rounded-[2.5rem] border-2 border-dashed transition-all group relative overflow-hidden",
+                    isDragging ? "border-[#196F03] bg-brand-green/5 ring-8 ring-brand-green/5" : "border-gray-100 hover:border-gray-200"
+                  )}
+                >
+                  <div className="h-24 w-24 rounded-[2rem] bg-white shadow-2xl flex items-center justify-center overflow-hidden flex-shrink-0 relative z-10">
                     {formData.logoUrl ? (
                       <img src={formData.logoUrl} alt="Preview" className="h-full w-full object-cover" />
                     ) : (
-                      <ImageIcon className="h-8 w-8 text-gray-200" />
+                      <ImageIcon className="h-10 w-10 text-gray-200" />
+                    )}
+                    {isDragging && (
+                      <div className="absolute inset-0 bg-[#196F03]/80 flex items-center justify-center text-white">
+                        <Save className="h-8 w-8 animate-bounce" />
+                      </div>
                     )}
                   </div>
-                  <div className="flex-1 space-y-1">
-                    <h4 className="text-sm font-bold text-primary">Upload Brand Logo</h4>
-                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">PNG, JPG or SVG (Max. 2MB)</p>
+                  <div className="flex-1 space-y-1 relative z-10 text-center sm:text-left">
+                    <h4 className="text-lg font-bold text-primary tracking-tight">Drop your logo here</h4>
+                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Or click the button to browse files</p>
                   </div>
                   <input
                     type="file"
                     id="logo-upload"
                     className="hidden"
                     accept="image/*"
-                    onChange={async (e) => {
+                    onChange={(e) => {
                       const file = e.target.files?.[0];
-                      if (!file || !user) return;
-                      
-                      const toastId = toast.loading("Uploading logo...");
-                      try {
-                        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-                        const { storage } = await import("@/lib/firebase");
-                        
-                        const storageRef = ref(storage, `logos/${user.uid}`);
-                        await uploadBytes(storageRef, file);
-                        const url = await getDownloadURL(storageRef);
-                        
-                        setFormData({ ...formData, logoUrl: url });
-                        toast.success("Logo uploaded successfully!", { id: toastId });
-                      } catch (error) {
-                        console.error(error);
-                        toast.error("Failed to upload logo", { id: toastId });
-                      }
+                      if (file) handleFileUpload(file);
                     }}
                   />
                   <button
                     type="button"
                     onClick={() => document.getElementById("logo-upload")?.click()}
-                    className="px-6 py-3 bg-white text-primary text-xs font-bold uppercase tracking-widest rounded-xl shadow-sm border border-gray-100 hover:bg-primary hover:text-white transition-all"
+                    className="relative z-10 px-8 py-4 bg-white text-primary text-xs font-bold uppercase tracking-widest rounded-2xl shadow-xl shadow-gray-200/50 hover:bg-primary hover:text-white transition-all"
                   >
-                    Select Image
+                    Select File
                   </button>
                 </div>
                 <div className="mt-4 flex items-center gap-2 px-2">
