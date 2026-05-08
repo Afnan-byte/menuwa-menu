@@ -43,17 +43,17 @@ export default function Sidebar() {
   const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
 
   return (
-    <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans">
-      <div className="p-6 pt-10 mb-2">
-        <Link href="/dashboard" className="flex items-center justify-center w-full">
-          <div className="relative h-14 w-full">
-            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain" />
+    <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans z-20">
+      <div className="h-20 flex items-center px-8 border-b border-gray-50/50 mb-4">
+        <Link href="/dashboard" className="flex items-center w-full">
+          <div className="relative h-10 w-32 transition-transform hover:scale-105">
+            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain object-left" />
           </div>
         </Link>
       </div>
 
-      <nav className="flex-1 px-6 space-y-2">
-        <p className="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6">Main Menu</p>
+      <nav className="flex-1 px-4 space-y-1.5">
+        <p className="px-5 text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6 opacity-70">Main Menu</p>
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -77,37 +77,37 @@ export default function Sidebar() {
         })}
       </nav>
 
-      <div className="p-6 mt-auto">
-        <div className="bg-primary/5 rounded-3xl p-5 mb-6 border border-primary/5">
+      <div className="p-4 mt-auto">
+        <div className="bg-primary/5 rounded-[2rem] p-6 mb-4 border border-primary/5">
           <div className="flex items-center gap-2 mb-2">
-            <div className="h-2 w-2 bg-[#196F03] rounded-full animate-pulse" />
-            <p className="text-xs font-bold text-primary uppercase tracking-wider">Support Centre</p>
+            <div className="h-1.5 w-1.5 bg-[#196F03] rounded-full animate-pulse" />
+            <p className="text-[10px] font-bold text-primary uppercase tracking-widest">Support Centre</p>
           </div>
-          <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need instant help? Chat with our experts directly on WhatsApp.</p>
+          <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need help? Chat with our experts directly.</p>
           <div className="flex flex-col gap-2">
             <a 
               href={SUPPORT_URL}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+              className="w-full py-3 bg-white border border-gray-100 rounded-xl text-[9px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
             >
-              <MessageCircle className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
+              <MessageCircle className="h-3 w-3 text-[#196F03] group-hover:text-white transition-colors" />
               WhatsApp
             </a>
             <a 
               href="mailto:info@menuwo.in"
-              className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+              className="w-full py-3 bg-white border border-gray-100 rounded-xl text-[9px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
             >
-              <Mail className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
-              Email Support
+              <Mail className="h-3 w-3 text-[#196F03] group-hover:text-white transition-colors" />
+              Email
             </a>
           </div>
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-4 px-5 py-4 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all group font-semibold text-sm"
+          className="w-full flex items-center gap-4 px-5 py-4 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all group font-bold text-[10px] uppercase tracking-widest"
         >
-          <LogOut className="h-5 w-5 group-hover:text-red-600" />
+          <LogOut className="h-4 w-4 group-hover:text-red-600" />
           <span>Logout</span>
         </button>
       </div>
