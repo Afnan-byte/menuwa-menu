@@ -31,7 +31,8 @@ import {
   Circle,
   Leaf,
   Flame,
-  Star
+  Star,
+  FileUp
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -108,6 +109,136 @@ export default function MenuPage() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleCSVImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file || !user) return;
+
+    const reader = new FileReader();
+    reader.onload = async (event) => {
+      const csvData = event.target?.result as string;
+      const lines = csvData.split("\n").filter(line => line.trim());
+      
+      if (lines.length <= 1) {
+        toast.error("CSV file is empty or only contains headers");
+        return;
+      }
+
+      setIsSaving(true);
+      const toastId = toast.loading("Processing bulk import...");
+
+      try {
+        // Simple CSV Parser (handles basic commas)
+        const parseLine = (line: string) => {
+          const result = [];
+          let current = "";
+          let inQuotes = false;
+          for (let i = 0; i < line.length; i++) {
+            const char = line[i];
+            if (char === '"' && line[i+1] === '"') {
+              current += '"'; i++;
+            } else if (char === '"') {
+              inQuotes = !inQuotes;
+            } else if (char === "," && !inQuotes) {
+              result.push(current.trim());
+              current = "";
+            } else {
+              current += char;
+            }
+          }
+          result.push(current.trim());
+          return result;
+        };
+
+        const headers = parseLine(lines[0]);
+        const dataRows = lines.slice(1).map(parseLine);
+
+        // Map headers to indices
+        const getIdx = (name: string) => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
+        const catIdx = getIdx("Category");
+        const nameIdx = getIdx("Name");
+        const priceIdx = getIdx("Price");
+        const descIdx = getIdx("Description");
+        const imgIdx = getIdx("Image");
+        const dietIdx = getIdx("Dietary");
+        const popIdx = getIdx("Popular");
+
+        if (catIdx === -1 || nameIdx === -1 || priceIdx === -1) {
+          toast.error("CSV missing required headers: Category, Name, Price", { id: toastId });
+          setIsSaving(false);
+          return;
+        }
+
+        // 1. Identify unique categories and create missing ones
+        const uniqueCatNames = Array.from(new Set(dataRows.map(row => row[catIdx]).filter(Boolean)));
+        const existingCatMap = new Map(categories.map(c => [c.name.toLowerCase(), c.id]));
+        
+        const currentCategories = [...categories];
+        for (const catName of uniqueCatNames) {
+          if (!existingCatMap.has(catName.toLowerCase())) {
+            const docRef = await addDoc(collection(db, "categories"), {
+              name: catName,
+              restaurantId: user.uid,
+              createdAt: new Date().toISOString(),
+            });
+            const newCat = { id: docRef.id, name: catName };
+            currentCategories.push(newCat);
+            existingCatMap.set(catName.toLowerCase(), docRef.id);
+          }
+        }
+        setCategories(currentCategories);
+
+        // 2. Batch create items
+        const batchSize = 500;
+        let batch = writeBatch(db);
+        let count = 0;
+        const newItems: MenuItem[] = [];
+
+        for (const row of dataRows) {
+          const categoryId = existingCatMap.get(row[catIdx]?.toLowerCase());
+          if (!categoryId) continue;
+
+          const itemData = {
+            restaurantId: user.uid,
+            categoryId,
+            name: row[nameIdx] || "Unnamed Item",
+            price: row[priceIdx] || "0",
+            description: row[descIdx] || "",
+            imageUrl: row[imgIdx] || "",
+            dietaryType: (row[dietIdx]?.toLowerCase() || "none") as any,
+            isPopular: row[popIdx]?.toLowerCase() === "true",
+            isAvailable: true,
+            tags: [],
+            createdAt: new Date().toISOString(),
+          };
+
+          const newDocRef = doc(collection(db, "items"));
+          batch.set(newDocRef, itemData);
+          newItems.push({ id: newDocRef.id, ...itemData } as MenuItem);
+          
+          count++;
+          if (count % batchSize === 0) {
+            await batch.commit();
+            batch = writeBatch(db);
+          }
+        }
+
+        if (count % batchSize !== 0) {
+          await batch.commit();
+        }
+
+        setItems([...items, ...newItems]);
+        toast.success(`Successfully imported ${count} items!`, { id: toastId });
+      } catch (error) {
+        console.error(error);
+        toast.error("Import failed. Please check your CSV format.", { id: toastId });
+      } finally {
+        setIsSaving(false);
+        if (e.target) e.target.value = ""; // Reset input
+      }
+    };
+    reader.readAsText(file);
   };
 
   const [isSaving, setIsSaving] = useState(false);
@@ -315,6 +446,20 @@ export default function MenuPage() {
             </div>
 
             <div className="flex items-center gap-3 w-full sm:w-auto">
+              <input
+                type="file"
+                accept=".csv"
+                id="csv-import"
+                className="hidden"
+                onChange={handleCSVImport}
+              />
+              <button
+                onClick={() => document.getElementById("csv-import")?.click()}
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+              >
+                <FileUp className="h-5 w-5 text-[#196F03]" />
+                Bulk Import
+              </button>
               <button
                 onClick={() => {
                   setEditingItem(null);
