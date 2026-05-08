@@ -454,12 +454,12 @@ export default function PublicMenuPage() {
         </AnimatePresence>
 
         {/* Footer */}
-        <footer className={cn("mt-20 py-32 px-10 text-center rounded-t-[5rem] border-t", isDark ? "bg-[#0F0F0F] border-white/5" : "bg-gray-100 border-gray-200")}>
-          <div className="mb-12">
-            <Image src="/logo.svg" alt="Menuvo" width={140} height={60} className={cn("mx-auto grayscale", isDark ? "brightness-200 opacity-20" : "opacity-30")} />
+        <footer className="pt-20 pb-20 mt-10 text-center px-6">
+          <div className="mb-8">
+            <Image src="/logo.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity", isDark ? "opacity-60" : "opacity-40")} />
           </div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuvo Digital</p>
-          <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/5" : "bg-gray-300")} />
+          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
+          <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/10" : "bg-gray-200")} />
         </footer>
       </div>
     </div>
