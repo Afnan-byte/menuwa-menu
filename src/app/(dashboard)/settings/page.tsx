@@ -30,11 +30,9 @@ export default function SettingsPage() {
   const [formData, setFormData] = useState({
     restaurantName: "",
     description: "",
-    phone: "",
     whatsapp: "",
     logoUrl: "",
     menuTheme: "dark",
-    googleReviewUrl: "",
   });
 
   useEffect(() => {
@@ -42,11 +40,9 @@ export default function SettingsPage() {
       setFormData({
         restaurantName: restaurantData.restaurantName || "",
         description: restaurantData.description || "",
-        phone: restaurantData.phone || "",
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
         menuTheme: restaurantData.menuTheme || "dark",
-        googleReviewUrl: restaurantData.googleReviewUrl || "",
       });
     }
   }, [restaurantData]);
@@ -126,38 +122,7 @@ export default function SettingsPage() {
 
         {/* Right Column: Configuration Forms */}
         <div className="lg:col-span-2 space-y-8">
-          {/* Visual Identity Section */}
-          <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
-            <div className="flex items-center gap-4 mb-10">
-              <div className="h-12 w-12 bg-brand-orange/10 rounded-2xl flex items-center justify-center text-brand-orange">
-                <Palette className="h-6 w-6" />
-              </div>
-              <div>
-                <h3 className="text-xl font-bold text-primary tracking-tight">Visual Identity</h3>
-                <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Customize your menu colors & images</p>
-              </div>
-            </div>
 
-            <div className="space-y-8">
-
-
-              <div className="pt-8 border-t border-gray-50">
-                <div>
-                  <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-4 ml-1">Logo Image URL</label>
-                  <div className="relative">
-                    <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                    <input
-                      type="text"
-                      value={formData.logoUrl}
-                      onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary placeholder:text-gray-300"
-                      placeholder="Paste your logo URL"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
 
           {/* General Information Section */}
           <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
@@ -194,21 +159,21 @@ export default function SettingsPage() {
                 />
               </div>
 
-              <div className="space-y-2">
-                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Order Phone</label>
+              <div className="md:col-span-2">
+                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Logo Image URL</label>
                 <div className="relative">
-                  <Phone className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                  <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
                   <input
                     type="text"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    value={formData.logoUrl}
+                    onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
                     className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
-                    placeholder="+1 (555) 000-0000"
+                    placeholder="Paste your logo URL"
                   />
                 </div>
               </div>
 
-              <div className="space-y-2">
+              <div className="md:col-span-2">
                 <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">WhatsApp Orders</label>
                 <div className="relative">
                   <MessageCircle className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
@@ -217,20 +182,7 @@ export default function SettingsPage() {
                     value={formData.whatsapp}
                     onChange={(e) => setFormData({ ...formData, whatsapp: e.target.value })}
                     className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
-                    placeholder="+1 (555) 000-0000"
-                  />
-                </div>
-              </div>
-              <div className="space-y-2 md:col-span-2">
-                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Google Review Link</label>
-                <div className="relative">
-                  <Star className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
-                  <input
-                    type="text"
-                    value={formData.googleReviewUrl}
-                    onChange={(e) => setFormData({ ...formData, googleReviewUrl: e.target.value })}
-                    className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
-                    placeholder="Paste your Google Maps Review link here..."
+                    placeholder="e.g. 919876543210"
                   />
                 </div>
               </div>
