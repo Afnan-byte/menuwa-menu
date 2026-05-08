@@ -34,7 +34,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
       {/* Overlapping circular Image Container */}
       <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-40 h-40">
         <div className="relative w-full h-full">
-          {item.imageUrl ? (
+          {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
             <div className="relative w-full h-full p-1 overflow-hidden rounded-full border-4 border-white shadow-2xl">
               <Image
                 src={item.imageUrl}

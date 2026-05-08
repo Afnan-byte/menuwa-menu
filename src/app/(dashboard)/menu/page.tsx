@@ -91,6 +91,67 @@ export default function MenuPage() {
     }
   }, [user]);
 
+  const detectImageUrl = (name: string): string => {
+    if (!name.trim()) return "";
+    const cleanName = name.trim().toLowerCase().replace(/\s+/g, ",");
+    return `https://loremflickr.com/800/600/${cleanName},food`;
+  };
+
+  const detectDietaryType = (name: string): "veg" | "non-veg" | "none" => {
+    const lowerName = name.toLowerCase();
+    const nonVegKeywords = ["chicken", "mutton", "beef", "fish", "egg", "prawn", "pork", "meat", "bacon", "pepperoni", "salami", "ham", "turkey", "squid", "crab", "lobster", "duck", "lamb"];
+    const vegKeywords = ["paneer", "veg", "mushroom", "cheese", "corn", "potato", "dal", "tofu", "soya", "gobi", "aloo"];
+
+    if (nonVegKeywords.some(keyword => lowerName.includes(keyword))) return "non-veg";
+    if (vegKeywords.some(keyword => lowerName.includes(keyword))) return "veg";
+    return "none";
+  };
+
+  const handleDeleteAll = async () => {
+    if (!user || items.length === 0) return;
+    
+    if (!window.confirm(`Are you sure you want to delete ALL ${items.length} items? This action cannot be undone.`)) {
+      return;
+    }
+
+    const toastId = toast.loading("Deleting all items...");
+    try {
+      const batch = writeBatch(db);
+      items.forEach((item) => {
+        batch.delete(doc(db, "items", item.id));
+      });
+      await batch.commit();
+      setItems([]);
+      toast.success("All items deleted successfully", { id: toastId });
+    } catch (error) {
+      console.error("Error deleting all items:", error);
+      toast.error("Failed to delete items", { id: toastId });
+    }
+  };
+
+  const handleDeleteAllCategories = async () => {
+    if (!user || categories.length === 0) return;
+    
+    if (!window.confirm(`Are you sure you want to delete ALL ${categories.length} sections? This will NOT delete the items, but they will become uncategorized.`)) {
+      return;
+    }
+
+    const toastId = toast.loading("Deleting all sections...");
+    try {
+      const batch = writeBatch(db);
+      categories.forEach((cat) => {
+        batch.delete(doc(db, "categories", cat.id));
+      });
+      await batch.commit();
+      setCategories([]);
+      setActiveCategory("all");
+      toast.success("All sections deleted successfully", { id: toastId });
+    } catch (error) {
+      console.error("Error deleting all sections:", error);
+      toast.error("Failed to delete sections", { id: toastId });
+    }
+  };
+
   const fetchMenu = async () => {
     setLoading(true);
     try {
@@ -117,8 +178,14 @@ export default function MenuPage() {
 
     const reader = new FileReader();
     reader.onload = async (event) => {
-      const csvData = event.target?.result as string;
-      const lines = csvData.split("\n").filter(line => line.trim());
+      let csvData = event.target?.result as string;
+      
+      // Strip UTF-8 BOM if present
+      if (csvData.startsWith("\ufeff")) {
+        csvData = csvData.substring(1);
+      }
+
+      const lines = csvData.split(/\r?\n/).filter(line => line.trim());
       
       if (lines.length <= 1) {
         toast.error("CSV file is empty or only contains headers");
@@ -129,18 +196,29 @@ export default function MenuPage() {
       const toastId = toast.loading("Processing bulk import...");
 
       try {
-        // Simple CSV Parser (handles basic commas)
-        const parseLine = (line: string) => {
+        const firstLine = lines[0];
+        // Count commas vs semicolons vs tabs to detect delimiter
+        const commas = (firstLine.match(/,/g) || []).length;
+        const semicolons = (firstLine.match(/;/g) || []).length;
+        const tabs = (firstLine.match(/\t/g) || []).length;
+        
+        let delimiter = ",";
+        if (semicolons > commas) delimiter = ";";
+        if (tabs > commas && tabs > semicolons) delimiter = "\t";
+
+        const parseLine = (line: string, delim: string) => {
           const result = [];
           let current = "";
           let inQuotes = false;
           for (let i = 0; i < line.length; i++) {
             const char = line[i];
-            if (char === '"' && line[i+1] === '"') {
-              current += '"'; i++;
-            } else if (char === '"') {
-              inQuotes = !inQuotes;
-            } else if (char === "," && !inQuotes) {
+            if (char === '"') {
+              if (inQuotes && line[i+1] === '"') {
+                current += '"'; i++;
+              } else {
+                inQuotes = !inQuotes;
+              }
+            } else if (char === delim && !inQuotes) {
               result.push(current.trim());
               current = "";
             } else {
@@ -151,11 +229,18 @@ export default function MenuPage() {
           return result;
         };
 
-        const headers = parseLine(lines[0]);
-        const dataRows = lines.slice(1).map(parseLine);
+        const headers = parseLine(lines[0], delimiter);
+        const dataRows = lines.slice(1).map(line => parseLine(line, delimiter));
 
-        // Map headers to indices
-        const getIdx = (name: string) => headers.findIndex(h => h.toLowerCase().includes(name.toLowerCase()));
+        // Refined Index Mapping
+        const getIdx = (name: string) => {
+          const lowerName = name.toLowerCase();
+          // 1. Exact match
+          let idx = headers.findIndex(h => h.toLowerCase().trim() === lowerName);
+          if (idx !== -1) return idx;
+          // 2. Contains match
+          return headers.findIndex(h => h.toLowerCase().includes(lowerName));
+        };
         const catIdx = getIdx("Category");
         const nameIdx = getIdx("Name");
         const priceIdx = getIdx("Price");
@@ -173,7 +258,7 @@ export default function MenuPage() {
         // 1. Identify unique categories and create missing ones
         const uniqueCatNames = Array.from(new Set(dataRows.map(row => row[catIdx]).filter(Boolean)));
         const existingCatMap = new Map(categories.map(c => [c.name.toLowerCase(), c.id]));
-        
+
         const currentCategories = [...categories];
         for (const catName of uniqueCatNames) {
           if (!existingCatMap.has(catName.toLowerCase())) {
@@ -199,15 +284,23 @@ export default function MenuPage() {
           const categoryId = existingCatMap.get(row[catIdx]?.toLowerCase());
           if (!categoryId) continue;
 
+          const rawDietary = row[dietIdx]?.toLowerCase().trim() || "none";
+          const dietaryType = rawDietary === "none" ? detectDietaryType(row[nameIdx] || "") : rawDietary as any;
+          
+          const rawImageUrl = (row[imgIdx] || "").trim();
+          const imageUrl = (rawImageUrl.startsWith("http") || rawImageUrl.startsWith("/")) 
+            ? rawImageUrl 
+            : detectImageUrl(row[nameIdx] || "");
+
           const itemData = {
             restaurantId: user.uid,
             categoryId,
-            name: row[nameIdx] || "Unnamed Item",
-            price: row[priceIdx] || "0",
-            description: row[descIdx] || "",
-            imageUrl: row[imgIdx] || "",
-            dietaryType: (row[dietIdx]?.toLowerCase() || "none") as any,
-            isPopular: row[popIdx]?.toLowerCase() === "true",
+            name: (row[nameIdx] || "Unnamed Item").trim(),
+            price: (row[priceIdx] || "0").trim(),
+            description: (row[descIdx] || "").trim(),
+            imageUrl,
+            dietaryType,
+            isPopular: row[popIdx]?.toLowerCase().trim() === "true",
             isAvailable: true,
             tags: [],
             createdAt: new Date().toISOString(),
@@ -216,7 +309,7 @@ export default function MenuPage() {
           const newDocRef = doc(collection(db, "items"));
           batch.set(newDocRef, itemData);
           newItems.push({ id: newDocRef.id, ...itemData } as MenuItem);
-          
+
           count++;
           if (count % batchSize === 0) {
             await batch.commit();
@@ -413,7 +506,7 @@ export default function MenuPage() {
 
           <div className="mt-12 pt-8 border-t border-gray-50">
             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
-              <button 
+              <button
                 onClick={() => setIsPreviewOpen(true)}
                 className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] hover:shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
               >
@@ -421,6 +514,24 @@ export default function MenuPage() {
                 View Live Menu
               </button>
             </div>
+          </div>
+
+          <div className="mt-8 pt-8 border-t border-gray-50 flex flex-col gap-3">
+            <button
+              onClick={() => setIsCategoryModalOpen(true)}
+              className="w-full flex items-center gap-3 p-4 bg-gray-50 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all group font-medium text-xs"
+            >
+              <FolderPlus className="h-4 w-4" />
+              Add New Section
+            </button>
+            <button
+              onClick={handleDeleteAllCategories}
+              disabled={categories.length === 0}
+              className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all group font-medium text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Trash2 className="h-4 w-4" />
+              Delete All Sections
+            </button>
           </div>
         </div>
       </div>
@@ -430,36 +541,46 @@ export default function MenuPage() {
         <div className="flex flex-col gap-8 mb-4">
           <div>
             <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
-            <p className="text-gray-400 font-medium mt-1">Found {filteredItems.length} items in your collection.</p>
+            <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
           </div>
 
-          <div className="flex flex-col md:flex-row items-center gap-4 w-full">
-            <div className="relative w-full sm:w-80 group">
-              <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
-              <input
-                type="text"
-                placeholder="Search anything..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-14 pr-6 py-4 bg-white border border-gray-100 rounded-[2rem] text-sm font-medium focus:ring-4 focus:ring-brand-green/5 transition-all outline-none text-primary"
-              />
-            </div>
+          {/* Search Bar Row */}
+          <div className="relative w-full group">
+            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
+            <input
+              type="text"
+              placeholder="Search anything in your menu..."
+              className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[2rem] text-sm font-medium outline-none focus:ring-4 focus:ring-brand-green/5 focus:border-[#196F03] transition-all shadow-sm shadow-gray-100/50"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
 
-            <div className="flex flex-col sm:flex-row items-center gap-3 w-full sm:w-auto">
-              <input
-                type="file"
-                accept=".csv"
-                id="csv-import"
-                className="hidden"
-                onChange={handleCSVImport}
-              />
-              <button
-                onClick={() => document.getElementById("csv-import")?.click()}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
-              >
-                <FileUp className="h-5 w-5 text-[#196F03]" />
-                Bulk Import
-              </button>
+          {/* Buttons Row */}
+          <div className="flex flex-col sm:flex-row items-center gap-3 w-full">
+            <input
+              type="file"
+              accept=".csv"
+              id="csv-import"
+              className="hidden"
+              onChange={handleCSVImport}
+            />
+            <button
+              onClick={handleDeleteAll}
+              disabled={items.length === 0}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-red-50 border border-red-100 text-red-500 font-medium rounded-[2rem] hover:bg-red-500 hover:text-white transition-all shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              <Trash2 className="h-5 w-5" />
+              Delete All
+            </button>
+            <button
+              onClick={() => document.getElementById("csv-import")?.click()}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+            >
+              <FileUp className="h-5 w-5 text-[#196F03]" />
+              Bulk Import
+            </button>
+            <div className="sm:ml-auto w-full sm:w-auto">
               <button
                 onClick={() => {
                   setEditingItem(null);
@@ -511,8 +632,8 @@ export default function MenuPage() {
                 item={item}
                 onEdit={() => {
                   setEditingItem(item);
-                  setItemForm({ 
-                    ...item, 
+                  setItemForm({
+                    ...item,
                     dietaryType: item.dietaryType || "none",
                     isPopular: item.isPopular || false
                   });
@@ -525,7 +646,7 @@ export default function MenuPage() {
           </div>
         ) : (
           <div className="flex flex-col items-center justify-center py-32 bg-white rounded-[3rem] border-4 border-dashed border-gray-50">
-             <p className="text-gray-400 font-medium text-xl tracking-tight">No items found.</p>
+            <p className="text-gray-400 font-medium text-xl tracking-tight">No items found.</p>
           </div>
         )}
       </div>
@@ -585,7 +706,24 @@ export default function MenuPage() {
 
                   <div className="space-y-2">
                     <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-3 block">Dish Name</label>
-                    <input required type="text" placeholder="e.g. Truffle Mushroom Pasta" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-medium outline-none text-primary" value={itemForm.name} onChange={(e) => setItemForm({ ...itemForm, name: e.target.value })} />
+                    <input 
+                      required 
+                      type="text" 
+                      placeholder="e.g. Truffle Mushroom Pasta" 
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-medium outline-none text-primary" 
+                      value={itemForm.name} 
+                      onChange={(e) => {
+                        const newName = e.target.value;
+                        const detectedType = detectDietaryType(newName);
+                        const detectedImage = detectImageUrl(newName);
+                        setItemForm({ 
+                          ...itemForm, 
+                          name: newName,
+                          dietaryType: itemForm.dietaryType === "none" ? detectedType : itemForm.dietaryType,
+                          imageUrl: !itemForm.imageUrl || itemForm.imageUrl.includes("loremflickr.com") ? detectedImage : itemForm.imageUrl
+                        });
+                      }} 
+                    />
                   </div>
 
                   <div className="space-y-2">
@@ -597,26 +735,26 @@ export default function MenuPage() {
                     <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-4 block">Dietary Type</label>
                     <div className="grid grid-cols-3 gap-4">
                       {[
-                        { 
-                          id: "veg", 
-                          label: "Vegetarian", 
+                        {
+                          id: "veg",
+                          label: "Vegetarian",
                           icon: Leaf,
-                          color: "text-[#196F03]", 
-                          bg: "bg-white" 
+                          color: "text-[#196F03]",
+                          bg: "bg-white"
                         },
-                        { 
-                          id: "non-veg", 
-                          label: "Non-Veg", 
+                        {
+                          id: "non-veg",
+                          label: "Non-Veg",
                           icon: Flame,
-                          color: "text-red-500", 
-                          bg: "bg-white" 
+                          color: "text-red-500",
+                          bg: "bg-white"
                         },
-                        { 
-                          id: "none", 
-                          label: "None", 
+                        {
+                          id: "none",
+                          label: "None",
                           icon: Circle,
-                          color: "text-gray-400", 
-                          bg: "bg-white" 
+                          color: "text-gray-400",
+                          bg: "bg-white"
                         },
                       ].map((type) => (
                         <button
@@ -625,8 +763,8 @@ export default function MenuPage() {
                           onClick={() => setItemForm({ ...itemForm, dietaryType: type.id as any })}
                           className={cn(
                             "flex flex-col items-center gap-3 p-6 rounded-3xl border-2 transition-all shadow-sm",
-                            itemForm.dietaryType === type.id 
-                              ? "border-[#196F03] bg-[#196F03]/5 ring-4 ring-[#196F03]/5" 
+                            itemForm.dietaryType === type.id
+                              ? "border-[#196F03] bg-[#196F03]/5 ring-4 ring-[#196F03]/5"
                               : "border-gray-50 hover:border-gray-200"
                           )}
                         >
@@ -676,30 +814,30 @@ export default function MenuPage() {
 
         {isPreviewOpen && (
           <div className="fixed inset-0 bg-primary/90 backdrop-blur-2xl z-[200] flex flex-col items-center justify-center p-4 sm:p-10">
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 20 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 20 }}
               className="relative w-full max-w-5xl h-full flex flex-col"
             >
-               <div className="flex items-center justify-between mb-6 text-white">
-                  <div className="flex items-center gap-4">
-                     <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center">
-                        <Globe className="h-5 w-5 text-brand-green" />
-                     </div>
-                     <div>
-                        <h2 className="text-xl font-bold tracking-tight">Live Menu Preview</h2>
-                        <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Interactive Dashboard Preview</p>
-                     </div>
+              <div className="flex items-center justify-between mb-6 text-white">
+                <div className="flex items-center gap-4">
+                  <div className="h-10 w-10 bg-white/10 rounded-xl flex items-center justify-center">
+                    <Globe className="h-5 w-5 text-brand-green" />
                   </div>
-                  <div className="flex items-center gap-3">
-                     <button onClick={() => window.open(`/menu/${user?.uid}`, '_blank')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all"><Maximize2 className="h-5 w-5" /></button>
-                     <button onClick={() => setIsPreviewOpen(false)} className="p-3 bg-white/10 hover:bg-red-500 rounded-xl transition-all"><X className="h-5 w-5" /></button>
+                  <div>
+                    <h2 className="text-xl font-bold tracking-tight">Live Menu Preview</h2>
+                    <p className="text-[10px] font-bold text-white/40 uppercase tracking-widest">Interactive Dashboard Preview</p>
                   </div>
-               </div>
-               <div className="flex-1 bg-white rounded-[3rem] overflow-hidden shadow-2xl relative">
-                  <iframe src={`/menu/${user?.uid}`} className="w-full h-full border-none" title="Menu Preview" />
-               </div>
+                </div>
+                <div className="flex items-center gap-3">
+                  <button onClick={() => window.open(`/menu/${user?.uid}`, '_blank')} className="p-3 bg-white/10 hover:bg-white/20 rounded-xl transition-all"><Maximize2 className="h-5 w-5" /></button>
+                  <button onClick={() => setIsPreviewOpen(false)} className="p-3 bg-white/10 hover:bg-red-500 rounded-xl transition-all"><X className="h-5 w-5" /></button>
+                </div>
+              </div>
+              <div className="flex-1 bg-white rounded-[3rem] overflow-hidden shadow-2xl relative">
+                <iframe src={`/menu/${user?.uid}`} className="w-full h-full border-none" title="Menu Preview" />
+              </div>
             </motion.div>
           </div>
         )}
