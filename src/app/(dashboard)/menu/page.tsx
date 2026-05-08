@@ -108,48 +108,38 @@ export default function MenuPage() {
     return "none";
   };
 
-  const handleDeleteAll = async () => {
-    if (!user || items.length === 0) return;
-    
-    if (!window.confirm(`Are you sure you want to delete ALL ${items.length} items? This action cannot be undone.`)) {
+  const handleClearEverything = async () => {
+    if (!user || (items.length === 0 && categories.length === 0)) return;
+
+    if (!window.confirm(`⚠️ WARNING: This will PERMANENTLY DELETE all ${items.length} items and all ${categories.length} sections. This action cannot be undone. Are you sure?`)) {
       return;
     }
 
-    const toastId = toast.loading("Deleting all items...");
+    setIsSaving(true);
+    const toastId = toast.loading("Clearing entire menu...");
     try {
       const batch = writeBatch(db);
-      items.forEach((item) => {
+      
+      // Delete all items
+      items.forEach(item => {
         batch.delete(doc(db, "items", item.id));
       });
-      await batch.commit();
-      setItems([]);
-      toast.success("All items deleted successfully", { id: toastId });
-    } catch (error) {
-      console.error("Error deleting all items:", error);
-      toast.error("Failed to delete items", { id: toastId });
-    }
-  };
 
-  const handleDeleteAllCategories = async () => {
-    if (!user || categories.length === 0) return;
-    
-    if (!window.confirm(`Are you sure you want to delete ALL ${categories.length} sections? This will NOT delete the items, but they will become uncategorized.`)) {
-      return;
-    }
-
-    const toastId = toast.loading("Deleting all sections...");
-    try {
-      const batch = writeBatch(db);
-      categories.forEach((cat) => {
+      // Delete all categories
+      categories.forEach(cat => {
         batch.delete(doc(db, "categories", cat.id));
       });
+
       await batch.commit();
+      setItems([]);
       setCategories([]);
       setActiveCategory("all");
-      toast.success("All sections deleted successfully", { id: toastId });
+      toast.success("Menu cleared successfully!", { id: toastId });
     } catch (error) {
-      console.error("Error deleting all sections:", error);
-      toast.error("Failed to delete sections", { id: toastId });
+      console.error(error);
+      toast.error("Failed to clear menu", { id: toastId });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -575,12 +565,12 @@ export default function MenuPage() {
               Add New Section
             </button>
             <button
-              onClick={handleDeleteAllCategories}
-              disabled={categories.length === 0}
+              onClick={handleClearEverything}
+              disabled={categories.length === 0 && items.length === 0}
               className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all group font-medium text-xs disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Trash2 className="h-4 w-4" />
-              Delete All Sections
+              Clear Entire Menu
             </button>
           </div>
         </div>
@@ -621,7 +611,7 @@ export default function MenuPage() {
                 toast.error("Please drop a valid CSV file");
               }
             }}
-            className="flex flex-col sm:flex-row items-center gap-3 w-full p-4 rounded-[2.5rem] border-2 border-transparent transition-all"
+            className="flex flex-wrap items-center gap-2 w-full p-2 rounded-[2rem] border-2 border-transparent transition-all"
           >
             <input
               type="file"
@@ -631,38 +621,30 @@ export default function MenuPage() {
               onChange={handleCSVImport}
             />
             <button
-              onClick={handleDeleteAll}
-              disabled={items.length === 0}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-red-50 border border-red-100 text-red-500 font-medium rounded-[2rem] hover:bg-red-500 hover:text-white transition-all shadow-sm whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Trash2 className="h-5 w-5" />
-              Delete All
-            </button>
-            <button
               onClick={() => document.getElementById("csv-import")?.click()}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-2xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
             >
-              <FileUp className="h-5 w-5 text-[#196F03]" />
-              Bulk Import (Drag & Drop)
+              <FileUp className="h-4 w-4 text-[#196F03]" />
+              Import CSV
             </button>
             <button
               onClick={handleExportCSV}
-              className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-white border border-gray-100 text-primary font-medium rounded-[2rem] hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-2xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
             >
-              <Download className="h-5 w-5 text-blue-500" />
-              Export Menu
+              <Download className="h-4 w-4 text-blue-500" />
+              Export
             </button>
-            <div className="sm:ml-auto w-full sm:w-auto">
+            <div className="w-full sm:w-auto sm:ml-auto">
               <button
                 onClick={() => {
                   setEditingItem(null);
                   setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
                   setIsItemModalOpen(true);
                 }}
-                className="w-full sm:w-auto flex items-center justify-center gap-2 px-8 py-4 bg-[#196F03] border border-transparent text-white font-medium rounded-[2rem] hover:bg-green-700 hover:scale-105 transition-all shadow-xl shadow-brand-green/30 whitespace-nowrap"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#196F03] border border-transparent text-white text-xs font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all shadow-lg shadow-brand-green/20 whitespace-nowrap"
               >
-                <Plus className="h-5 w-5" />
-                Add New Item
+                <Plus className="h-4 w-4" />
+                Add Dish
               </button>
             </div>
           </div>
@@ -672,11 +654,11 @@ export default function MenuPage() {
           <div className="flex items-center gap-6">
             <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
             <button 
-              onClick={handleDeleteAllCategories}
-              disabled={categories.length === 0}
-              className="text-xs font-medium text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors"
+              onClick={handleClearEverything}
+              disabled={categories.length === 0 && items.length === 0}
+              className="text-xs font-bold text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors uppercase tracking-widest"
             >
-              Delete All Sections
+              Clear Menu
             </button>
           </div>
           <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
