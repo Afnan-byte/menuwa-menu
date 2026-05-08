@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, QrCode, Menu as MenuIcon, LayoutDashboard, Settings } from "lucide-react";
+import { ArrowRight, QrCode, Menu as MenuIcon, LayoutDashboard, Settings, Phone, Mail, Instagram } from "lucide-react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
@@ -107,10 +107,25 @@ export default function Home() {
                 <Image src="/logo.svg" alt="Menuwo Logo" fill className="object-contain" />
               </div>
             </Link>
-            <div className="flex flex-col gap-3 text-sm font-medium text-gray-500">
-              <a href="tel:+918089685278" className="hover:text-[#196F03] transition-colors">+91 80896 85278</a>
-              <a href="mailto:info@menuwo.in" className="hover:text-[#196F03] transition-colors">info@menuwo.in</a>
-              <a href="https://www.instagram.com/menuw.o/?hl=en" target="_blank" className="hover:text-[#196F03] transition-colors">Instagram</a>
+            <div className="flex flex-col gap-4 text-sm font-medium text-gray-500">
+              <a href="tel:+918089685278" className="flex items-center gap-3 hover:text-[#196F03] transition-colors group">
+                <div className="h-8 w-8 rounded-full bg-white border border-gray-100 flex items-center justify-center group-hover:bg-[#196F03]/5 group-hover:border-[#196F03]/20 transition-all">
+                  <Phone className="h-4 w-4" />
+                </div>
+                +91 80896 85278
+              </a>
+              <a href="mailto:info@menuwo.in" className="flex items-center gap-3 hover:text-[#196F03] transition-colors group">
+                <div className="h-8 w-8 rounded-full bg-white border border-gray-100 flex items-center justify-center group-hover:bg-[#196F03]/5 group-hover:border-[#196F03]/20 transition-all">
+                  <Mail className="h-4 w-4" />
+                </div>
+                info@menuwo.in
+              </a>
+              <a href="https://www.instagram.com/menuw.o/?hl=en" target="_blank" className="flex items-center gap-3 hover:text-[#196F03] transition-colors group">
+                <div className="h-8 w-8 rounded-full bg-white border border-gray-100 flex items-center justify-center group-hover:bg-[#196F03]/5 group-hover:border-[#196F03]/20 transition-all">
+                  <Instagram className="h-4 w-4" />
+                </div>
+                Instagram
+              </a>
             </div>
           </div>
           <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest">© 2026 Menuwo. All rights reserved.</p>
