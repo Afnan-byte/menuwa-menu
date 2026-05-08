@@ -173,7 +173,7 @@ export default function PublicMenuPage() {
             </div>
             <X className={cn("h-2.5 w-2.5", isDark ? "text-white/20" : "text-gray-400")} />
             <div className="flex items-center">
-              <Image src="/logo.svg" alt="Menuwo" width={60} height={16} className={cn("object-contain", isDark ? "opacity-30 brightness-0 invert" : "opacity-30")} />
+              <Image src="/logo-white.svg" alt="Menuwo" width={60} height={16} className={cn("object-contain", isDark ? "opacity-30" : "opacity-30 brightness-0")} />
             </div>
           </div>
 
@@ -456,7 +456,7 @@ export default function PublicMenuPage() {
         {/* Footer */}
         <footer className="pt-20 pb-20 mt-10 text-center px-6">
           <div className="mb-8">
-            <Image src="/logo.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity", isDark ? "opacity-60" : "opacity-40")} />
+            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity", isDark ? "opacity-60" : "opacity-40")} />
           </div>
           <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
           <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/10" : "bg-gray-200")} />
