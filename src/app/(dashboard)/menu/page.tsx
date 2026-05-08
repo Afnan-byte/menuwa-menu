@@ -32,7 +32,8 @@ import {
   Leaf,
   Flame,
   Star,
-  FileUp
+  FileUp,
+  Download
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
