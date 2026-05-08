@@ -599,6 +599,13 @@ export default function MenuPage() {
         <div className="flex items-center justify-between border-b border-gray-100 pb-6">
           <div className="flex items-center gap-6">
             <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
+            <button 
+              onClick={handleDeleteAllCategories}
+              disabled={categories.length === 0}
+              className="text-xs font-medium text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors"
+            >
+              Delete All Sections
+            </button>
           </div>
           <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
             <button
