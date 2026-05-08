@@ -2,8 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
 import { doc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Save,
   User,
@@ -56,11 +57,14 @@ export default function SettingsPage() {
       return;
     }
 
+    // Enforce 2MB limit for faster uploads
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error("File is too large! Please use an image under 2MB for faster processing.");
+      return;
+    }
+
     const toastId = toast.loading("Uploading logo...");
     try {
-      const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
-      const { storage } = await import("@/lib/firebase");
-      
       const storageRef = ref(storage, `logos/${user.uid}`);
       await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
