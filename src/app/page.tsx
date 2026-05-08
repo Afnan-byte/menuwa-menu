@@ -16,11 +16,11 @@ export default function Home() {
           </div>
         </Link>
         <nav className="ml-auto flex items-center gap-8">
-          <Link className="text-sm font-bold text-gray-500 hover:text-[#196F03] transition-colors" href="/login">
+          <Link className="text-sm font-semibold text-gray-500 hover:text-[#196F03] transition-colors" href="/login">
             Login
           </Link>
           <Link
-            className="text-sm font-black bg-[#196F03] text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-[#196F03]/20"
+            className="text-sm font-bold bg-[#196F03] text-white px-8 py-3 rounded-2xl hover:scale-105 transition-all shadow-xl shadow-[#196F03]/20"
             href="/signup"
           >
             Get Started
@@ -43,7 +43,7 @@ export default function Home() {
                 transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
                 className="space-y-6"
               >
-                <h1 className="text-5xl font-black tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-primary">
+                <h1 className="text-5xl font-bold tracking-tighter sm:text-6xl md:text-7xl lg:text-8xl leading-[0.95] text-primary">
                   Modernize Your <br />
                   <span className="text-[#196F03]">Digital Experience</span>
                 </h1>
@@ -60,13 +60,13 @@ export default function Home() {
               >
                 <Link
                   href="/signup"
-                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-[#196F03] px-10 text-sm font-black text-white shadow-2xl shadow-[#196F03]/20 transition-all hover:scale-105"
+                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-[#196F03] px-10 text-sm font-bold text-white shadow-2xl shadow-[#196F03]/20 transition-all hover:scale-105"
                 >
                   Create Your Menu <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
                 <Link
                   href="/login"
-                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-white border border-gray-100 px-10 text-sm font-black text-primary transition-all hover:bg-gray-50 shadow-sm"
+                  className="inline-flex h-14 items-center justify-center rounded-2xl bg-white border border-gray-100 px-10 text-sm font-bold text-primary transition-all hover:bg-gray-50 shadow-sm"
                 >
                   View Demo
                 </Link>
@@ -106,10 +106,10 @@ export default function Home() {
               <Image src="/logo.svg" alt="Menuvo Logo" fill className="object-contain" />
             </div>
           </Link>
-          <p className="text-sm font-bold text-gray-400 uppercase tracking-widest">© 2026 Menuvo. All rights reserved.</p>
+          <p className="text-sm font-semibold text-gray-400 uppercase tracking-widest">© 2026 Menuvo. All rights reserved.</p>
           <div className="flex gap-8">
-            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-[#196F03] transition-colors">Privacy Policy</Link>
-            <Link href="#" className="text-xs font-bold text-gray-400 hover:text-[#196F03] transition-colors">Terms of Service</Link>
+            <Link href="#" className="text-xs font-semibold text-gray-400 hover:text-[#196F03] transition-colors">Privacy Policy</Link>
+            <Link href="#" className="text-xs font-semibold text-gray-400 hover:text-[#196F03] transition-colors">Terms of Service</Link>
           </div>
         </div>
       </footer>
@@ -123,7 +123,7 @@ function FeatureCard({ icon, title, description }: { icon: React.ReactNode, titl
       <div className="mb-8 p-5 bg-white rounded-3xl shadow-sm group-hover:scale-110 transition-transform">
         {icon}
       </div>
-      <h3 className="text-2xl font-black mb-4 text-primary tracking-tight">{title}</h3>
+      <h3 className="text-2xl font-bold mb-4 text-primary tracking-tight">{title}</h3>
       <p className="text-gray-500 font-medium leading-relaxed">{description}</p>
     </div>
   );
