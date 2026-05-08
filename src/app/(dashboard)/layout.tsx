@@ -41,15 +41,13 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
             />
           </div>
           <div className="flex items-center gap-6">
-            <button className="p-2.5 bg-gray-50 text-gray-400 hover:text-primary rounded-xl transition-all hover:scale-110">
-              <Bell className="h-5 w-5" />
-            </button>
+
             <div className="flex items-center gap-3 pl-2 border-l border-gray-100">
               <div className="text-right hidden sm:block">
-                <p className="text-sm font-black text-primary leading-none">{user.displayName || "Restaurant Owner"}</p>
-                <p className="text-[10px] text-gray-400 font-bold uppercase tracking-wider mt-1">Premium Plan</p>
+                <p className="text-sm font-bold text-primary leading-none">{user.displayName || "Restaurant Owner"}</p>
+
               </div>
-              <div className="h-11 w-11 rounded-2xl bg-brand-green/10 flex items-center justify-center text-brand-green font-black text-lg shadow-sm border border-brand-green/10">
+              <div className="h-11 w-11 rounded-2xl bg-brand-green/10 flex items-center justify-center text-brand-green font-bold text-lg shadow-sm border border-brand-green/10">
                 {user.displayName?.charAt(0) || "U"}
               </div>
             </div>
