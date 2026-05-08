@@ -34,7 +34,7 @@ export default function QRPage() {
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
-        <h1 className="text-3xl font-bold text-primary">Your QR Code</h1>
+        <h1 className="text-3xl font-semibold text-primary">Your QR Code</h1>
         <p className="text-gray-500">Share your digital menu with your customers.</p>
       </div>
 
@@ -49,20 +49,20 @@ export default function QRPage() {
               includeMargin={true}
             />
           </div>
-          <h2 className="text-2xl font-bold text-primary mb-2">{restaurantData?.restaurantName}</h2>
+          <h2 className="text-2xl font-semibold text-primary mb-2">{restaurantData?.restaurantName}</h2>
           <p className="text-sm text-gray-500 mb-6">Scan to view digital menu</p>
           
           <div className="flex gap-4 w-full">
             <button 
               onClick={downloadQR}
-              className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-md"
+              className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 transition-all shadow-md"
             >
               <Download className="h-5 w-5" />
               Download PNG
             </button>
             <button 
               onClick={() => window.print()}
-              className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border border-gray-100 text-primary font-bold rounded-2xl hover:bg-gray-50 transition-all"
+              className="flex-1 flex items-center justify-center gap-2 py-4 bg-white border border-gray-100 text-primary font-semibold rounded-2xl hover:bg-gray-50 transition-all"
             >
               <Printer className="h-5 w-5" />
               Print
@@ -73,7 +73,7 @@ export default function QRPage() {
         {/* Link & Info */}
         <div className="space-y-6">
           <div className="bg-white p-8 rounded-3xl border border-gray-100 shadow-sm">
-            <h3 className="font-bold text-primary mb-4 flex items-center gap-2">
+            <h3 className="font-semibold text-primary mb-4 flex items-center gap-2">
               <ExternalLink className="h-5 w-5 text-accent" />
               Direct Menu Link
             </h3>
@@ -94,32 +94,32 @@ export default function QRPage() {
             <a 
               href={menuUrl} 
               target="_blank" 
-              className="mt-4 inline-flex items-center gap-2 text-accent font-bold hover:underline text-sm"
+              className="mt-4 inline-flex items-center gap-2 text-accent font-semibold hover:underline text-sm"
             >
               View live menu <ExternalLink className="h-4 w-4" />
             </a>
           </div>
 
           <div className="bg-accent/10 p-8 rounded-3xl border border-accent/20">
-            <h3 className="font-bold text-primary mb-2 flex items-center gap-2">
+            <h3 className="font-semibold text-primary mb-2 flex items-center gap-2">
               <QrIcon className="h-5 w-5 text-accent" />
               How it works
             </h3>
             <ul className="space-y-3 text-sm text-gray-600">
               <li className="flex gap-3">
-                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">1</span>
+                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-semibold">1</span>
                 Download the QR code image or print it directly.
               </li>
               <li className="flex gap-3">
-                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">2</span>
+                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-semibold">2</span>
                 Place it on tables, windows, or promotional material.
               </li>
               <li className="flex gap-3">
-                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">3</span>
+                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-semibold">3</span>
                 Customers scan the code with their smartphone camera.
               </li>
               <li className="flex gap-3">
-                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-bold">4</span>
+                <span className="flex-shrink-0 h-5 w-5 rounded-full bg-accent text-white flex items-center justify-center text-[10px] font-semibold">4</span>
                 Your menu opens instantly in their browser!
               </li>
             </ul>

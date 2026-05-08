@@ -51,7 +51,7 @@ export default function DashboardPage() {
           initial={{ opacity: 0, x: -20 }}
           animate={{ opacity: 1, x: 0 }}
         >
-          <h1 className="text-4xl font-black text-primary tracking-tighter">
+          <h1 className="text-4xl font-bold text-primary tracking-tighter">
             Welcome, <span className="text-[#196F03]">{restaurantData?.restaurantName || "Chef"}</span>!
           </h1>
           <p className="text-gray-400 font-medium mt-1">Manage your digital menu and QR presence.</p>
@@ -61,14 +61,14 @@ export default function DashboardPage() {
           <Link 
             href={`/menu/${user?.uid}`}
             target="_blank"
-            className="flex items-center gap-3 bg-white border border-gray-100 px-6 py-4 rounded-2xl text-xs font-black text-primary shadow-sm hover:bg-gray-50 transition-all uppercase tracking-widest"
+            className="flex items-center gap-3 bg-white border border-gray-100 px-6 py-4 rounded-2xl text-xs font-bold text-primary shadow-sm hover:bg-gray-50 transition-all uppercase tracking-widest"
           >
             <ExternalLink className="h-4 w-4" />
             Live Menu
           </Link>
           <Link 
             href="/qr" 
-            className="flex items-center gap-3 bg-[#196F03] text-white px-8 py-4 rounded-2xl text-xs font-black shadow-xl shadow-brand-green/20 hover:scale-105 transition-all uppercase tracking-widest"
+            className="flex items-center gap-3 bg-[#196F03] text-white px-8 py-4 rounded-2xl text-xs font-bold shadow-xl shadow-brand-green/20 hover:scale-105 transition-all uppercase tracking-widest"
           >
             <QrCode className="h-4 w-4" />
             QR Code
@@ -87,13 +87,13 @@ export default function DashboardPage() {
           >
              <div className="absolute top-0 right-0 w-64 h-64 bg-[#196F03]/5 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
              <div className="relative z-10">
-                <p className="text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4">Current Inventory</p>
+                <p className="text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-4">Current Inventory</p>
                 {loading ? (
                   <Loader2 className="h-10 w-10 animate-spin text-[#196F03]" />
                 ) : (
                   <div className="flex items-baseline gap-4">
-                    <h2 className="text-7xl font-black text-primary tracking-tighter">{itemCount || 0}</h2>
-                    <span className="text-xl font-bold text-gray-400">Items Live</span>
+                    <h2 className="text-7xl font-bold text-primary tracking-tighter">{itemCount || 0}</h2>
+                    <span className="text-xl font-semibold text-gray-400">Items Live</span>
                   </div>
                 )}
              </div>
@@ -104,7 +104,7 @@ export default function DashboardPage() {
 
           {/* Quick Actions */}
           <div className="space-y-6">
-            <h2 className="text-xl font-black text-primary tracking-tight ml-2">Quick Management</h2>
+            <h2 className="text-xl font-bold text-primary tracking-tight ml-2">Quick Management</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
               <ActionLink 
                 href="/menu"
@@ -136,10 +136,10 @@ export default function DashboardPage() {
           <div className="relative z-10 flex flex-col h-full">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-[#196F03]/20 rounded-full border border-[#196F03]/30 mb-8 self-start">
               <div className="h-2 w-2 bg-[#196F03] rounded-full animate-pulse" />
-              <span className="text-[10px] font-black uppercase tracking-widest text-[#196F03]">System Live</span>
+              <span className="text-[10px] font-bold uppercase tracking-widest text-[#196F03]">System Live</span>
             </div>
             
-            <h2 className="text-3xl font-black mb-6 tracking-tight leading-tight">Your Digital Menu is <br/><span className="text-[#196F03]">Active</span></h2>
+            <h2 className="text-3xl font-bold mb-6 tracking-tight leading-tight">Your Digital Menu is <br/><span className="text-[#196F03]">Active</span></h2>
             <p className="text-white/40 text-sm font-medium mb-10 leading-relaxed">
               Customers can currently scan and view your menu. All changes you make in the manager will reflect instantly.
             </p>
@@ -147,7 +147,7 @@ export default function DashboardPage() {
             <div className="mt-auto">
               <Link 
                 href="/menu" 
-                className="w-full flex items-center justify-center gap-3 bg-white text-primary py-5 rounded-2xl font-black text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+                className="w-full flex items-center justify-center gap-3 bg-white text-primary py-5 rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
               >
                 Go to Menu Manager <ArrowRight className="h-4 w-4" />
               </Link>
@@ -166,7 +166,7 @@ function ActionLink({ href, icon, title, description, color, isExternal }: { hre
         {icon}
       </div>
       <div>
-        <h4 className="text-lg font-black text-primary tracking-tight group-hover:text-[#196F03] transition-colors">{title}</h4>
+        <h4 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors">{title}</h4>
         <p className="text-xs text-gray-400 font-medium leading-relaxed mt-1">{description}</p>
       </div>
     </div>
