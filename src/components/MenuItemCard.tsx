@@ -50,7 +50,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
           )}
 
           {/* Price Badge (Green pill at bottom right of image) */}
-          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-4 py-1.5 rounded-full font-bold text-xs shadow-lg shadow-brand-green/30 border border-white/20">
+          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-4 py-1.5 rounded-full font-semibold text-xs shadow-lg shadow-brand-green/30 border border-white/20">
             {item.price.replace(/[^0-9.]/g, '')}
           </div>
 
@@ -72,7 +72,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
 
       {/* Content Area */}
       <div className="pt-28 text-center space-y-4">
-        <h3 className="text-xl font-extrabold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1">
+        <h3 className="text-xl font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1">
           {item.name}
         </h3>
 
@@ -84,7 +84,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         <div className="flex gap-4 mt-8">
           <button
             onClick={onEdit}
-            className="flex-1 py-4 bg-gray-50 text-primary font-bold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
+            className="flex-1 py-4 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
           >
             <Edit2 className="h-3.5 w-3.5" />
             Edit

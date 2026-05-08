@@ -52,7 +52,7 @@ export default function Sidebar() {
       </div>
 
       <nav className="flex-1 px-6 space-y-2">
-        <p className="px-4 text-[10px] font-black text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6">Main Menu</p>
+        <p className="px-4 text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6">Main Menu</p>
         {navItems.map((item) => {
           const isActive = pathname === item.href;
           return (
@@ -68,7 +68,7 @@ export default function Sidebar() {
             >
               <div className="flex items-center gap-4">
                 <item.icon className={cn("h-5 w-5", isActive ? "text-white" : "text-gray-400 group-hover:text-primary")} />
-                <span className="font-bold text-sm tracking-tight">{item.label}</span>
+                <span className="font-semibold text-sm tracking-tight">{item.label}</span>
               </div>
               {isActive && <motion.div layoutId="sidebar-active" className="w-1.5 h-1.5 rounded-full bg-white shadow-glow" />}
             </Link>
@@ -80,14 +80,14 @@ export default function Sidebar() {
         <div className="bg-primary/5 rounded-3xl p-5 mb-6 border border-primary/5">
           <div className="flex items-center gap-2 mb-2">
             <div className="h-2 w-2 bg-[#196F03] rounded-full animate-pulse" />
-            <p className="text-xs font-black text-primary uppercase tracking-wider">Support Centre</p>
+            <p className="text-xs font-bold text-primary uppercase tracking-wider">Support Centre</p>
           </div>
           <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need instant help? Chat with our experts directly on WhatsApp.</p>
           <a 
             href={SUPPORT_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-black text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
+            className="w-full py-3 bg-white border border-gray-200 rounded-xl text-[10px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
           >
             <MessageCircle className="h-3.5 w-3.5 text-[#196F03] group-hover:text-white transition-colors" />
             WhatsApp
@@ -95,7 +95,7 @@ export default function Sidebar() {
         </div>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-4 px-5 py-4 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all group font-bold text-sm"
+          className="w-full flex items-center gap-4 px-5 py-4 text-gray-400 hover:bg-red-50 hover:text-red-600 rounded-2xl transition-all group font-semibold text-sm"
         >
           <LogOut className="h-5 w-5 group-hover:text-red-600" />
           <span>Logout</span>
