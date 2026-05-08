@@ -180,7 +180,6 @@ export default function MenuPage() {
     reader.onload = async (event) => {
       let csvData = event.target?.result as string;
       
-      // Strip UTF-8 BOM if present
       if (csvData.startsWith("\ufeff")) {
         csvData = csvData.substring(1);
       }
@@ -196,49 +195,53 @@ export default function MenuPage() {
       const toastId = toast.loading("Processing bulk import...");
 
       try {
-        const firstLine = lines[0];
-        // Count commas vs semicolons vs tabs to detect delimiter
-        const commas = (firstLine.match(/,/g) || []).length;
-        const semicolons = (firstLine.match(/;/g) || []).length;
-        const tabs = (firstLine.match(/\t/g) || []).length;
+        // Detect delimiter by checking header and first data row
+        const detect = (str: string) => ({
+          commas: (str.match(/,/g) || []).length,
+          semicolons: (str.match(/;/g) || []).length,
+          tabs: (str.match(/\t/g) || []).length,
+        });
+
+        const hStats = detect(lines[0]);
+        const dStats = detect(lines[1]);
         
         let delimiter = ",";
-        if (semicolons > commas) delimiter = ";";
-        if (tabs > commas && tabs > semicolons) delimiter = "\t";
+        if (hStats.semicolons > 0 && dStats.semicolons === hStats.semicolons) delimiter = ";";
+        else if (hStats.tabs > 0 && dStats.tabs === hStats.tabs) delimiter = "\t";
+        else if (hStats.commas > 0) delimiter = ",";
 
-        const parseLine = (line: string, delim: string) => {
-          const result = [];
-          let current = "";
-          let inQuotes = false;
-          for (let i = 0; i < line.length; i++) {
-            const char = line[i];
-            if (char === '"') {
-              if (inQuotes && line[i+1] === '"') {
-                current += '"'; i++;
-              } else {
-                inQuotes = !inQuotes;
-              }
-            } else if (char === delim && !inQuotes) {
-              result.push(current.trim());
-              current = "";
-            } else {
-              current += char;
+        // Advanced regex parser with recursive unwrapping for "wrapped" CSV lines
+        const parseLine = (line: string, delim: string): string[] => {
+          const pattern = new RegExp(
+            `(${delim}|\\r?\\n|^)(?:"([^"]*(?:""[^"]*)*)"|([^"${delim}\\r\\n]*))`,
+            "gi"
+          );
+          let result = [];
+          let match;
+          while ((match = pattern.exec(line))) {
+            let val = match[2] !== undefined ? match[2].replace(/""/g, '"') : match[3];
+            result.push(val ? val.trim() : "");
+            if (match[1] === delim && line[pattern.lastIndex] === undefined) {
+              result.push("");
             }
           }
-          result.push(current.trim());
+          
+          // Fix for "Wrapped" lines: If the entire line was one big quoted string
+          // but contains our delimiter, it means we need to unwrap and re-parse.
+          if (result.length === 1 && result[0].includes(delim)) {
+            return parseLine(result[0], delim);
+          }
+          
           return result;
         };
 
         const headers = parseLine(lines[0], delimiter);
         const dataRows = lines.slice(1).map(line => parseLine(line, delimiter));
 
-        // Refined Index Mapping
         const getIdx = (name: string) => {
-          const lowerName = name.toLowerCase();
-          // 1. Exact match
+          const lowerName = name.toLowerCase().trim();
           let idx = headers.findIndex(h => h.toLowerCase().trim() === lowerName);
           if (idx !== -1) return idx;
-          // 2. Contains match
           return headers.findIndex(h => h.toLowerCase().includes(lowerName));
         };
         const catIdx = getIdx("Category");

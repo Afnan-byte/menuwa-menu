@@ -160,15 +160,65 @@ export default function SettingsPage() {
               </div>
 
               <div className="md:col-span-2">
-                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Logo Image URL</label>
-                <div className="relative">
-                  <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300" />
+                <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Restaurant Logo</label>
+                <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-gray-50 rounded-[1.5rem] border-2 border-dashed border-gray-100 hover:border-brand-orange/20 transition-all group">
+                  <div className="h-20 w-20 rounded-2xl bg-white shadow-sm flex items-center justify-center overflow-hidden flex-shrink-0">
+                    {formData.logoUrl ? (
+                      <img src={formData.logoUrl} alt="Preview" className="h-full w-full object-cover" />
+                    ) : (
+                      <ImageIcon className="h-8 w-8 text-gray-200" />
+                    )}
+                  </div>
+                  <div className="flex-1 space-y-1">
+                    <h4 className="text-sm font-bold text-primary">Upload Brand Logo</h4>
+                    <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">PNG, JPG or SVG (Max. 2MB)</p>
+                  </div>
+                  <input
+                    type="file"
+                    id="logo-upload"
+                    className="hidden"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      const file = e.target.files?.[0];
+                      if (!file || !user) return;
+                      
+                      const toastId = toast.loading("Uploading logo...");
+                      try {
+                        const { ref, uploadBytes, getDownloadURL } = await import("firebase/storage");
+                        const { storage } = await import("@/lib/firebase");
+                        
+                        const storageRef = ref(storage, `logos/${user.uid}`);
+                        await uploadBytes(storageRef, file);
+                        const url = await getDownloadURL(storageRef);
+                        
+                        setFormData({ ...formData, logoUrl: url });
+                        toast.success("Logo uploaded successfully!", { id: toastId });
+                      } catch (error) {
+                        console.error(error);
+                        toast.error("Failed to upload logo", { id: toastId });
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => document.getElementById("logo-upload")?.click()}
+                    className="px-6 py-3 bg-white text-primary text-xs font-bold uppercase tracking-widest rounded-xl shadow-sm border border-gray-100 hover:bg-primary hover:text-white transition-all"
+                  >
+                    Select Image
+                  </button>
+                </div>
+                <div className="mt-4 flex items-center gap-2 px-2">
+                  <div className="h-1 w-1 rounded-full bg-gray-300"></div>
+                  <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">Or paste a direct image link below</p>
+                </div>
+                <div className="mt-2 relative">
+                  <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
                   <input
                     type="text"
                     value={formData.logoUrl}
                     onChange={(e) => setFormData({ ...formData, logoUrl: e.target.value })}
-                    className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
-                    placeholder="Paste your logo URL"
+                    className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary"
+                    placeholder="Logo Image URL"
                   />
                 </div>
               </div>
