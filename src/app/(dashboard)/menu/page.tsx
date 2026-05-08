@@ -427,13 +427,13 @@ export default function MenuPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-8">
-        <div className="flex flex-col xl:flex-row xl:items-center justify-between gap-6">
+        <div className="flex flex-col gap-8 mb-4">
           <div>
             <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
             <p className="text-gray-400 font-medium mt-1">Found {filteredItems.length} items in your collection.</p>
           </div>
 
-          <div className="flex flex-col sm:flex-row items-center gap-4 w-full xl:w-auto">
+          <div className="flex flex-col md:flex-row items-center gap-4 w-full">
             <div className="relative w-full sm:w-80 group">
               <Search className="absolute left-5 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
               <input
