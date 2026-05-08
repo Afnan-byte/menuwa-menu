@@ -466,7 +466,7 @@ export default function MenuPage() {
                   setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
                   setIsItemModalOpen(true);
                 }}
-                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-[#196F03] text-white font-medium rounded-[2rem] hover:bg-green-700 hover:scale-105 transition-all shadow-xl shadow-brand-green/30 whitespace-nowrap"
+                className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-8 py-4 bg-[#196F03] border border-transparent text-white font-medium rounded-[2rem] hover:bg-green-700 hover:scale-105 transition-all shadow-xl shadow-brand-green/30 whitespace-nowrap"
               >
                 <Plus className="h-5 w-5" />
                 Add New Item
