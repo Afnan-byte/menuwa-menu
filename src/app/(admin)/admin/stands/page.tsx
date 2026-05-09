@@ -12,7 +12,8 @@ import {
   CheckCircle2, 
   ExternalLink,
   Trash2,
-  Filter
+  Filter,
+  ChevronRight
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import { motion, AnimatePresence } from "framer-motion";
