@@ -31,6 +31,41 @@ export default function QRPage() {
     toast.success("Link copied to clipboard!");
   };
 
+  if (!restaurantData?.menuId) {
+    return (
+      <div className="max-w-4xl mx-auto py-20 px-6">
+        <div className="bg-white rounded-[3rem] p-12 text-center border border-gray-100 shadow-xl space-y-8 relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full translate-x-20 -translate-y-20" />
+          
+          <div className="h-24 w-24 bg-yellow-500/10 rounded-full flex items-center justify-center mx-auto mb-8">
+            <QrIcon className="h-10 w-10 text-yellow-600" />
+          </div>
+
+          <div className="space-y-4 max-w-md mx-auto">
+            <h2 className="text-3xl font-bold text-primary tracking-tight">QR Stand Pending</h2>
+            <p className="text-gray-500 font-medium leading-relaxed">
+              Your unique 6-digit QR stand is currently being prepared by our team.
+            </p>
+          </div>
+
+          <div className="bg-gray-50 rounded-2xl p-6 border border-gray-100">
+            <p className="text-xs font-bold text-gray-400 uppercase tracking-widest mb-3">Next Steps</p>
+            <p className="text-sm text-gray-600 leading-relaxed font-medium">
+              Once the admin assigns your physical stand, your digital QR code will appear here automatically.
+            </p>
+          </div>
+
+          <a 
+            href="mailto:info@menuwo.in"
+            className="inline-flex items-center gap-3 px-10 py-5 bg-primary text-white rounded-2xl font-bold text-xs uppercase tracking-widest hover:scale-105 transition-all shadow-xl"
+          >
+            Contact Support
+          </a>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
