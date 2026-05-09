@@ -107,63 +107,68 @@ export default function MenuPage() {
 
   const convertToWebP = (file: File): Promise<Blob> => {
     return new Promise((resolve, reject) => {
-      console.log("Starting WebP conversion for:", file.name, file.size);
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      
-      const timeout = setTimeout(() => {
-        URL.revokeObjectURL(url);
-        reject(new Error("Image optimization timed out"));
-      }, 10000);
-
-      img.onload = () => {
-        clearTimeout(timeout);
-        URL.revokeObjectURL(url);
-        const canvas = document.createElement("canvas");
+      try {
+        console.log("Starting WebP conversion for:", file.name);
+        const img = new Image();
+        const url = URL.createObjectURL(file);
         
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 1200;
+        const timeout = setTimeout(() => {
+          URL.revokeObjectURL(url);
+          console.warn("Optimization timeout reached");
+          reject(new Error("Timeout"));
+        }, 5000);
 
-        if (width > height && width > maxDim) {
-          height = Math.round((height * maxDim) / width);
-          width = maxDim;
-        } else if (height > maxDim) {
-          width = Math.round((width * maxDim) / height);
-          height = maxDim;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Failed to get canvas context"));
-          return;
-        }
-        
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              console.log("Conversion successful, new size:", blob.size);
-              resolve(blob);
-            } else {
-              reject(new Error("WebP conversion failed"));
+        img.onload = () => {
+          try {
+            clearTimeout(timeout);
+            URL.revokeObjectURL(url);
+            
+            const canvas = document.createElement("canvas");
+            let width = img.width;
+            let height = img.height;
+            
+            if (width === 0 || height === 0) {
+              reject(new Error("Invalid image dimensions"));
+              return;
             }
-          },
-          "image/webp",
-          0.8
-        );
-      };
-      
-      img.onerror = (err) => {
-        clearTimeout(timeout);
-        URL.revokeObjectURL(url);
-        console.error("Image loading error:", err);
-        reject(new Error("Image loading failed"));
-      };
-      
-      img.src = url;
+
+            const maxDim = 1200;
+            if (width > height && width > maxDim) {
+              height = Math.round((height * maxDim) / width);
+              width = maxDim;
+            } else if (height > maxDim) {
+              width = Math.round((width * maxDim) / height);
+              height = maxDim;
+            }
+
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            if (!ctx) {
+              reject(new Error("No canvas context"));
+              return;
+            }
+            
+            ctx.drawImage(img, 0, 0, width, height);
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("Blob conversion failed"));
+            }, "image/webp", 0.8);
+          } catch (e) {
+            reject(e);
+          }
+        };
+        
+        img.onerror = () => {
+          clearTimeout(timeout);
+          URL.revokeObjectURL(url);
+          reject(new Error("Image load error"));
+        };
+        
+        img.src = url;
+      } catch (e) {
+        reject(e);
+      }
     });
   };
 
