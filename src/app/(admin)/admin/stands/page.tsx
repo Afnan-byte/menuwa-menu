@@ -165,12 +165,6 @@ export default function StandsManager() {
                 ctx.fillStyle = "white";
                 ctx.fillRect(0, 0, canvas.width, canvas.height);
                 ctx.drawImage(img, 50, 50, 900, 900);
-                
-                // Add ID text
-                ctx.fillStyle = "black";
-                ctx.font = "bold 40px Arial";
-                ctx.textAlign = "center";
-                ctx.fillText(`ID: ${stand.id}`, 500, 980);
               }
               canvas.toBlob((blob) => {
                 if (blob) zip.file(`stand-${stand.id}.png`, blob);
