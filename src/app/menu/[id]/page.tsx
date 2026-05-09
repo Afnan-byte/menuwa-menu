@@ -104,7 +104,7 @@ export default function PublicMenuPage() {
       const catSnap = await getDocs(catQuery);
       setCategories(catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category)));
 
-      const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id), where("isAvailable", "==", true));
+      const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id));
       const itemSnap = await getDocs(itemQuery);
 
       const fetchedItems = itemSnap.docs.map((doc) => ({
