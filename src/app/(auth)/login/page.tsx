@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Loader2, Mail, Lock, ArrowRight, Eye, EyeOff } from "lucide-react";
 import toast from "react-hot-toast";
@@ -29,6 +29,17 @@ export default function LoginPage() {
       toast.error(error.message || "Invalid credentials");
     } finally {
       setLoading(false);
+    }
+  const handleForgotPassword = async () => {
+    if (!email) {
+      toast.error("Please enter your email first");
+      return;
+    }
+    try {
+      await sendPasswordResetEmail(auth, email);
+      toast.success("Password reset email sent!");
+    } catch (error: any) {
+      toast.error(error.message || "Failed to send reset email");
     }
   };
 
@@ -99,6 +110,15 @@ export default function LoginPage() {
                   className="absolute right-4 top-1/2 -translate-y-1/2 p-2 text-gray-300 hover:text-brand-green transition-colors"
                 >
                   {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                </button>
+              </div>
+              <div className="flex justify-end">
+                <button
+                  type="button"
+                  onClick={handleForgotPassword}
+                  className="text-[10px] font-bold text-gray-400 uppercase tracking-widest hover:text-brand-green transition-colors"
+                >
+                  Forgot Password?
                 </button>
               </div>
             </div>
