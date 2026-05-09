@@ -526,7 +526,7 @@ export default function MenuPage() {
       }
       setIsItemModalOpen(false);
       setEditingItem(null);
-      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
+      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true });
     } catch (error: any) {
       toast.error("Database Error");
     } finally {
