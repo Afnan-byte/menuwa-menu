@@ -50,67 +50,6 @@ export default function SettingsPage() {
 
   const [isDragging, setIsDragging] = useState(false);
 
-  const convertToWebP = (file: File): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      console.log("Starting logo optimization...");
-      const img = new Image();
-      const url = URL.createObjectURL(file);
-      
-      const timeout = setTimeout(() => {
-        URL.revokeObjectURL(url);
-        reject(new Error("Logo optimization timed out"));
-      }, 10000);
-
-      img.onload = () => {
-        clearTimeout(timeout);
-        URL.revokeObjectURL(url);
-        const canvas = document.createElement("canvas");
-        
-        // Resize logic: Max 800px for logos
-        let width = img.width;
-        let height = img.height;
-        const maxDim = 800;
-
-        if (width > height && width > maxDim) {
-          height = Math.round((height * maxDim) / width);
-          width = maxDim;
-        } else if (height > maxDim) {
-          width = Math.round((width * maxDim) / height);
-          height = maxDim;
-        }
-
-        canvas.width = width;
-        canvas.height = height;
-        const ctx = canvas.getContext("2d");
-        if (!ctx) {
-          reject(new Error("Failed to get canvas context"));
-          return;
-        }
-        ctx.drawImage(img, 0, 0, width, height);
-        canvas.toBlob(
-          (blob) => {
-            if (blob) {
-              console.log("Logo optimization complete");
-              resolve(blob);
-            } else {
-              reject(new Error("WebP conversion failed"));
-            }
-          },
-          "image/webp",
-          0.8
-        );
-      };
-      
-      img.onerror = () => {
-        clearTimeout(timeout);
-        URL.revokeObjectURL(url);
-        reject(new Error("Image loading failed"));
-      };
-      
-      img.src = url;
-    });
-  };
-
   const handleFileUpload = async (file: File) => {
     if (!file || !user) return;
     if (!file.type.startsWith("image/")) {
@@ -118,36 +57,18 @@ export default function SettingsPage() {
       return;
     }
 
-    // Enforce 2MB limit for faster uploads
-    if (file.size > 2 * 1024 * 1024) {
-      toast.error("File is too large! Please use an image under 2MB for faster processing.");
-      return;
-    }
-
-    const toastId = toast.loading("Processing logo...");
+    const toastId = toast.loading("Uploading logo...");
     try {
-      let uploadData: Blob | File = file;
-      let extension = file.name.split('.').pop() || 'png';
-
-      try {
-        uploadData = await convertToWebP(file);
-        extension = 'webp';
-      } catch (optError) {
-        console.warn("Logo optimization failed, using original:", optError);
-        uploadData = file;
-        toast.loading("Uploading original logo...", { id: toastId });
-      }
-
-      console.log("Uploading logo to Storage...");
+      const extension = file.name.split('.').pop() || 'png';
       const storageRef = ref(storage, `logos/${user.uid}.${extension}`);
-      await uploadBytes(storageRef, uploadData);
+      await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       
       setFormData(prev => ({ ...prev, logoUrl: url }));
       toast.success("Logo updated successfully!", { id: toastId });
     } catch (error: any) {
       console.error("Logo Upload Error:", error);
-      toast.error(`Upload failed: ${error.message || 'Check connection'}`, { id: toastId });
+      toast.error(`Upload failed: ${error.message || 'Check storage rules'}`, { id: toastId });
     }
   };
 

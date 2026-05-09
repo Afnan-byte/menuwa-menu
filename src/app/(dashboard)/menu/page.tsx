@@ -105,73 +105,6 @@ export default function MenuPage() {
     return "none";
   };
 
-  const convertToWebP = (file: File): Promise<Blob> => {
-    return new Promise((resolve, reject) => {
-      try {
-        console.log("Starting WebP conversion for:", file.name);
-        const img = new Image();
-        const url = URL.createObjectURL(file);
-        
-        const timeout = setTimeout(() => {
-          URL.revokeObjectURL(url);
-          console.warn("Optimization timeout reached");
-          reject(new Error("Timeout"));
-        }, 5000);
-
-        img.onload = () => {
-          try {
-            clearTimeout(timeout);
-            URL.revokeObjectURL(url);
-            
-            const canvas = document.createElement("canvas");
-            let width = img.width;
-            let height = img.height;
-            
-            if (width === 0 || height === 0) {
-              reject(new Error("Invalid image dimensions"));
-              return;
-            }
-
-            const maxDim = 1200;
-            if (width > height && width > maxDim) {
-              height = Math.round((height * maxDim) / width);
-              width = maxDim;
-            } else if (height > maxDim) {
-              width = Math.round((width * maxDim) / height);
-              height = maxDim;
-            }
-
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext("2d");
-            if (!ctx) {
-              reject(new Error("No canvas context"));
-              return;
-            }
-            
-            ctx.drawImage(img, 0, 0, width, height);
-            canvas.toBlob((blob) => {
-              if (blob) resolve(blob);
-              else reject(new Error("Blob conversion failed"));
-            }, "image/webp", 0.8);
-          } catch (e) {
-            reject(e);
-          }
-        };
-        
-        img.onerror = () => {
-          clearTimeout(timeout);
-          URL.revokeObjectURL(url);
-          reject(new Error("Image load error"));
-        };
-        
-        img.src = url;
-      } catch (e) {
-        reject(e);
-      }
-    });
-  };
-
   const [isItemImageDragging, setIsItemImageDragging] = useState(false);
 
   const handleItemImageUpload = async (file: File) => {
@@ -181,33 +114,20 @@ export default function MenuPage() {
       return;
     }
 
-    const toastId = toast.loading("Processing image...");
+    const toastId = toast.loading("Uploading raw image...");
     try {
-      let uploadData: Blob | File = file;
-      let extension = file.name.split('.').pop() || 'jpg';
-
-      try {
-        console.log("Attempting WebP optimization...");
-        uploadData = await convertToWebP(file);
-        extension = 'webp';
-      } catch (optError) {
-        console.warn("Optimization failed, falling back to original file:", optError);
-        // Fallback to original file if optimization fails
-        uploadData = file;
-        toast.loading("Optimization failed, uploading original...", { id: toastId });
-      }
-
-      console.log("Uploading to Firebase Storage...");
+      console.log("Direct upload started for:", file.name);
+      const extension = file.name.split('.').pop() || 'jpg';
       const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}.${extension}`);
-      await uploadBytes(storageRef, uploadData);
+      
+      await uploadBytes(storageRef, file);
       const url = await getDownloadURL(storageRef);
       
       setItemForm(prev => ({ ...prev, imageUrl: url }));
       toast.success("Dish photo uploaded!", { id: toastId });
-      console.log("Upload successful:", url);
     } catch (error: any) {
       console.error("Firebase Storage Error:", error);
-      toast.error(`Upload failed: ${error.message || 'Check connection'}`, { id: toastId });
+      toast.error(`Upload failed: ${error.message || 'Check storage rules'}`, { id: toastId });
     }
   };
 
