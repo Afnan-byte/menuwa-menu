@@ -107,14 +107,20 @@ export default function MenuPage() {
 
   const convertToWebP = (file: File): Promise<Blob> => {
     return new Promise((resolve, reject) => {
+      console.log("Starting WebP conversion for:", file.name, file.size);
       const img = new Image();
       const url = URL.createObjectURL(file);
       
+      const timeout = setTimeout(() => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Image optimization timed out"));
+      }, 10000);
+
       img.onload = () => {
+        clearTimeout(timeout);
         URL.revokeObjectURL(url);
         const canvas = document.createElement("canvas");
         
-        // Resize logic: Max 1200px for menu items
         let width = img.width;
         let height = img.height;
         const maxDim = 1200;
@@ -129,7 +135,6 @@ export default function MenuPage() {
 
         canvas.width = width;
         canvas.height = height;
-        
         const ctx = canvas.getContext("2d");
         if (!ctx) {
           reject(new Error("Failed to get canvas context"));
@@ -139,16 +144,22 @@ export default function MenuPage() {
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob(
           (blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error("WebP conversion failed"));
+            if (blob) {
+              console.log("Conversion successful, new size:", blob.size);
+              resolve(blob);
+            } else {
+              reject(new Error("WebP conversion failed"));
+            }
           },
           "image/webp",
           0.8
         );
       };
       
-      img.onerror = () => {
+      img.onerror = (err) => {
+        clearTimeout(timeout);
         URL.revokeObjectURL(url);
+        console.error("Image loading error:", err);
         reject(new Error("Image loading failed"));
       };
       
@@ -165,18 +176,33 @@ export default function MenuPage() {
       return;
     }
 
-    const toastId = toast.loading("Optimizing and uploading image...");
+    const toastId = toast.loading("Processing image...");
     try {
-      const webpBlob = await convertToWebP(file);
-      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}.webp`);
-      await uploadBytes(storageRef, webpBlob);
+      let uploadData: Blob | File = file;
+      let extension = file.name.split('.').pop() || 'jpg';
+
+      try {
+        console.log("Attempting WebP optimization...");
+        uploadData = await convertToWebP(file);
+        extension = 'webp';
+      } catch (optError) {
+        console.warn("Optimization failed, falling back to original file:", optError);
+        // Fallback to original file if optimization fails
+        uploadData = file;
+        toast.loading("Optimization failed, uploading original...", { id: toastId });
+      }
+
+      console.log("Uploading to Firebase Storage...");
+      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}.${extension}`);
+      await uploadBytes(storageRef, uploadData);
       const url = await getDownloadURL(storageRef);
       
       setItemForm(prev => ({ ...prev, imageUrl: url }));
-      toast.success("Image uploaded successfully!", { id: toastId });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload image", { id: toastId });
+      toast.success("Dish photo uploaded!", { id: toastId });
+      console.log("Upload successful:", url);
+    } catch (error: any) {
+      console.error("Firebase Storage Error:", error);
+      toast.error(`Upload failed: ${error.message || 'Check connection'}`, { id: toastId });
     }
   };
 

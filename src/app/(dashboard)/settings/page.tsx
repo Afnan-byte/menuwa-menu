@@ -52,10 +52,17 @@ export default function SettingsPage() {
 
   const convertToWebP = (file: File): Promise<Blob> => {
     return new Promise((resolve, reject) => {
+      console.log("Starting logo optimization...");
       const img = new Image();
       const url = URL.createObjectURL(file);
       
+      const timeout = setTimeout(() => {
+        URL.revokeObjectURL(url);
+        reject(new Error("Logo optimization timed out"));
+      }, 10000);
+
       img.onload = () => {
+        clearTimeout(timeout);
         URL.revokeObjectURL(url);
         const canvas = document.createElement("canvas");
         
@@ -82,8 +89,12 @@ export default function SettingsPage() {
         ctx.drawImage(img, 0, 0, width, height);
         canvas.toBlob(
           (blob) => {
-            if (blob) resolve(blob);
-            else reject(new Error("WebP conversion failed"));
+            if (blob) {
+              console.log("Logo optimization complete");
+              resolve(blob);
+            } else {
+              reject(new Error("WebP conversion failed"));
+            }
           },
           "image/webp",
           0.8
@@ -91,6 +102,7 @@ export default function SettingsPage() {
       };
       
       img.onerror = () => {
+        clearTimeout(timeout);
         URL.revokeObjectURL(url);
         reject(new Error("Image loading failed"));
       };
@@ -112,18 +124,30 @@ export default function SettingsPage() {
       return;
     }
 
-    const toastId = toast.loading("Optimizing and uploading logo...");
+    const toastId = toast.loading("Processing logo...");
     try {
-      const webpBlob = await convertToWebP(file);
-      const storageRef = ref(storage, `logos/${user.uid}.webp`);
-      await uploadBytes(storageRef, webpBlob);
+      let uploadData: Blob | File = file;
+      let extension = file.name.split('.').pop() || 'png';
+
+      try {
+        uploadData = await convertToWebP(file);
+        extension = 'webp';
+      } catch (optError) {
+        console.warn("Logo optimization failed, using original:", optError);
+        uploadData = file;
+        toast.loading("Uploading original logo...", { id: toastId });
+      }
+
+      console.log("Uploading logo to Storage...");
+      const storageRef = ref(storage, `logos/${user.uid}.${extension}`);
+      await uploadBytes(storageRef, uploadData);
       const url = await getDownloadURL(storageRef);
       
       setFormData(prev => ({ ...prev, logoUrl: url }));
-      toast.success("Logo updated and optimized!", { id: toastId });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to upload logo", { id: toastId });
+      toast.success("Logo updated successfully!", { id: toastId });
+    } catch (error: any) {
+      console.error("Logo Upload Error:", error);
+      toast.error(`Upload failed: ${error.message || 'Check connection'}`, { id: toastId });
     }
   };
 
