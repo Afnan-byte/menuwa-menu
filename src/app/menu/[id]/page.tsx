@@ -250,8 +250,13 @@ export default function PublicMenuPage() {
                   whileHover={{ scale: 1.02 }}
                   className="flex-shrink-0 w-64 group cursor-pointer"
                 >
-                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100")}>
+                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100", !item.isAvailable && "grayscale brightness-75")}>
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
+                    {!item.isAvailable && (
+                      <div className="absolute inset-0 z-10 flex items-center justify-center">
+                        <span className="px-4 py-2 bg-black/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl border border-white/10 shadow-2xl">Out of Stock</span>
+                      </div>
+                    )}
                     <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
                     
                     <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-2">
@@ -327,13 +332,18 @@ export default function PublicMenuPage() {
                         className="group cursor-pointer relative"
                       >
                         <div className="grid grid-cols-12 gap-6 items-start">
-                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
+                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm", !item.isAvailable && "grayscale opacity-60")}>
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
                               fill
                               className="object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000"
                             />
+                            {!item.isAvailable && (
+                              <div className="absolute inset-0 z-10 flex items-center justify-center">
+                                <span className="text-[8px] font-black text-white uppercase tracking-tighter bg-black/40 px-2 py-1 rounded-md">Sold Out</span>
+                              </div>
+                            )}
                           </div>
 
                           <div className="col-span-8 space-y-4 pt-2">
@@ -354,8 +364,16 @@ export default function PublicMenuPage() {
                             </div>
                             <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
                             {item.isPopular && (
-                              <div className="flex items-center text-yellow-500">
-                                <span className="text-[10px] font-semibold uppercase tracking-widest">Bestseller</span>
+                              <div className="flex items-center gap-3">
+                                <span className="text-[10px] font-semibold uppercase tracking-widest text-yellow-500">Bestseller</span>
+                                {!item.isAvailable && (
+                                  <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
+                                )}
+                              </div>
+                            )}
+                            {!item.isPopular && !item.isAvailable && (
+                              <div className="flex items-center text-red-500">
+                                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
                               </div>
                             )}
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
@@ -435,16 +453,19 @@ export default function PublicMenuPage() {
                       >
                         <ArrowRight className="h-6 w-6 rotate-180" />
                       </button>
-                      {restaurant?.whatsapp && (
+                      <div className="flex-1">
                         <button
                           onClick={() => handleWhatsAppOrder(selectedItem)}
-                          className="flex-1 h-20 text-white font-semibold text-[11px] uppercase tracking-[0.3em] rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-4 group"
-                          style={{ backgroundColor: themeColor }}
+                          disabled={!selectedItem.isAvailable}
+                          className={cn(
+                            "w-full h-20 text-white font-semibold text-[11px] uppercase tracking-[0.3em] rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-4 group disabled:opacity-50 disabled:cursor-not-allowed",
+                          )}
+                          style={{ backgroundColor: selectedItem.isAvailable ? themeColor : '#9CA3AF' }}
                         >
-                          <MessageCircle className="h-5 w-5 group-hover:animate-bounce" />
-                          Order via WhatsApp
+                          <MessageCircle className="h-5 w-5" />
+                          {selectedItem.isAvailable ? "Order via WhatsApp" : "Currently Unavailable"}
                         </button>
-                      )}
+                      </div>
                     </div>
                   </div>
                 </div>
