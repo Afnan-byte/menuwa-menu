@@ -170,6 +170,8 @@ export default function MenuPage() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "od1sjbbu");
+      formData.append("api_key", "955253717999674");
+      formData.append("cloud_name", "da1edgeae1");
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
