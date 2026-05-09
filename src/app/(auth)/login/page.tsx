@@ -30,6 +30,8 @@ export default function LoginPage() {
     } finally {
       setLoading(false);
     }
+  };
+
   const handleForgotPassword = async () => {
     if (!email) {
       toast.error("Please enter your email first");
@@ -123,11 +125,7 @@ export default function LoginPage() {
               </div>
             </div>
 
-            <div className="flex justify-end">
-              <Link href="#" className="text-[10px] font-bold text-gray-300 uppercase tracking-widest hover:text-brand-green transition-colors">
-                Forgot Password?
-              </Link>
-            </div>
+
 
             <button
               type="submit"
