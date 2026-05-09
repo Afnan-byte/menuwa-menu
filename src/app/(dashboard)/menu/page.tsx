@@ -170,6 +170,7 @@ export default function MenuPage() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "od1sjbbu");
+      formData.append("cloud_name", "da1edgeae1");
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
@@ -179,17 +180,20 @@ export default function MenuPage() {
         }
       );
 
+      if (!response.ok) {
+        const errorData = await response.json();
+        console.error("Cloudinary Error Response:", errorData);
+        throw new Error(errorData.error?.message || "Upload failed");
+      }
+
       const data = await response.json();
       
       if (data.secure_url) {
         setItemForm(prev => ({ ...prev, imageUrl: data.secure_url }));
         toast.success("Dish photo uploaded!", { id: toastId });
-      } else {
-        console.error("Cloudinary Detailed Error:", data);
-        throw new Error(data.error?.message || "Upload failed");
       }
     } catch (error: any) {
-      console.error("Cloudinary Error:", error);
+      console.error("Cloudinary Full Error:", error);
       toast.error(`Upload failed: ${error.message || 'Check Cloudinary settings'}`, { id: toastId });
     }
   };
