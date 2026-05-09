@@ -172,7 +172,7 @@ export default function MenuPage() {
       formData.append("upload_preset", "od1sjbbu");
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/da1edgeae1/auto/upload`,
+        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
         {
           method: "POST",
           body: formData,
