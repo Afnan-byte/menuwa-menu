@@ -250,11 +250,11 @@ export default function PublicMenuPage() {
                   whileHover={{ scale: 1.02 }}
                   className="flex-shrink-0 w-64 group cursor-pointer"
                 >
-                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100", !item.isAvailable && "grayscale brightness-75")}>
+                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
                     {!item.isAvailable && (
-                      <div className="absolute inset-0 z-10 flex items-center justify-center">
-                        <span className="px-4 py-2 bg-black/80 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest rounded-xl border border-white/10 shadow-2xl">Out of Stock</span>
+                      <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/20">
+                        <span className="px-5 py-2.5 bg-red-600/90 backdrop-blur-md text-white text-[9px] font-black uppercase tracking-[0.2em] rounded-full shadow-2xl border border-white/20">Sold Out</span>
                       </div>
                     )}
                     <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
@@ -329,24 +329,24 @@ export default function PublicMenuPage() {
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 }}
                         onClick={() => setSelectedItem(item)}
-                        className="group cursor-pointer relative"
+                        className={cn("group cursor-pointer relative transition-all duration-500", !item.isAvailable && "opacity-70")}
                       >
                         <div className="grid grid-cols-12 gap-6 items-start">
-                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm", !item.isAvailable && "grayscale opacity-60")}>
+                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
                             <Image
                               src={item.imageUrl}
                               alt={item.name}
                               fill
-                              className="object-cover opacity-90 group-hover:scale-110 transition-transform duration-1000"
+                              className={cn("object-cover transition-transform duration-1000 group-hover:scale-110", !item.isAvailable && "grayscale opacity-40")}
                             />
                             {!item.isAvailable && (
-                              <div className="absolute inset-0 z-10 flex items-center justify-center">
-                                <span className="text-[8px] font-black text-white uppercase tracking-tighter bg-black/40 px-2 py-1 rounded-md">Sold Out</span>
+                              <div className="absolute inset-0 z-10 flex items-center justify-center bg-black/10">
+                                <span className="text-[9px] font-black text-white uppercase tracking-[0.15em] bg-red-600/90 px-4 py-2 rounded-full shadow-xl border border-white/20">Out of Stock</span>
                               </div>
                             )}
                           </div>
 
-                          <div className="col-span-8 space-y-4 pt-2">
+                          <div className={cn("col-span-8 space-y-4 pt-2 transition-colors", !item.isAvailable && "grayscale")}>
                             <div className="flex items-center justify-between">
                               <div className="flex items-center gap-3">
                                 {item.dietaryType === "veg" && (
