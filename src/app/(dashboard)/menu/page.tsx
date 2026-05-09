@@ -85,6 +85,7 @@ export default function MenuPage() {
     tags: [] as string[],
     dietaryType: "none" as "veg" | "non-veg" | "none",
     isPopular: false,
+    isAvailable: true,
   });
 
   useEffect(() => {
@@ -720,7 +721,7 @@ export default function MenuPage() {
               <button
                 onClick={() => {
                   setEditingItem(null);
-                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false });
+                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true });
                   setIsItemModalOpen(true);
                 }}
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#196F03] border border-transparent text-white text-xs font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all shadow-lg shadow-brand-green/20 whitespace-nowrap"
@@ -778,7 +779,8 @@ export default function MenuPage() {
                   setItemForm({
                     ...item,
                     dietaryType: item.dietaryType || "none",
-                    isPopular: item.isPopular || false
+                    isPopular: item.isPopular || false,
+                    isAvailable: item.isAvailable !== undefined ? item.isAvailable : true
                   });
                   setIsItemModalOpen(true);
                 }}
@@ -927,6 +929,19 @@ export default function MenuPage() {
                     </div>
                     <label className="relative inline-flex items-center cursor-pointer">
                       <input type="checkbox" className="sr-only peer" checked={itemForm.isPopular} onChange={(e) => setItemForm({ ...itemForm, isPopular: e.target.checked })} />
+                      <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#196F03]"></div>
+                    </label>
+                  </div>
+
+                  <div className="md:col-span-2 flex items-center justify-between p-6 bg-gray-50 rounded-[1.5rem] border border-gray-100">
+                    <div>
+                      <h3 className="text-sm font-medium text-primary flex items-center gap-2">
+                        <Utensils className="h-4 w-4 text-[#196F03]" /> Availability Status
+                      </h3>
+                      <p className="text-[10px] font-bold text-gray-400 uppercase tracking-widest mt-1">Toggle "Out of Stock" status for this item</p>
+                    </div>
+                    <label className="relative inline-flex items-center cursor-pointer">
+                      <input type="checkbox" className="sr-only peer" checked={itemForm.isAvailable} onChange={(e) => setItemForm({ ...itemForm, isAvailable: e.target.checked })} />
                       <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-[#196F03]"></div>
                     </label>
                   </div>
