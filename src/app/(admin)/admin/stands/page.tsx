@@ -35,7 +35,19 @@ export default function StandsManager() {
     try {
       const q = query(collection(db, "stands"), orderBy("createdAt", "desc"));
       const snap = await getDocs(q);
-      setStands(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+      const standsData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+
+      // Fetch restaurant names for assigned stands
+      const resSnap = await getDocs(collection(db, "restaurants"));
+      const resMap: Record<string, string> = {};
+      resSnap.docs.forEach(doc => {
+        resMap[doc.id] = doc.data().restaurantName || "Unnamed";
+      });
+
+      setStands(standsData.map(s => ({
+        ...s,
+        restaurantName: s.assignedTo ? resMap[s.assignedTo] : null
+      })));
     } catch (error) {
       console.error(error);
     } finally {
@@ -228,6 +240,9 @@ export default function StandsManager() {
                 
                 <div className="text-center">
                   <h4 className="text-lg font-black tracking-tighter">{stand.id}</h4>
+                  {stand.restaurantName && (
+                    <p className="text-[10px] font-bold text-white truncate px-2 mb-1">{stand.restaurantName}</p>
+                  )}
                   <p className={cn(
                     "text-[8px] font-bold uppercase tracking-widest mt-1",
                     stand.status === 'assigned' ? "text-[#196F03]" : "text-gray-500"

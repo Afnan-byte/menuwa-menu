@@ -11,7 +11,7 @@ export default function QRPage() {
   const qrRef = useRef<HTMLDivElement>(null);
   
   const menuUrl = typeof window !== "undefined" 
-    ? `${window.location.origin}/menu/${user?.uid}` 
+    ? `${window.location.origin}/menu/${restaurantData?.menuId || user?.uid}` 
     : "";
 
   const downloadQR = () => {

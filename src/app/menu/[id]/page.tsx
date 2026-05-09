@@ -95,24 +95,38 @@ export default function PublicMenuPage() {
 
   const fetchMenu = async () => {
     try {
-      const resSnap = await getDoc(doc(db, "restaurants", id as string));
-      if (resSnap.exists()) {
-        setRestaurant(resSnap.data() as Restaurant);
+      let resSnap;
+      // If the ID is 6 characters, it's a short menuId
+      if (id && (id as string).length === 6) {
+        const q = query(collection(db, "restaurants"), where("menuId", "==", id));
+        const querySnap = await getDocs(q);
+        if (!querySnap.empty) {
+          resSnap = querySnap.docs[0];
+        }
+      } else {
+        // Fallback to standard UID lookup
+        resSnap = await getDoc(doc(db, "restaurants", id as string));
       }
 
-      const catQuery = query(collection(db, "categories"), where("restaurantId", "==", id));
-      const catSnap = await getDocs(catQuery);
-      setCategories(catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category)));
+      if (resSnap && resSnap.exists()) {
+        const data = resSnap.data() as Restaurant;
+        setRestaurant(data);
+        const restaurantId = resSnap.id; // Use the actual document ID for other queries
 
-      const itemQuery = query(collection(db, "items"), where("restaurantId", "==", id));
-      const itemSnap = await getDocs(itemQuery);
+        const catQuery = query(collection(db, "categories"), where("restaurantId", "==", restaurantId));
+        const catSnap = await getDocs(catQuery);
+        setCategories(catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category)));
 
-      const fetchedItems = itemSnap.docs.map((doc) => ({
-        id: doc.id,
-        ...doc.data()
-      } as MenuItem));
+        const itemQuery = query(collection(db, "items"), where("restaurantId", "==", restaurantId));
+        const itemSnap = await getDocs(itemQuery);
 
-      setItems(fetchedItems);
+        const fetchedItems = itemSnap.docs.map((doc) => ({
+          id: doc.id,
+          ...doc.data()
+        } as MenuItem));
+
+        setItems(fetchedItems);
+      }
     } catch (error) {
       console.error(error);
     } finally {

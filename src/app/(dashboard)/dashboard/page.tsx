@@ -60,7 +60,7 @@ export default function DashboardPage() {
         
         <div className="flex items-center gap-4">
           <Link 
-            href={`/menu/${user?.uid}`}
+            href={`/menu/${restaurantData?.menuId || user?.uid}`}
             target="_blank"
             className="flex items-center gap-3 bg-white border border-gray-100 px-6 py-4 rounded-2xl text-xs font-bold text-primary shadow-sm hover:bg-gray-50 transition-all uppercase tracking-widest"
           >
