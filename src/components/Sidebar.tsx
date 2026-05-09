@@ -10,8 +10,10 @@ import {
   LogOut,
   MessageCircle,
   ChevronRight,
-  Mail
+  Mail,
+  ShieldCheck
 } from "lucide-react";
+import { useAuth } from "./auth-provider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
 import { auth } from "@/lib/firebase";
@@ -28,6 +30,7 @@ const navItems = [
 export default function Sidebar() {
   const pathname = usePathname();
   const router = useRouter();
+  const { isAdmin } = useAuth();
 
   const handleLogout = async () => {
     try {
@@ -75,6 +78,26 @@ export default function Sidebar() {
             </Link>
           );
         })}
+
+        {isAdmin && (
+          <>
+            <p className="px-5 text-[10px] font-bold text-red-400 uppercase tracking-[0.2em] mb-4 mt-8 opacity-70">Super Admin</p>
+            <Link
+              href="/admin"
+              className={cn(
+                "flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group",
+                pathname.startsWith("/admin")
+                  ? "bg-black text-white shadow-xl scale-[1.02]"
+                  : "text-gray-500 hover:bg-gray-50 hover:text-black"
+              )}
+            >
+              <div className="flex items-center gap-4">
+                <ShieldCheck className={cn("h-5 w-5", pathname.startsWith("/admin") ? "text-[#196F03]" : "text-gray-400 group-hover:text-black")} />
+                <span className="font-semibold text-sm tracking-tight">Admin Panel</span>
+              </div>
+            </Link>
+          </>
+        )}
       </nav>
 
       <div className="p-4 mt-auto">
