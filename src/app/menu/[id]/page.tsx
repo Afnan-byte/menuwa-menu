@@ -258,7 +258,12 @@ export default function PublicMenuPage() {
                     <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
                     
                     <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-2">
-                      <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
+                        {!item.isAvailable && (
+                          <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-0.5 bg-white rounded-lg shadow-lg">Sold Out</span>
+                        )}
+                      </div>
                       <div className="flex items-center justify-between">
                          <span className="text-[13px] font-bold text-[#196F03] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
 
@@ -363,16 +368,8 @@ export default function PublicMenuPage() {
                                )}
                              </div>
                             {item.isPopular && (
-                              <div className="flex items-center gap-3">
-                                <span className="text-[10px] font-semibold uppercase tracking-widest text-yellow-500">Bestseller</span>
-                                {!item.isAvailable && (
-                                  <span className="text-[10px] font-bold text-red-500 uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
-                                )}
-                              </div>
-                            )}
-                            {!item.isPopular && !item.isAvailable && (
-                              <div className="flex items-center text-red-500">
-                                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
+                              <div className="flex items-center text-yellow-500">
+                                <span className="text-[10px] font-semibold uppercase tracking-widest">Bestseller</span>
                               </div>
                             )}
                             <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
