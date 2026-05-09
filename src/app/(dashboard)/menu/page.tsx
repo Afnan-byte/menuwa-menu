@@ -109,6 +109,38 @@ export default function MenuPage() {
     return "none";
   };
 
+  const convertToWebP = (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("Failed to get canvas context"));
+            return;
+          }
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("WebP conversion failed"));
+            },
+            "image/webp",
+            0.8
+          );
+        };
+        img.onerror = () => reject(new Error("Image loading failed"));
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error("File reading failed"));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const [isItemImageDragging, setIsItemImageDragging] = useState(false);
 
   const handleItemImageUpload = async (file: File) => {
@@ -118,15 +150,11 @@ export default function MenuPage() {
       return;
     }
 
-    if (file.size > 5 * 1024 * 1024) {
-      toast.error("File is too large! Please use an image under 5MB.");
-      return;
-    }
-
-    const toastId = toast.loading("Uploading dish image...");
+    const toastId = toast.loading("Optimizing and uploading image...");
     try {
-      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}_${file.name}`);
-      await uploadBytes(storageRef, file);
+      const webpBlob = await convertToWebP(file);
+      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}.webp`);
+      await uploadBytes(storageRef, webpBlob);
       const url = await getDownloadURL(storageRef);
       
       setItemForm(prev => ({ ...prev, imageUrl: url }));

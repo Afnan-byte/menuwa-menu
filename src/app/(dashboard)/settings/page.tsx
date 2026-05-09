@@ -50,6 +50,38 @@ export default function SettingsPage() {
 
   const [isDragging, setIsDragging] = useState(false);
 
+  const convertToWebP = (file: File): Promise<Blob> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement("canvas");
+          canvas.width = img.width;
+          canvas.height = img.height;
+          const ctx = canvas.getContext("2d");
+          if (!ctx) {
+            reject(new Error("Failed to get canvas context"));
+            return;
+          }
+          ctx.drawImage(img, 0, 0);
+          canvas.toBlob(
+            (blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("WebP conversion failed"));
+            },
+            "image/webp",
+            0.8
+          );
+        };
+        img.onerror = () => reject(new Error("Image loading failed"));
+        img.src = e.target?.result as string;
+      };
+      reader.onerror = () => reject(new Error("File reading failed"));
+      reader.readAsDataURL(file);
+    });
+  };
+
   const handleFileUpload = async (file: File) => {
     if (!file || !user) return;
     if (!file.type.startsWith("image/")) {
@@ -63,14 +95,15 @@ export default function SettingsPage() {
       return;
     }
 
-    const toastId = toast.loading("Uploading logo...");
+    const toastId = toast.loading("Optimizing and uploading logo...");
     try {
-      const storageRef = ref(storage, `logos/${user.uid}`);
-      await uploadBytes(storageRef, file);
+      const webpBlob = await convertToWebP(file);
+      const storageRef = ref(storage, `logos/${user.uid}.webp`);
+      await uploadBytes(storageRef, webpBlob);
       const url = await getDownloadURL(storageRef);
       
       setFormData(prev => ({ ...prev, logoUrl: url }));
-      toast.success("Logo uploaded successfully!", { id: toastId });
+      toast.success("Logo updated and optimized!", { id: toastId });
     } catch (error) {
       console.error(error);
       toast.error("Failed to upload logo", { id: toastId });
