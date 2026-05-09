@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { Utensils, Edit2, Trash2, Leaf, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -36,11 +35,10 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         <div className="relative w-full h-full">
           {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
             <div className="relative w-full h-full p-1 overflow-hidden rounded-full border-4 border-white shadow-2xl">
-              <Image
+              <img
                 src={item.imageUrl}
                 alt={item.name}
-                fill
-                className="object-cover group-hover:scale-110 transition-transform duration-500"
+                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
               />
             </div>
           ) : (

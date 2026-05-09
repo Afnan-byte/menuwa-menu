@@ -350,11 +350,10 @@ export default function PublicMenuPage() {
                       >
                         <div className="grid grid-cols-12 gap-6 items-start">
                           <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
-                            <Image
+                            <img
                               src={item.imageUrl}
                               alt={item.name}
-                              fill
-                              className={cn("object-cover transition-transform duration-1000 group-hover:scale-110", !item.isAvailable && "grayscale opacity-40")}
+                              className={cn("w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110", !item.isAvailable && "grayscale opacity-40")}
                             />
                             {/* Clean image container, status moved to text area */}
                           </div>
@@ -424,7 +423,7 @@ export default function PublicMenuPage() {
                 </button>
 
                 <div className="relative h-[40vh] w-full shrink-0">
-                  <Image src={selectedItem.imageUrl} alt={selectedItem.name} fill className="object-cover" />
+                  <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
                   <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0F0F0F]" : "from-black/70")}></div>
 
                 </div>
