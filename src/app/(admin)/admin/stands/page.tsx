@@ -59,7 +59,7 @@ export default function StandsManager() {
         resMap[doc.id] = doc.data().restaurantName || "Unnamed";
       });
 
-      setStands(standsData.map(s => ({
+      setStands(standsData.map((s: any) => ({
         ...s,
         restaurantName: s.assignedTo ? resMap[s.assignedTo] : null
       })));
