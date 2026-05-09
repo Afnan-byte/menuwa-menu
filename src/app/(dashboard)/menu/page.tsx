@@ -165,30 +165,32 @@ export default function MenuPage() {
       return;
     }
 
-    const toastId = toast.loading("Processing photo...");
+    const toastId = toast.loading("Uploading to Cloudinary...");
     try {
-      let uploadData: Blob | File = file;
-      let extension = file.name.split('.').pop() || 'jpg';
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "od1sjbbu"); // Your preset
+      formData.append("cloud_name", "da1edgeae1"); // Your cloud name
 
-      try {
-        // Attempt optimization
-        uploadData = await convertToWebP(file);
-        extension = 'webp';
-      } catch (optError) {
-        console.warn("Optimization skipped/failed:", optError);
-        // Fallback to raw file
-        uploadData = file;
-      }
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}.${extension}`);
-      await uploadBytes(storageRef, uploadData);
-      const url = await getDownloadURL(storageRef);
+      const data = await response.json();
       
-      setItemForm(prev => ({ ...prev, imageUrl: url }));
-      toast.success("Dish photo uploaded!", { id: toastId });
+      if (data.secure_url) {
+        setItemForm(prev => ({ ...prev, imageUrl: data.secure_url }));
+        toast.success("Dish photo uploaded!", { id: toastId });
+      } else {
+        throw new Error(data.error?.message || "Upload failed");
+      }
     } catch (error: any) {
-      console.error("Upload Error:", error);
-      toast.error(`Upload failed: ${error.message || 'Check storage'}`, { id: toastId });
+      console.error("Cloudinary Error:", error);
+      toast.error(`Upload failed: ${error.message || 'Check Cloudinary settings'}`, { id: toastId });
     }
   };
 
