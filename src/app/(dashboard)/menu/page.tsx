@@ -170,23 +170,30 @@ export default function MenuPage() {
       const formData = new FormData();
       formData.append("file", file);
       formData.append("upload_preset", "od1sjbbu");
-      formData.append("cloud_name", "da1edgeae1");
 
       const response = await fetch(
-        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
+        `https://api.cloudinary.com/v1_1/da1edgeae1/auto/upload`,
         {
           method: "POST",
           body: formData,
         }
       );
 
+      const responseText = await response.text();
+      
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error("Cloudinary Error Response:", errorData);
-        throw new Error(errorData.error?.message || "Upload failed");
+        console.error("Cloudinary Raw Error:", responseText);
+        let errorMessage = "Upload failed";
+        try {
+          const errorData = JSON.parse(responseText);
+          errorMessage = errorData.error?.message || errorMessage;
+        } catch (e) {
+          errorMessage = responseText;
+        }
+        throw new Error(errorMessage);
       }
 
-      const data = await response.json();
+      const data = JSON.parse(responseText);
       
       if (data.secure_url) {
         setItemForm(prev => ({ ...prev, imageUrl: data.secure_url }));
