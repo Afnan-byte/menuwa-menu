@@ -169,8 +169,7 @@ export default function MenuPage() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      formData.append("upload_preset", "od1sjbbu"); // Your preset
-      formData.append("cloud_name", "da1edgeae1"); // Your cloud name
+      formData.append("upload_preset", "od1sjbbu");
 
       const response = await fetch(
         `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
@@ -186,6 +185,7 @@ export default function MenuPage() {
         setItemForm(prev => ({ ...prev, imageUrl: data.secure_url }));
         toast.success("Dish photo uploaded!", { id: toastId });
       } else {
+        console.error("Cloudinary Detailed Error:", data);
         throw new Error(data.error?.message || "Upload failed");
       }
     } catch (error: any) {
