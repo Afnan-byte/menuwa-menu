@@ -364,7 +364,7 @@ export default function MenuPage() {
           const rawImageUrl = (row[imgIdx] || "").trim();
           const imageUrl = (rawImageUrl.startsWith("http") || rawImageUrl.startsWith("/")) 
             ? rawImageUrl 
-            : detectImageUrl(row[nameIdx] || "");
+            : "";
 
           const itemData = {
             restaurantId: user.uid,
