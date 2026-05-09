@@ -22,14 +22,28 @@ import { cn } from "@/lib/utils";
 
 export default function StandsManager() {
   const [stands, setStands] = useState<any[]>([]);
+  const [restaurants, setRestaurants] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isAssignModalOpen, setIsAssignModalOpen] = useState(false);
+  const [selectedStand, setSelectedStand] = useState<any>(null);
+  const [assigning, setAssigning] = useState(false);
   const [generating, setGenerating] = useState(false);
   const [batchSize, setBatchSize] = useState(10);
   const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
     fetchStands();
+    fetchRestaurants();
   }, []);
+
+  const fetchRestaurants = async () => {
+    try {
+      const snap = await getDocs(collection(db, "restaurants"));
+      setRestaurants(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const fetchStands = async () => {
     try {
@@ -88,6 +102,36 @@ export default function StandsManager() {
       toast.error("Generation failed");
     } finally {
       setGenerating(false);
+    }
+  };
+
+  const assignStand = async (restaurantId: string) => {
+    if (!selectedStand || !restaurantId) return;
+    setAssigning(true);
+    try {
+      const batch = writeBatch(db);
+      
+      // 1. Update stand document
+      batch.update(doc(db, "stands", selectedStand.id), {
+        status: "assigned",
+        assignedTo: restaurantId,
+        assignedAt: new Date().toISOString()
+      });
+
+      // 2. Update restaurant document
+      batch.update(doc(db, "restaurants", restaurantId), {
+        menuId: selectedStand.id
+      });
+
+      await batch.commit();
+      toast.success("Stand assigned successfully!");
+      setIsAssignModalOpen(false);
+      fetchStands();
+    } catch (error) {
+      console.error(error);
+      toast.error("Assignment failed");
+    } finally {
+      setAssigning(false);
     }
   };
 
@@ -244,17 +288,74 @@ export default function StandsManager() {
                     <p className="text-[10px] font-bold text-white truncate px-2 mb-1">{stand.restaurantName}</p>
                   )}
                   <p className={cn(
-                    "text-[8px] font-bold uppercase tracking-widest mt-1",
+                    "text-[8px] font-bold uppercase tracking-widest mt-1 mb-4",
                     stand.status === 'assigned' ? "text-[#196F03]" : "text-gray-500"
                   )}>
                     {stand.status === 'assigned' ? "Assigned" : "Available"}
                   </p>
+
+                  {stand.status === 'unassigned' && (
+                    <button 
+                      onClick={() => {
+                        setSelectedStand(stand);
+                        setIsAssignModalOpen(true);
+                      }}
+                      className="w-full py-2 bg-white/10 hover:bg-white/20 text-white text-[9px] font-bold uppercase tracking-widest rounded-lg transition-all"
+                    >
+                      Assign Brand
+                    </button>
+                  )}
                 </div>
               </motion.div>
             ))}
           </AnimatePresence>
         </div>
       )}
+      {/* Assignment Modal */}
+      <AnimatePresence>
+        {isAssignModalOpen && (
+          <div className="fixed inset-0 bg-black/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-[#1A1A1A] border border-white/10 rounded-[3rem] p-10 max-w-md w-full shadow-2xl space-y-8"
+            >
+              <div>
+                <h2 className="text-2xl font-bold text-white">Assign Stand {selectedStand?.id}</h2>
+                <p className="text-gray-400 text-sm mt-2">Select a restaurant to link with this unique 6-digit ID.</p>
+              </div>
+
+              <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2 custom-scrollbar">
+                {restaurants.filter(r => !r.menuId).map((res) => (
+                  <button
+                    key={res.id}
+                    onClick={() => assignStand(res.id)}
+                    disabled={assigning}
+                    className="w-full p-4 bg-white/5 border border-white/5 rounded-2xl flex items-center justify-between group hover:bg-[#196F03]/10 hover:border-[#196F03]/20 transition-all text-left"
+                  >
+                    <div>
+                      <h4 className="font-bold text-sm text-white group-hover:text-[#196F03]">{res.restaurantName}</h4>
+                      <p className="text-[10px] text-gray-500 font-medium">{res.whatsapp}</p>
+                    </div>
+                    <ChevronRight className="h-4 w-4 text-gray-700 group-hover:text-[#196F03]" />
+                  </button>
+                ))}
+                {restaurants.filter(r => !r.menuId).length === 0 && (
+                  <p className="text-center py-10 text-gray-500 text-sm italic">All registered restaurants already have stands assigned.</p>
+                )}
+              </div>
+
+              <button 
+                onClick={() => setIsAssignModalOpen(false)}
+                className="w-full py-4 text-gray-500 text-[10px] font-bold uppercase tracking-widest hover:text-white transition-colors"
+              >
+                Cancel
+              </button>
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
     </div>
   );
 }
