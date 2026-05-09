@@ -183,7 +183,13 @@ export default function PublicMenuPage() {
           {/* Co-branding Bar */}
           <div className="absolute top-4 left-6 flex items-center gap-3 z-30">
             <div className={cn("relative h-10 w-10 rounded-full overflow-hidden border", isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white shadow-sm")}>
-              <Image src={restaurant?.logoUrl || "/logo.svg"} alt="Restaurant" fill className="object-contain p-1" />
+              {restaurant?.logoUrl ? (
+                <img src={restaurant.logoUrl} alt="Restaurant" className="w-full h-full object-contain p-1" />
+              ) : (
+                <div className="h-full w-full flex items-center justify-center bg-primary/10">
+                  <Utensils className="h-5 w-5 text-primary" />
+                </div>
+              )}
             </div>
             <X className={cn("h-2.5 w-2.5", isDark ? "text-white/20" : "text-gray-400")} />
             <div className="flex items-center">
