@@ -253,9 +253,7 @@ export default function PublicMenuPage() {
                   <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
                     <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
                     {!item.isAvailable && (
-                      <div className="absolute top-6 left-6 z-10">
-                        <span className="px-3 py-1.5 bg-red-600 text-white text-[7px] font-black uppercase tracking-[0.2em] rounded-lg border border-white/10 shadow-2xl">Out of Stock</span>
-                      </div>
+                      <div className="absolute inset-0 bg-black/10 z-10" />
                     )}
                     <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
                     
@@ -339,11 +337,7 @@ export default function PublicMenuPage() {
                               fill
                               className={cn("object-cover transition-transform duration-1000 group-hover:scale-110", !item.isAvailable && "grayscale opacity-40")}
                             />
-                            {!item.isAvailable && (
-                              <div className="absolute top-4 left-4 z-10">
-                                <span className="text-[7px] font-black text-white uppercase tracking-[0.2em] bg-red-600 px-3 py-1.5 rounded-lg shadow-xl border border-white/10">Out of Stock</span>
-                              </div>
-                            )}
+                            {/* Clean image container, status moved to text area */}
                           </div>
 
                           <div className={cn("col-span-8 space-y-4 pt-2 transition-colors", !item.isAvailable && "grayscale")}>
@@ -362,7 +356,12 @@ export default function PublicMenuPage() {
                               </div>
                               <span className="text-[15px] font-semibold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                             </div>
-                            <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
+                             <div className="flex items-center gap-3">
+                               <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900", !item.isAvailable && "opacity-50")}>{item.name}</h3>
+                               {!item.isAvailable && (
+                                 <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
+                               )}
+                             </div>
                             {item.isPopular && (
                               <div className="flex items-center gap-3">
                                 <span className="text-[10px] font-semibold uppercase tracking-widest text-yellow-500">Bestseller</span>
