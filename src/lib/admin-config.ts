@@ -1,6 +1,5 @@
 export const ADMIN_EMAILS = [
-  "afnanbyte@gmail.com", // Main admin
-  "info@menuwo.in"       // Support/Admin
+  "afnan.messaging@gmail.com"
 ];
 
 export const isAdmin = (email: string | null | undefined) => {
