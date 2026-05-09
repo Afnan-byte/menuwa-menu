@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db } from "@/lib/firebase";
+import { db, storage } from "@/lib/firebase";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   collection,
   query,
@@ -106,6 +107,34 @@ export default function MenuPage() {
     if (nonVegKeywords.some(keyword => lowerName.includes(keyword))) return "non-veg";
     if (vegKeywords.some(keyword => lowerName.includes(keyword))) return "veg";
     return "none";
+  };
+
+  const [isItemImageDragging, setIsItemImageDragging] = useState(false);
+
+  const handleItemImageUpload = async (file: File) => {
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("File is too large! Please use an image under 5MB.");
+      return;
+    }
+
+    const toastId = toast.loading("Uploading dish image...");
+    try {
+      const storageRef = ref(storage, `dishes/${user.uid}/${Date.now()}_${file.name}`);
+      await uploadBytes(storageRef, file);
+      const url = await getDownloadURL(storageRef);
+      
+      setItemForm(prev => ({ ...prev, imageUrl: url }));
+      toast.success("Image uploaded successfully!", { id: toastId });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to upload image", { id: toastId });
+    }
   };
 
   const handleClearEverything = async () => {
@@ -852,8 +881,69 @@ export default function MenuPage() {
                   </div>
 
                   <div className="md:col-span-2">
-                    <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1 mb-3 block">Image URL</label>
-                    <input type="text" placeholder="Paste image link here" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-bold outline-none text-primary" value={itemForm.imageUrl} onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })} />
+                    <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1 mb-4 block">Dish Image</label>
+                    <div 
+                      onDragOver={(e) => { e.preventDefault(); setIsItemImageDragging(true); }}
+                      onDragLeave={() => setIsItemImageDragging(false)}
+                      onDrop={(e) => {
+                        e.preventDefault();
+                        setIsItemImageDragging(false);
+                        const file = e.dataTransfer.files?.[0];
+                        if (file) handleItemImageUpload(file);
+                      }}
+                      className={cn(
+                        "flex flex-col sm:flex-row items-center gap-6 p-6 bg-gray-50 rounded-[2rem] border-2 border-dashed transition-all group relative overflow-hidden",
+                        isItemImageDragging ? "border-[#196F03] bg-[#196F03]/5 ring-8 ring-[#196F03]/5" : "border-gray-100 hover:border-gray-200"
+                      )}
+                    >
+                      <div className="h-24 w-24 rounded-[1.5rem] bg-white shadow-xl flex items-center justify-center overflow-hidden flex-shrink-0 relative z-10 border border-gray-50">
+                        {itemForm.imageUrl ? (
+                          <img src={itemForm.imageUrl} alt="Preview" className="h-full w-full object-cover" />
+                        ) : (
+                          <Utensils className="h-10 w-10 text-gray-200" />
+                        )}
+                        {isItemImageDragging && (
+                          <div className="absolute inset-0 bg-[#196F03]/80 flex items-center justify-center text-white">
+                            <Plus className="h-8 w-8 animate-bounce" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex-1 space-y-1 relative z-10 text-center sm:text-left">
+                        <h4 className="text-sm font-bold text-primary tracking-tight">Drop dish photo here</h4>
+                        <p className="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Or click to browse from device</p>
+                      </div>
+                      <input
+                        type="file"
+                        id="dish-image-upload"
+                        className="hidden"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleItemImageUpload(file);
+                        }}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => document.getElementById("dish-image-upload")?.click()}
+                        className="relative z-10 px-6 py-3 bg-white text-primary text-[10px] font-bold uppercase tracking-widest rounded-xl shadow-sm border border-gray-100 hover:bg-primary hover:text-white transition-all"
+                      >
+                        Select Image
+                      </button>
+                    </div>
+                    <div className="mt-4 flex items-center gap-2 px-2">
+                      <div className="h-1 w-1 rounded-full bg-gray-300"></div>
+                      <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">Or paste a direct image link below</p>
+                    </div>
+                    <div className="mt-2 relative">
+                      <Globe className="absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
+                      <input
+                        type="text"
+                        value={itemForm.imageUrl}
+                        onChange={(e) => setItemForm({ ...itemForm, imageUrl: e.target.value })}
+                        className="w-full pl-14 pr-6 py-4 bg-gray-50/50 border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary"
+                        placeholder="Image URL"
+                      />
+                    </div>
                   </div>
 
                   <div className="md:col-span-2">
