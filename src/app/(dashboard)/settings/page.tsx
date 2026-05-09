@@ -106,28 +106,38 @@ export default function SettingsPage() {
       return;
     }
 
-    const toastId = toast.loading("Processing logo...");
+    const toastId = toast.loading("Uploading to Cloudinary...");
     try {
-      let uploadData: Blob | File = file;
-      let extension = file.name.split('.').pop() || 'png';
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "od1sjbbu");
+      formData.append("api_key", "955253717999674");
+      formData.append("cloud_name", "da1edgeae1");
 
-      try {
-        uploadData = await convertToWebP(file);
-        extension = 'webp';
-      } catch (optError) {
-        console.warn("Optimization skipped/failed:", optError);
-        uploadData = file;
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
+
+      const responseText = await response.text();
+      
+      if (!response.ok) {
+        console.error("Cloudinary Logo Error:", responseText);
+        throw new Error("Upload failed. Check settings.");
       }
 
-      const storageRef = ref(storage, `logos/${user.uid}.${extension}`);
-      await uploadBytes(storageRef, uploadData);
-      const url = await getDownloadURL(storageRef);
+      const data = JSON.parse(responseText);
       
-      setFormData(prev => ({ ...prev, logoUrl: url }));
-      toast.success("Logo updated successfully!", { id: toastId });
+      if (data.secure_url) {
+        setFormData(prev => ({ ...prev, logoUrl: data.secure_url }));
+        toast.success("Logo uploaded successfully!", { id: toastId });
+      }
     } catch (error: any) {
       console.error("Logo Upload Error:", error);
-      toast.error(`Upload failed: ${error.message || 'Check storage'}`, { id: toastId });
+      toast.error(`Upload failed: ${error.message || 'Check Cloudinary'}`, { id: toastId });
     }
   };
 
