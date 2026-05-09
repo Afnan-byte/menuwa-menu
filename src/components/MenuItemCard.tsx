@@ -54,6 +54,23 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
             {item.price.replace(/[^0-9.]/g, '')}
           </div>
 
+          {/* Availability Toggle Badge (Top Left of image) */}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleAvailability();
+            }}
+            className={cn(
+              "absolute -top-2 -left-2 h-10 w-10 rounded-2xl flex items-center justify-center border shadow-xl transition-all active:scale-95 z-20",
+              item.isAvailable 
+                ? "bg-white text-[#196F03] border-gray-100 hover:border-[#196F03]" 
+                : "bg-red-500 text-white border-red-400 hover:bg-red-600 shadow-red-200"
+            )}
+            title={item.isAvailable ? "Mark as Out of Stock" : "Mark as In Stock"}
+          >
+            <Utensils className="h-4 w-4" />
+          </button>
+
           {/* Dietary Icon (Next to image - Pure White Background) */}
           <div className="absolute top-1/2 -right-4 -translate-y-1/2">
             {item.dietaryType === "veg" && (
@@ -81,28 +98,17 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         </p>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 mt-8">
-          <button
-            onClick={onToggleAvailability}
-            className={cn(
-              "flex-1 py-4 font-bold text-[9px] uppercase tracking-[0.1em] rounded-2xl transition-all flex items-center justify-center gap-2 border",
-              item.isAvailable 
-                ? "bg-white text-[#196F03] border-gray-100 hover:border-[#196F03]" 
-                : "bg-red-50 text-red-500 border-red-100 hover:bg-red-500 hover:text-white"
-            )}
-          >
-            <Utensils className="h-3 w-3" />
-            {item.isAvailable ? "In Stock" : "Out of Stock"}
-          </button>
+        <div className="flex gap-4 mt-8">
           <button
             onClick={onEdit}
-            className="p-4 bg-gray-50 text-primary rounded-2xl hover:bg-primary hover:text-white transition-all flex items-center justify-center border border-gray-100"
+            className="flex-1 py-4 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
           >
-            <Edit2 className="h-4 w-4" />
+            <Edit2 className="h-3.5 w-3.5" />
+            Edit
           </button>
           <button
             onClick={onDelete}
-            className="p-4 bg-gray-50 text-red-400 rounded-2xl hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
+            className="p-4 bg-gray-50 text-red-500 rounded-[2rem] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
           >
             <Trash2 className="h-4 w-4" />
           </button>
