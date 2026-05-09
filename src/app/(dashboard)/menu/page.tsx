@@ -67,6 +67,7 @@ export default function MenuPage() {
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [searchQuery, setSearchQuery] = useState("");
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  const [stockFilter, setStockFilter] = useState<"all" | "available" | "out">("all");
 
   // Modals
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
@@ -559,9 +560,13 @@ export default function MenuPage() {
       const matchesCategory = activeCategory === "all" || item.categoryId === activeCategory;
       const matchesSearch = item.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         item.description.toLowerCase().includes(searchQuery.toLowerCase());
-      return matchesCategory && matchesSearch;
+      
+      const matchesStock = stockFilter === "all" || 
+        (stockFilter === "available" ? item.isAvailable : !item.isAvailable);
+
+      return matchesCategory && matchesSearch && matchesStock;
     });
-  }, [items, activeCategory, searchQuery]);
+  }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 font-sans min-h-screen pb-10">
@@ -667,16 +672,39 @@ export default function MenuPage() {
             <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
           </div>
 
-          {/* Search Bar Row */}
-          <div className="relative w-full group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
-            <input
-              type="text"
-              placeholder="Search anything in your menu..."
-              className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[2rem] text-sm font-medium outline-none focus:ring-4 focus:ring-brand-green/5 focus:border-[#196F03] transition-all shadow-sm shadow-gray-100/50"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-            />
+          {/* Search Bar & Filters Row */}
+          <div className="flex flex-col md:flex-row gap-4 items-center">
+            <div className="relative flex-1 group w-full">
+              <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
+              <input
+                type="text"
+                placeholder="Search anything in your menu..."
+                className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[2rem] text-sm font-medium outline-none focus:ring-4 focus:ring-brand-green/5 focus:border-[#196F03] transition-all shadow-sm shadow-gray-100/50"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+              />
+            </div>
+            
+            <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] self-stretch md:self-auto">
+              {[
+                { id: "all", label: "All" },
+                { id: "available", label: "In Stock" },
+                { id: "out", label: "Out of Stock" }
+              ].map((filter) => (
+                <button
+                  key={filter.id}
+                  onClick={() => setStockFilter(filter.id as any)}
+                  className={cn(
+                    "px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all",
+                    stockFilter === filter.id 
+                      ? "bg-white text-[#196F03] shadow-sm" 
+                      : "text-gray-400 hover:text-gray-600"
+                  )}
+                >
+                  {filter.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Buttons Row with Drag & Drop */}
