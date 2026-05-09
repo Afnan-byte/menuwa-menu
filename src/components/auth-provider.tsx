@@ -4,17 +4,20 @@ import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, getDoc } from "firebase/firestore";
+import { isAdmin as checkIsAdmin } from "@/lib/admin-config";
 
 interface AuthContextType {
   user: User | null;
   restaurantData: any | null;
   loading: boolean;
+  isAdmin: boolean;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   restaurantData: null,
   loading: true,
+  isAdmin: false,
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -41,7 +44,12 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, restaurantData, loading }}>
+    <AuthContext.Provider value={{ 
+      user, 
+      restaurantData, 
+      loading, 
+      isAdmin: checkIsAdmin(user?.email) 
+    }}>
       {children}
     </AuthContext.Provider>
   );
