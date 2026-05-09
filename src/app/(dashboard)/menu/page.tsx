@@ -93,11 +93,7 @@ export default function MenuPage() {
     }
   }, [user]);
 
-  const detectImageUrl = (name: string): string => {
-    if (!name.trim()) return "";
-    const cleanName = name.trim().toLowerCase().replace(/\s+/g, ",");
-    return `https://loremflickr.com/800/600/${cleanName},food`;
-  };
+
 
   const detectDietaryType = (name: string): "veg" | "non-veg" | "none" => {
     const lowerName = name.toLowerCase();
@@ -852,12 +848,10 @@ export default function MenuPage() {
                       onChange={(e) => {
                         const newName = e.target.value;
                         const detectedType = detectDietaryType(newName);
-                        const detectedImage = detectImageUrl(newName);
                         setItemForm({ 
                           ...itemForm, 
                           name: newName,
-                          dietaryType: itemForm.dietaryType === "none" ? detectedType : itemForm.dietaryType,
-                          imageUrl: !itemForm.imageUrl || itemForm.imageUrl.includes("loremflickr.com") ? detectedImage : itemForm.imageUrl
+                          dietaryType: itemForm.dietaryType === "none" ? detectedType : itemForm.dietaryType
                         });
                       }} 
                     />
