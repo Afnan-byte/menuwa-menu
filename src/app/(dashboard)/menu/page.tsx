@@ -803,7 +803,6 @@ export default function MenuPage() {
               </button>
             </div>
           </div>
-        </div>
 
           <div className="flex items-center justify-between border-b border-gray-100 pb-6">
             <div className="flex items-center gap-6">
