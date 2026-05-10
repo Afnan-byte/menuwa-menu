@@ -727,9 +727,10 @@ export default function MenuPage() {
       <div className="flex-1 flex flex-col min-w-0 lg:h-full px-2">
         {/* Fixed Header Part */}
         <div className="flex-shrink-0 space-y-8 mb-4">
-          {/* Filters Row */}
-          <div className="flex flex-col md:flex-row gap-4 items-center justify-end">
-            <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] self-stretch md:self-auto">
+          
+          {/* Top Row: Filters & Add Dish */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] self-stretch md:self-auto overflow-x-auto">
               {[
                 { id: "all", label: "All" },
                 { id: "available", label: "In Stock" },
@@ -749,47 +750,9 @@ export default function MenuPage() {
                 </button>
               ))}
             </div>
-          </div>
 
-          {/* Buttons Row with Drag & Drop */}
-          <div 
-            onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-brand-green/5', 'border-brand-green'); }}
-            onDragLeave={(e) => { e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green'); }}
-            onDrop={(e) => {
-              e.preventDefault();
-              e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green');
-              const file = e.dataTransfer.files?.[0];
-              if (file && file.name.endsWith('.csv')) {
-                const mockEvent = { target: { files: [file] } } as any;
-                handleCSVImport(mockEvent);
-              } else {
-                toast.error("Please drop a valid CSV file");
-              }
-            }}
-            className="flex flex-wrap items-center gap-2 w-full p-2 rounded-[2rem] border-2 border-transparent transition-all"
-          >
-            <input
-              type="file"
-              accept=".csv"
-              id="csv-import"
-              className="hidden"
-              onChange={handleCSVImport}
-            />
-            <button
-              onClick={() => document.getElementById("csv-import")?.click()}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-2xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
-            >
-              <FileUp className="h-4 w-4 text-[#196F03]" />
-              Import CSV
-            </button>
-            <button
-              onClick={handleExportCSV}
-              className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-5 py-3 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-2xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
-            >
-              <Download className="h-4 w-4 text-blue-500" />
-              Export
-            </button>
-            <div className="w-full sm:w-auto sm:ml-auto">
+            {/* Add Dish Button */}
+            <div className="w-full sm:w-auto">
               <button
                 onClick={() => {
                   setEditingItem(null);
@@ -804,7 +767,10 @@ export default function MenuPage() {
             </div>
           </div>
 
-          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+          {/* Second Row: Tabs & Import/Export */}
+          <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between border-b border-gray-100 pb-6 gap-6">
+            
+            {/* Tabs */}
             <div className="flex items-center gap-6">
               <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
               <button 
@@ -815,19 +781,64 @@ export default function MenuPage() {
                 Clear Menu
               </button>
             </div>
-            <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
-              <button
-                onClick={() => setViewMode("grid")}
-                className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
+
+            {/* Right side: Import/Export & View Toggle */}
+            <div className="flex flex-wrap items-center gap-4 xl:ml-auto w-full xl:w-auto">
+              {/* Drag & Drop zone for CSV */}
+              <div 
+                onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-brand-green/5', 'border-brand-green'); }}
+                onDragLeave={(e) => { e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green'); }}
+                onDrop={(e) => {
+                  e.preventDefault();
+                  e.currentTarget.classList.remove('bg-brand-green/5', 'border-brand-green');
+                  const file = e.dataTransfer.files?.[0];
+                  if (file && file.name.endsWith('.csv')) {
+                    const mockEvent = { target: { files: [file] } } as any;
+                    handleCSVImport(mockEvent);
+                  } else {
+                    toast.error("Please drop a valid CSV file");
+                  }
+                }}
+                className="flex items-center gap-2 p-1 rounded-[1.5rem] border-2 border-transparent transition-all"
               >
-                <LayoutGrid className="h-4 w-4" />
-              </button>
-              <button
-                onClick={() => setViewMode("list")}
-                className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
-              >
-                <List className="h-4 w-4" />
-              </button>
+                <input
+                  type="file"
+                  accept=".csv"
+                  id="csv-import"
+                  className="hidden"
+                  onChange={handleCSVImport}
+                />
+                <button
+                  onClick={() => document.getElementById("csv-import")?.click()}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+                >
+                  <FileUp className="h-4 w-4 text-[#196F03]" />
+                  Import
+                </button>
+                <button
+                  onClick={handleExportCSV}
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
+                >
+                  <Download className="h-4 w-4 text-blue-500" />
+                  Export
+                </button>
+              </div>
+
+              {/* View Toggle */}
+              <div className="flex items-center gap-1 bg-gray-100/50 p-1 rounded-xl">
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
+                >
+                  <LayoutGrid className="h-4 w-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
+                >
+                  <List className="h-4 w-4" />
+                </button>
+              </div>
             </div>
           </div>
         </div>
