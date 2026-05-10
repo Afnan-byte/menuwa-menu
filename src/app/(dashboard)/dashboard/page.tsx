@@ -45,7 +45,7 @@ export default function DashboardPage() {
   const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
 
   return (
-    <div className="flex-1 h-[calc(100vh-5rem)] overflow-y-auto custom-scrollbar">
+    <div className="flex-1 overflow-y-auto custom-scrollbar">
       <div className="p-4 md:p-10 space-y-10 font-sans pb-20">
         {/* Header Section */}
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-8">

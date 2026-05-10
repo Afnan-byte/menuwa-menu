@@ -33,7 +33,7 @@ export default function QRPage() {
 
   if (!restaurantData?.menuId) {
     return (
-      <div className="flex-1 h-[calc(100vh-5rem)] overflow-y-auto custom-scrollbar">
+      <div className="flex-1 overflow-y-auto custom-scrollbar">
         <div className="p-4 md:p-10 max-w-4xl mx-auto py-20 px-6">
           <div className="bg-white rounded-[2.5rem] md:rounded-[3rem] p-8 md:p-12 text-center border border-gray-100 shadow-xl space-y-8 relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-yellow-500/5 rounded-full translate-x-20 -translate-y-20" />
@@ -69,7 +69,7 @@ export default function QRPage() {
   }
 
   return (
-    <div className="flex-1 h-[calc(100vh-5rem)] overflow-y-auto custom-scrollbar">
+    <div className="flex-1 overflow-y-auto custom-scrollbar">
       <div className="p-4 md:p-10 max-w-4xl mx-auto space-y-8 pb-20">
         <div>
           <h1 className="text-3xl font-semibold text-primary">Your QR Code</h1>

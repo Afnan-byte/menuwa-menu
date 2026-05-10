@@ -593,13 +593,13 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex flex-col h-[calc(100vh-5rem)] font-sans overflow-hidden">
-      <div className="p-4 md:p-10 pb-4">
+    <div className="flex flex-col lg:h-full font-sans overflow-hidden">
+      <div className="p-4 md:p-10 pb-4 flex-shrink-0">
         <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
         <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
       </div>
 
-      <div className="flex-1 flex flex-col lg:flex-row gap-8 px-4 md:px-10 pb-10 overflow-hidden lg:overflow-visible relative">
+      <div className="flex-1 flex flex-col lg:flex-row gap-8 px-4 md:px-10 pb-10 overflow-y-auto lg:overflow-hidden relative custom-scrollbar">
         {/* Sidebar Filter Panel */}
       <AnimatePresence>
         {isCatalogueVisible && (

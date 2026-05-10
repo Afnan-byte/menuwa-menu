@@ -34,7 +34,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   if (!user) return null;
 
   return (
-    <div className="flex min-h-screen bg-background-soft font-sans relative">
+    <div className="flex h-screen bg-background-soft font-sans relative overflow-hidden">
       {/* Sidebar - desktop version is static, mobile version is absolute/drawer */}
       <div className={`${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'} lg:translate-x-0 fixed lg:static inset-y-0 left-0 z-50 w-72 transition-transform duration-300 ease-in-out`}>
         <Sidebar onClose={() => setIsSidebarOpen(false)} />
