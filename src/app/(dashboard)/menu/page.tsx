@@ -77,8 +77,9 @@ export default function MenuPage() {
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
 
   useEffect(() => {
+    // Collapse categories by default on mobile screens
     if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      setIsCatalogueVisible(false);
+      setIsCategoriesExpanded(false);
     }
   }, []);
 
@@ -593,15 +594,6 @@ export default function MenuPage() {
 
   return (
     <div className="flex flex-col lg:flex-row gap-8 font-sans lg:h-[calc(100vh-10rem)] relative overflow-hidden lg:overflow-visible">
-      {/* Mobile Catalogue Toggle Button */}
-      <button
-        onClick={() => setIsCatalogueVisible(!isCatalogueVisible)}
-        className="lg:hidden fixed bottom-6 right-6 z-40 bg-[#196F03] text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-widest"
-      >
-        <LayoutGrid className="h-5 w-5" />
-        {isCatalogueVisible ? "Hide Sections" : "Show Sections"}
-      </button>
-
       {/* Sidebar Filter Panel */}
       <AnimatePresence>
         {isCatalogueVisible && (
@@ -611,8 +603,8 @@ export default function MenuPage() {
             exit={{ opacity: 0, x: -20 }}
             className="w-full lg:w-72 flex-shrink-0 lg:h-full lg:overflow-y-auto custom-scrollbar pr-2"
           >
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 lg:min-h-full">
-              <div className="flex items-center justify-between mb-10">
+            <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-gray-100/50 lg:min-h-full">
+              <div className="flex items-center justify-between mb-2 md:mb-10">
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
@@ -624,12 +616,13 @@ export default function MenuPage() {
                     </button>
                     <button 
                       onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
-                      className="lg:hidden p-1 hover:bg-gray-100 rounded-md text-gray-400 transition-colors"
+                      className="lg:hidden p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors flex items-center gap-2"
                     >
+                      <span className="text-[10px] font-bold uppercase tracking-widest">{isCategoriesExpanded ? "Hide" : "Show"}</span>
                       {isCategoriesExpanded ? <ChevronRight className="h-5 w-5 rotate-90 transition-transform" /> : <ChevronRight className="h-5 w-5 transition-transform" />}
                     </button>
                   </div>
-                  <p className="text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
+                  <p className="hidden md:block text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
                 </div>
                 <button
                   onClick={() => setIsCategoryModalOpen(true)}
