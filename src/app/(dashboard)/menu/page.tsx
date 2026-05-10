@@ -593,7 +593,7 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex flex-col lg:h-full font-sans overflow-hidden">
+    <div className="flex-1 flex flex-col font-sans overflow-hidden">
       <div className="p-4 md:p-10 pb-4 flex-shrink-0">
         <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
         <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
@@ -607,7 +607,7 @@ export default function MenuPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="w-full lg:w-72 flex-shrink-0 lg:h-full lg:overflow-y-auto custom-scrollbar pr-2"
+            className="w-full lg:w-72 flex-shrink-0 lg:overflow-y-auto custom-scrollbar pr-2"
           >
             <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-gray-100/50 lg:min-h-full">
               <div className="flex items-center justify-between mb-2 md:mb-10">
@@ -724,7 +724,7 @@ export default function MenuPage() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:h-full px-2">
+      <div className="flex-1 flex flex-col min-w-0 px-2">
         {/* Fixed Header Part */}
         <div className="flex-shrink-0 space-y-8 mb-4">
           
@@ -844,7 +844,7 @@ export default function MenuPage() {
         </div>
 
         {/* Scrollable Content Part */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1">
+        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-32">
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
