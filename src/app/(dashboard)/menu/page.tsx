@@ -724,21 +724,11 @@ export default function MenuPage() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 space-y-8 min-w-0 lg:h-full lg:overflow-y-auto custom-scrollbar px-2">
-        <div className="flex flex-col gap-8 mb-4">
-          {/* Search Bar & Filters Row */}
-          <div className="flex flex-col md:flex-row gap-4 items-center">
-            <div className="relative flex-1 group w-full">
-              <Search className="absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 text-gray-300 group-focus-within:text-[#196F03] transition-colors" />
-              <input
-                type="text"
-                placeholder="Search anything in your menu..."
-                className="w-full pl-16 pr-8 py-5 bg-white border border-gray-100 rounded-[2rem] text-sm font-medium outline-none focus:ring-4 focus:ring-brand-green/5 focus:border-[#196F03] transition-all shadow-sm shadow-gray-100/50"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-              />
-            </div>
-            
+      <div className="flex-1 flex flex-col min-w-0 lg:h-full px-2">
+        {/* Fixed Header Part */}
+        <div className="flex-shrink-0 space-y-8 mb-4">
+          {/* Filters Row */}
+          <div className="flex flex-col md:flex-row gap-4 items-center justify-end">
             <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] self-stretch md:self-auto">
               {[
                 { id: "all", label: "All" },
@@ -815,32 +805,36 @@ export default function MenuPage() {
           </div>
         </div>
 
-        <div className="flex items-center justify-between border-b border-gray-100 pb-6">
-          <div className="flex items-center gap-6">
-            <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
-            <button 
-              onClick={handleClearEverything}
-              disabled={categories.length === 0 && items.length === 0}
-              className="text-xs font-bold text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors uppercase tracking-widest"
-            >
-              Clear Menu
-            </button>
-          </div>
-          <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
-            <button
-              onClick={() => setViewMode("grid")}
-              className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
-            >
-              <LayoutGrid className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setViewMode("list")}
-              className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
-            >
-              <List className="h-4 w-4" />
-            </button>
+          <div className="flex items-center justify-between border-b border-gray-100 pb-6">
+            <div className="flex items-center gap-6">
+              <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
+              <button 
+                onClick={handleClearEverything}
+                disabled={categories.length === 0 && items.length === 0}
+                className="text-xs font-bold text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors uppercase tracking-widest"
+              >
+                Clear Menu
+              </button>
+            </div>
+            <div className="flex items-center gap-2 bg-gray-100/50 p-1 rounded-xl">
+              <button
+                onClick={() => setViewMode("grid")}
+                className={cn("p-2 rounded-lg transition-all", viewMode === "grid" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
+              >
+                <LayoutGrid className="h-4 w-4" />
+              </button>
+              <button
+                onClick={() => setViewMode("list")}
+                className={cn("p-2 rounded-lg transition-all", viewMode === "list" ? "bg-white shadow-sm text-[#196F03]" : "text-gray-400")}
+              >
+                <List className="h-4 w-4" />
+              </button>
+            </div>
           </div>
         </div>
+
+        {/* Scrollable Content Part */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1">
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
