@@ -73,6 +73,7 @@ export default function MenuPage() {
   const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isCatalogueVisible, setIsCatalogueVisible] = useState(true);
 
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -584,22 +585,46 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 font-sans min-h-screen pb-10">
+    <div className="flex flex-col lg:flex-row gap-8 font-sans min-h-screen pb-10 relative">
+      {/* Mobile Catalogue Toggle Button */}
+      <button
+        onClick={() => setIsCatalogueVisible(!isCatalogueVisible)}
+        className="lg:hidden fixed bottom-6 right-6 z-40 bg-[#196F03] text-white p-4 rounded-full shadow-2xl flex items-center gap-2 font-bold text-xs uppercase tracking-widest"
+      >
+        <LayoutGrid className="h-5 w-5" />
+        {isCatalogueVisible ? "Hide Sections" : "Show Sections"}
+      </button>
+
       {/* Sidebar Filter Panel */}
-      <div className="w-full lg:w-72 flex-shrink-0">
-        <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 sticky top-8">
-          <div className="flex items-center justify-between mb-10">
-            <div>
-              <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
-              <p className="text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
-            </div>
-            <button
-              onClick={() => setIsCategoryModalOpen(true)}
-              className="p-3 bg-gray-100 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all shadow-sm group"
-            >
-              <FolderPlus className="h-5 w-5" />
-            </button>
-          </div>
+      <AnimatePresence>
+        {isCatalogueVisible && (
+          <motion.div 
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -20 }}
+            className="w-full lg:w-72 flex-shrink-0"
+          >
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 sticky top-8">
+              <div className="flex items-center justify-between mb-10">
+                <div>
+                  <div className="flex items-center gap-2">
+                    <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
+                    <button 
+                      onClick={() => setIsCatalogueVisible(false)}
+                      className="hidden lg:block p-1 hover:bg-gray-100 rounded-md text-gray-300 transition-colors"
+                    >
+                      <X className="h-4 w-4" />
+                    </button>
+                  </div>
+                  <p className="text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
+                </div>
+                <button
+                  onClick={() => setIsCategoryModalOpen(true)}
+                  className="p-3 bg-gray-100 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all shadow-sm group"
+                >
+                  <FolderPlus className="h-5 w-5" />
+                </button>
+              </div>
 
           <div className="space-y-2">
             <button
@@ -676,11 +701,22 @@ export default function MenuPage() {
               Clear Entire Menu
             </button>
           </div>
-        </div>
-      </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 space-y-8">
+      <div className="flex-1 space-y-8 min-w-0">
+        {!isCatalogueVisible && (
+          <button
+            onClick={() => setIsCatalogueVisible(true)}
+            className="hidden lg:flex items-center gap-2 text-[#196F03] font-bold text-[10px] uppercase tracking-widest mb-4 hover:opacity-70 transition-opacity"
+          >
+            <LayoutGrid className="h-4 w-4" />
+            Show Catalogue
+          </button>
+        )}
         <div className="flex flex-col gap-8 mb-4">
           <div>
             <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>

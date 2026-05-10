@@ -11,7 +11,8 @@ import {
   MessageCircle,
   ChevronRight,
   Mail,
-  ShieldCheck
+  ShieldCheck,
+  X
 } from "lucide-react";
 import { useAuth } from "./auth-provider";
 import { cn } from "@/lib/utils";
@@ -27,7 +28,7 @@ const navItems = [
   { icon: Settings, label: "Settings", href: "/settings" },
 ];
 
-export default function Sidebar() {
+export default function Sidebar({ onClose }: { onClose?: () => void }) {
   const pathname = usePathname();
   const router = useRouter();
   const { isAdmin } = useAuth();
@@ -46,13 +47,21 @@ export default function Sidebar() {
   const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
 
   return (
-    <aside className="w-72 bg-white border-r border-gray-100 flex flex-col h-screen sticky top-0 font-sans z-20">
-      <div className="h-20 flex items-center px-8 border-b border-gray-50/50 mb-4">
-        <Link href="/dashboard" className="flex items-center w-full">
+    <aside className="w-full h-full bg-white border-r border-gray-100 flex flex-col font-sans z-50">
+      <div className="h-20 flex items-center justify-between px-8 border-b border-gray-50/50 mb-4">
+        <Link href="/dashboard" className="flex items-center">
           <div className="relative h-10 w-32 transition-transform hover:scale-105">
             <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain object-left" />
           </div>
         </Link>
+        {onClose && (
+          <button 
+            onClick={onClose}
+            className="p-2 hover:bg-gray-100 rounded-xl lg:hidden text-gray-400"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       <nav className="flex-1 px-4 space-y-1.5">

@@ -84,7 +84,7 @@ export default function DashboardPage() {
           <motion.div 
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-white p-10 rounded-[3rem] border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] flex items-center justify-between relative overflow-hidden group"
+            className="bg-white p-6 md:p-10 rounded-[2.5rem] md:rounded-[3rem] border border-gray-100 shadow-[0_20px_50px_-20px_rgba(0,0,0,0.05)] flex items-center justify-between relative overflow-hidden group"
           >
              <div className="absolute top-0 right-0 w-64 h-64 bg-[#196F03]/5 rounded-full translate-x-32 -translate-y-32 transition-transform group-hover:scale-110"></div>
              <div className="relative z-10">
@@ -93,8 +93,8 @@ export default function DashboardPage() {
                   <Loader2 className="h-10 w-10 animate-spin text-[#196F03]" />
                 ) : (
                   <div className="flex items-baseline gap-4">
-                    <h2 className="text-7xl font-bold text-primary tracking-tighter">{itemCount || 0}</h2>
-                    <span className="text-xl font-semibold text-gray-400">Items Live</span>
+                    <h2 className="text-5xl md:text-7xl font-bold text-primary tracking-tighter">{itemCount || 0}</h2>
+                    <span className="text-lg md:text-xl font-semibold text-gray-400">Items Live</span>
                   </div>
                 )}
              </div>
@@ -130,7 +130,7 @@ export default function DashboardPage() {
         <motion.div 
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="bg-primary text-white p-10 rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col"
+          className="bg-primary text-white p-8 md:p-10 rounded-[2.5rem] md:rounded-[3rem] shadow-2xl relative overflow-hidden flex flex-col"
         >
           <div className="absolute top-0 right-0 w-64 h-64 bg-[#196F03]/20 blur-[80px] rounded-full translate-x-10 -translate-y-10"></div>
           
@@ -162,7 +162,7 @@ export default function DashboardPage() {
 
 function ActionLink({ href, icon, title, description, color, isExternal }: { href: string, icon: React.ReactNode, title: string, description: string, color: string, isExternal?: boolean }) {
   const content = (
-    <div className="flex items-start gap-5 p-8 border border-gray-100 rounded-[2.5rem] hover:shadow-2xl hover:shadow-gray-100 transition-all group bg-white h-full">
+    <div className="flex items-start gap-5 p-6 md:p-8 border border-gray-100 rounded-[2rem] md:rounded-[2.5rem] hover:shadow-2xl hover:shadow-gray-100 transition-all group bg-white h-full">
       <div className={cn("p-4 rounded-2xl text-white shadow-xl transition-transform group-hover:scale-110", color)}>
         {icon}
       </div>
