@@ -593,8 +593,14 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 font-sans lg:h-[calc(100vh-10rem)] relative overflow-hidden lg:overflow-visible">
-      {/* Sidebar Filter Panel */}
+    <div className="space-y-8 font-sans pb-10">
+      <div>
+        <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
+        <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
+      </div>
+
+      <div className="flex flex-col lg:flex-row gap-8 lg:h-[calc(100vh-16rem)] relative overflow-hidden lg:overflow-visible">
+        {/* Sidebar Filter Panel */}
       <AnimatePresence>
         {isCatalogueVisible && (
           <motion.div 
@@ -735,11 +741,6 @@ export default function MenuPage() {
           </button>
         )}
         <div className="flex flex-col gap-8 mb-4">
-          <div>
-            <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
-            <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
-          </div>
-
           {/* Search Bar & Filters Row */}
           <div className="flex flex-col md:flex-row gap-4 items-center">
             <div className="relative flex-1 group w-full">
