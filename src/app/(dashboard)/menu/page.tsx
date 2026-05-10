@@ -74,6 +74,7 @@ export default function MenuPage() {
   const [isItemModalOpen, setIsItemModalOpen] = useState(false);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCatalogueVisible, setIsCatalogueVisible] = useState(true);
+  const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
 
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
@@ -615,6 +616,12 @@ export default function MenuPage() {
                     >
                       <X className="h-4 w-4" />
                     </button>
+                    <button 
+                      onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
+                      className="lg:hidden p-1 hover:bg-gray-100 rounded-md text-gray-400 transition-colors"
+                    >
+                      {isCategoriesExpanded ? <ChevronRight className="h-5 w-5 rotate-90 transition-transform" /> : <ChevronRight className="h-5 w-5 transition-transform" />}
+                    </button>
                   </div>
                   <p className="text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
                 </div>
@@ -626,51 +633,62 @@ export default function MenuPage() {
                 </button>
               </div>
 
-          <div className="space-y-2">
-            <button
-              onClick={() => setActiveCategory("all")}
-              className={cn(
-                "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
-                activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
-              )}
-            >
-              <div className="flex items-center gap-3">
-                <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                  <LayoutGrid className="h-4 w-4" />
-                </div>
-                <span className="text-xs font-medium">All Items</span>
-              </div>
-              <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
-            </button>
-
-            {categories.map((cat) => (
-              <div key={cat.id} className="relative group">
-                <button
-                  onClick={() => setActiveCategory(cat.id)}
-                  className={cn(
-                    "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
-                    activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
-                  )}
-                >
-                  <div className="flex items-center gap-3">
-                    <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                      <Utensils className="h-4 w-4" />
+          <AnimatePresence>
+            {isCategoriesExpanded && (
+              <motion.div 
+                initial={{ height: 0, opacity: 0 }}
+                animate={{ height: "auto", opacity: 1 }}
+                exit={{ height: 0, opacity: 0 }}
+                className="overflow-hidden"
+              >
+                <div className="space-y-2 mt-4">
+                  <button
+                    onClick={() => setActiveCategory("all")}
+                    className={cn(
+                      "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
+                      activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                    )}
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
+                        <LayoutGrid className="h-4 w-4" />
+                      </div>
+                      <span className="text-xs font-medium">All Items</span>
                     </div>
-                    <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
-                  </div>
-                </button>
-                <button
-                  onClick={(e) => handleDeleteCategory(cat.id, e)}
-                  className={cn(
-                    "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
-                    activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
-                  )}
-                >
-                  <Trash2 className="h-3.5 w-3.5" />
-                </button>
-              </div>
-            ))}
-          </div>
+                    <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
+                  </button>
+
+                  {categories.map((cat) => (
+                    <div key={cat.id} className="relative group">
+                      <button
+                        onClick={() => setActiveCategory(cat.id)}
+                        className={cn(
+                          "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
+                          activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                        )}
+                      >
+                        <div className="flex items-center gap-3">
+                          <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
+                            <Utensils className="h-4 w-4" />
+                          </div>
+                          <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
+                        </div>
+                      </button>
+                      <button
+                        onClick={(e) => handleDeleteCategory(cat.id, e)}
+                        className={cn(
+                          "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
+                          activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
+                        )}
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           <div className="mt-12 pt-8 border-t border-gray-50">
             <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
