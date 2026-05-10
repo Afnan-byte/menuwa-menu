@@ -593,13 +593,13 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="space-y-8 font-sans pb-10">
-      <div>
+    <div className="flex flex-col h-[calc(100vh-5rem)] font-sans overflow-hidden">
+      <div className="p-4 md:p-10 pb-4">
         <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
         <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
       </div>
 
-      <div className="flex flex-col lg:flex-row gap-8 lg:h-[calc(100vh-16rem)] relative overflow-hidden lg:overflow-visible">
+      <div className="flex-1 flex flex-col lg:flex-row gap-8 px-4 md:px-10 pb-10 overflow-hidden lg:overflow-visible relative">
         {/* Sidebar Filter Panel */}
       <AnimatePresence>
         {isCatalogueVisible && (
@@ -614,12 +614,6 @@ export default function MenuPage() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
-                    <button 
-                      onClick={() => setIsCatalogueVisible(false)}
-                      className="hidden lg:block p-1 hover:bg-gray-100 rounded-md text-gray-300 transition-colors"
-                    >
-                      <X className="h-4 w-4" />
-                    </button>
                     <button 
                       onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
                       className="lg:hidden p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors flex items-center gap-2"
@@ -731,15 +725,6 @@ export default function MenuPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 space-y-8 min-w-0 lg:h-full lg:overflow-y-auto custom-scrollbar px-2">
-        {!isCatalogueVisible && (
-          <button
-            onClick={() => setIsCatalogueVisible(true)}
-            className="hidden lg:flex items-center gap-2 text-[#196F03] font-bold text-[10px] uppercase tracking-widest mb-4 hover:opacity-70 transition-opacity"
-          >
-            <LayoutGrid className="h-4 w-4" />
-            Show Catalogue
-          </button>
-        )}
         <div className="flex flex-col gap-8 mb-4">
           {/* Search Bar & Filters Row */}
           <div className="flex flex-col md:flex-row gap-4 items-center">

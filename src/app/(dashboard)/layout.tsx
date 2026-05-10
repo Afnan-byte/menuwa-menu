@@ -81,7 +81,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
         </header>
 
         {/* Content */}
-        <main className="p-4 md:p-10 animate-fade-in min-h-screen">
+        <main className="flex-1 animate-fade-in flex flex-col min-h-0 relative">
           {children}
         </main>
       </div>
