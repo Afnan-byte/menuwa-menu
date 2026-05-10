@@ -892,9 +892,10 @@ export default function MenuPage() {
           </div>
         )}
       </div>
+    </div>
 
-      {/* Modals */}
-      <AnimatePresence>
+    {/* Modals */}
+    <AnimatePresence>
         {isCategoryModalOpen && (
           <div className="fixed inset-0 bg-primary/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
             <motion.div
