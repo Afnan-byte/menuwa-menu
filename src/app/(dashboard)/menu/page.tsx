@@ -585,7 +585,7 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 font-sans min-h-screen pb-10 relative">
+    <div className="flex flex-col lg:flex-row gap-8 font-sans lg:h-[calc(100vh-10rem)] relative overflow-hidden lg:overflow-visible">
       {/* Mobile Catalogue Toggle Button */}
       <button
         onClick={() => setIsCatalogueVisible(!isCatalogueVisible)}
@@ -602,9 +602,9 @@ export default function MenuPage() {
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="w-full lg:w-72 flex-shrink-0"
+            className="w-full lg:w-72 flex-shrink-0 lg:h-full lg:overflow-y-auto custom-scrollbar pr-2"
           >
-            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 sticky top-8">
+            <div className="bg-white rounded-[2.5rem] p-8 shadow-sm border border-gray-100/50 lg:min-h-full">
               <div className="flex items-center justify-between mb-10">
                 <div>
                   <div className="flex items-center gap-2">
@@ -707,7 +707,7 @@ export default function MenuPage() {
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 space-y-8 min-w-0">
+      <div className="flex-1 space-y-8 min-w-0 lg:h-full lg:overflow-y-auto custom-scrollbar px-2">
         {!isCatalogueVisible && (
           <button
             onClick={() => setIsCatalogueVisible(true)}
