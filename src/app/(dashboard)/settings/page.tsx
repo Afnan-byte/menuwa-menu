@@ -157,7 +157,6 @@ export default function SettingsPage() {
   };
 
   return (
-  return (
     <div className="flex-1 h-[calc(100vh-5rem)] overflow-y-auto custom-scrollbar">
       <div className="max-w-5xl mx-auto p-4 md:p-10 space-y-12 pb-20 font-sans">
         {/* Header Section */}
