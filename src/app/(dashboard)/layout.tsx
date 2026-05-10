@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useAuth } from "@/components/auth-provider";
 import Sidebar from "@/components/Sidebar";
 import { Loader2, Bell, Search, Menu as MenuIcon, X } from "lucide-react";
@@ -9,6 +9,7 @@ import { Loader2, Bell, Search, Menu as MenuIcon, X } from "lucide-react";
 export default function DashboardLayout({ children }: { children: React.ReactNode }) {
   const { user, loading } = useAuth();
   const router = useRouter();
+  const pathname = usePathname();
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
 
   useEffect(() => {
@@ -20,7 +21,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   // Close sidebar on navigation
   useEffect(() => {
     setIsSidebarOpen(false);
-  }, [router]);
+  }, [pathname]);
 
   if (loading) {
     return (
