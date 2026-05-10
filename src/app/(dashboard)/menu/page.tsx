@@ -76,6 +76,12 @@ export default function MenuPage() {
   const [isCatalogueVisible, setIsCatalogueVisible] = useState(true);
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
 
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.innerWidth < 1024) {
+      setIsCatalogueVisible(false);
+    }
+  }, []);
+
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
