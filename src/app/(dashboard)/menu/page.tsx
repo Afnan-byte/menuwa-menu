@@ -594,7 +594,7 @@ export default function MenuPage() {
 
   return (
     <div className="flex-1 flex flex-col font-sans overflow-hidden">
-      <div className="p-4 md:p-10 pb-4 flex-shrink-0">
+      <div className="px-4 md:px-10 pt-4 md:pt-6 pb-2 flex-shrink-0">
         <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
         <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
       </div>
@@ -726,7 +726,7 @@ export default function MenuPage() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 px-2">
         {/* Fixed Header Part */}
-        <div className="flex-shrink-0 space-y-8 mb-4">
+        <div className="flex-shrink-0 space-y-4 mb-4">
           
           {/* Top Row: Filters & Add Dish */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
