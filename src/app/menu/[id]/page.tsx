@@ -17,7 +17,6 @@ import {
   LayoutGrid,
   X,
   ArrowRight,
-  MessageCircle,
   Clock,
   ChevronRight,
   Star,
@@ -161,13 +160,7 @@ export default function PublicMenuPage() {
     );
   }
 
-  const handleWhatsAppOrder = (item?: MenuItem) => {
-    if (!restaurant?.whatsapp) return;
-    const text = item
-      ? `Hello! I would like to order: ${item.name} (${item.price}).`
-      : `Hello! I'm viewing your menu and would like to place an order.`;
-    window.open(`https://wa.me/${restaurant.whatsapp.replace(/\D/g, '')}?text=${encodeURIComponent(text)}`, '_blank');
-  };
+
 
 
   return (
@@ -464,23 +457,10 @@ export default function PublicMenuPage() {
                     <div className="flex gap-4">
                       <button
                         onClick={() => setSelectedItem(null)}
-                        className={cn("h-20 w-20 rounded-[2rem] flex items-center justify-center transition-all shrink-0 border", isDark ? "bg-white/5 text-gray-500 hover:bg-white/10 border-white/5" : "bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-200")}
+                        className={cn("w-full h-20 rounded-[2rem] flex items-center justify-center transition-all shrink-0 border font-semibold text-[11px] uppercase tracking-[0.3em]", isDark ? "bg-white/5 text-white hover:bg-white/10 border-white/5" : "bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-200")}
                       >
-                        <ArrowRight className="h-6 w-6 rotate-180" />
+                        Close
                       </button>
-                      <div className="flex-1">
-                        <button
-                          onClick={() => handleWhatsAppOrder(selectedItem)}
-                          disabled={!selectedItem.isAvailable}
-                          className={cn(
-                            "w-full h-20 text-white font-semibold text-[11px] uppercase tracking-[0.3em] rounded-[2rem] shadow-[0_20px_50px_rgba(0,0,0,0.5)] transition-all flex items-center justify-center gap-4 group disabled:opacity-50 disabled:cursor-not-allowed",
-                          )}
-                          style={{ backgroundColor: selectedItem.isAvailable ? themeColor : '#9CA3AF' }}
-                        >
-                          <MessageCircle className="h-5 w-5" />
-                          {selectedItem.isAvailable ? "Order via WhatsApp" : "Currently Unavailable"}
-                        </button>
-                      </div>
                     </div>
                   </div>
                 </div>
