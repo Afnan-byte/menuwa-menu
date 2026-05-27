@@ -402,6 +402,13 @@ export default function PublicMenuPage() {
                 initial={{ y: "100%" }}
                 animate={{ y: 0 }}
                 exit={{ y: "100%" }}
+                drag="y"
+                dragConstraints={{ top: 0, bottom: 0 }}
+                onDragEnd={(_, info) => {
+                  if (info.offset.y > 100 || info.velocity.y > 200) {
+                    setSelectedItem(null);
+                  }
+                }}
                 className={cn("relative w-full max-w-md overflow-hidden shadow-2xl h-full flex flex-col border-t", isDark ? "bg-[#0F0F0F] border-white/10" : "bg-white border-white")}
               >
                 <div className={cn("px-8 pt-8 pb-8 relative z-10 flex-1 flex flex-col h-full overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
