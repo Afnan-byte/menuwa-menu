@@ -83,11 +83,11 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
 
       {/* Content Area */}
       <div className="flex-1 flex flex-col">
-        <h3 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1 mb-1 px-1">
+        <h3 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors mb-1 px-1">
           {item.name}
         </h3>
 
-        <p className="text-xs text-gray-500 font-medium line-clamp-2 leading-relaxed h-8 mb-4 px-1">
+        <p className="text-xs text-gray-500 font-medium leading-relaxed mb-4 px-1">
           {item.description}
         </p>
 
