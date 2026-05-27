@@ -812,14 +812,14 @@ export default function MenuPage() {
                   onClick={() => document.getElementById("csv-import")?.click()}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
                 >
-                  <FileUp className="h-4 w-4 text-[#196F03]" />
+                  <Download className="h-4 w-4 text-[#196F03]" />
                   Import
                 </button>
                 <button
                   onClick={handleExportCSV}
                   className="flex items-center gap-2 px-4 py-2.5 bg-white border border-gray-100 text-primary text-xs font-semibold rounded-xl hover:bg-gray-50 transition-all shadow-sm whitespace-nowrap"
                 >
-                  <Download className="h-4 w-4 text-blue-500" />
+                  <FileUp className="h-4 w-4 text-blue-500" />
                   Export
                 </button>
               </div>
