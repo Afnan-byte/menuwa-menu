@@ -329,7 +329,7 @@ export default function PublicMenuPage() {
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-10">
+                <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-4">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -339,48 +339,60 @@ export default function PublicMenuPage() {
                         viewport={{ once: true }}
                         transition={{ delay: idx * 0.1 }}
                         onClick={() => setSelectedItem(item)}
-                        className={cn("group cursor-pointer relative transition-all duration-500", !item.isAvailable && "opacity-70")}
+                        className={cn(
+                          "group cursor-pointer relative transition-all duration-500 flex flex-col rounded-[1.5rem] p-2",
+                          isDark ? "bg-[#1A1A1A] border border-white/5" : "bg-white shadow-sm border border-gray-100",
+                          !item.isAvailable && "opacity-70"
+                        )}
                       >
-                        <div className="grid grid-cols-12 gap-6 items-start">
-                          <div className={cn("col-span-4 relative aspect-square rounded-[1.5rem] overflow-hidden border group-hover:border-[#196F03]/30 transition-all duration-500", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-gray-100 border-gray-200 shadow-sm")}>
-                            <img
-                              src={item.imageUrl}
-                              alt={item.name}
-                              className={cn("w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110", !item.isAvailable && "grayscale opacity-40")}
-                            />
-                            {/* Clean image container, status moved to text area */}
+                        {/* Image Container */}
+                        <div className={cn(
+                          "relative w-full aspect-[4/3] mb-3 rounded-xl overflow-hidden",
+                          isDark ? "bg-[#0A0A0A]" : "bg-gray-50"
+                        )}>
+                          <img
+                            src={item.imageUrl}
+                            alt={item.name}
+                            className={cn("w-full h-full object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
+                          />
+                          
+                          {/* Top Left Icon */}
+                          <div className={cn("absolute top-2 left-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                            <Utensils className={cn("h-3 w-3", isDark ? "text-white" : "text-[#196F03]")} />
                           </div>
 
-                          <div className={cn("col-span-8 space-y-4 pt-2 transition-colors", !item.isAvailable && "grayscale")}>
-                            <div className="flex items-center justify-between">
-                              <div className="flex items-center gap-3">
-                                {item.dietaryType === "veg" && (
-                                  <div className="h-4.5 w-4.5 border border-green-600 rounded-[4px] flex items-center justify-center p-[2.5px]">
-                                    <div className="h-full w-full bg-green-600 rounded-full" />
-                                  </div>
-                                )}
-                                {item.dietaryType === "non-veg" && (
-                                  <div className="h-4.5 w-4.5 border border-red-600 rounded-[4px] flex items-center justify-center p-[2.5px]">
-                                    <div className="h-full w-full bg-red-600 rounded-full" />
-                                  </div>
-                                )}
-                              </div>
-                              <span className="text-[15px] font-semibold text-[#196F03] tracking-tight">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                          {/* Top Right Dietary Icon */}
+                          {item.dietaryType === "veg" && (
+                            <div className={cn("absolute top-2 right-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20 text-[#196F03]", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                              <Leaf className="h-3 w-3 fill-[#196F03]/20" />
                             </div>
-                             <div className="flex items-center gap-3">
-                               <h3 className={cn("text-2xl font-serif tracking-tight leading-snug group-hover:text-[#196F03] transition-colors", isDark ? "text-white" : "text-gray-900", !item.isAvailable && "opacity-50")}>{item.name}</h3>
-                               {!item.isAvailable && (
-                                 <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-0.5 bg-red-500/10 rounded-lg">Out of Stock</span>
-                               )}
-                             </div>
-                            {item.isPopular && (
-                              <div className="flex items-center text-yellow-500">
-                                <span className="text-[10px] font-semibold uppercase tracking-widest">Bestseller</span>
-                              </div>
-                            )}
-                            <p className="text-gray-500 text-[13px] leading-relaxed line-clamp-2 font-medium">{item.description}</p>
+                          )}
+                          {item.dietaryType === "non-veg" && (
+                            <div className={cn("absolute top-2 right-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20 text-red-500", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                              <Flame className="h-3 w-3 fill-red-500/20" />
+                            </div>
+                          )}
 
+                          {/* Price Tag */}
+                          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-2 py-1 rounded-lg font-bold text-[10px] shadow-lg shadow-brand-green/30">
+                            ₹{item.price.replace(/[^0-9.]/g, '')}
                           </div>
+                        </div>
+
+                        {/* Content Area */}
+                        <div className="flex-1 flex flex-col px-1 pb-1">
+                          <h3 className={cn("text-xs font-bold tracking-tight leading-snug group-hover:text-[#196F03] transition-colors mb-1 line-clamp-1", isDark ? "text-white" : "text-gray-900")}>
+                            {item.name}
+                          </h3>
+                          <p className="text-[10px] text-gray-500 font-medium leading-relaxed line-clamp-2">
+                            {item.description}
+                          </p>
+                          
+                          {!item.isAvailable && (
+                            <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded-md mt-2 w-fit">
+                              Sold Out
+                            </span>
+                          )}
                         </div>
                       </motion.div>
                     );
