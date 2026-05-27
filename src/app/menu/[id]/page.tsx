@@ -329,7 +329,7 @@ export default function PublicMenuPage() {
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-x-4 gap-y-6 px-4">
+                <div className="grid grid-cols-2 gap-3 px-2">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -381,15 +381,12 @@ export default function PublicMenuPage() {
 
                         {/* Content Area */}
                         <div className="flex-1 flex flex-col px-1 pb-1">
-                          <h3 className={cn("text-xs font-bold tracking-tight leading-snug group-hover:text-[#196F03] transition-colors mb-1 line-clamp-1", isDark ? "text-white" : "text-gray-900")}>
+                          <h3 className={cn("text-xs font-bold tracking-tight leading-snug group-hover:text-[#196F03] transition-colors mb-1", isDark ? "text-white" : "text-gray-900")}>
                             {item.name}
                           </h3>
-                          <p className="text-[10px] text-gray-500 font-medium leading-relaxed line-clamp-2">
-                            {item.description}
-                          </p>
                           
                           {!item.isAvailable && (
-                            <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded-md mt-2 w-fit">
+                            <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded-md mt-1 w-fit">
                               Sold Out
                             </span>
                           )}
