@@ -172,14 +172,16 @@ export default function PublicMenuPage() {
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative transition-colors duration-500", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
         {/* Cinematic Branding Header */}
-        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-16 pb-2">
+        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-24 pb-2">
           {/* Branding Bar */}
-          <div className="absolute top-4 left-6 flex items-center z-30">
+          <div className="absolute top-6 left-6 flex items-center z-30">
             {restaurant?.logoUrl ? (
-              <img src={restaurant.logoUrl} alt="Restaurant" className="h-10 w-auto max-w-[120px] object-contain" />
+              <div className={cn("h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
+                <img src={restaurant.logoUrl} alt="Restaurant" className="h-full w-full object-contain" />
+              </div>
             ) : (
-              <div className="h-10 w-10 flex items-center justify-center">
-                <Utensils className="h-6 w-6 text-primary" />
+              <div className={cn("h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
+                <Utensils className="h-8 w-8 text-primary" />
               </div>
             )}
           </div>
@@ -191,7 +193,7 @@ export default function PublicMenuPage() {
         </header>
 
         {/* Search & Filters - Premium Glass */}
-        <div className="px-6 relative z-30 space-y-5">
+        <div className="px-6 relative z-30 space-y-5 mt-4">
           <div className="relative group">
             <div className={cn("absolute inset-0 rounded-3xl blur-xl transition-opacity opacity-0 group-focus-within:opacity-100", isDark ? "bg-[#196F03]/20" : "bg-[#196F03]/10")} />
             <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors z-10", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
@@ -215,7 +217,7 @@ export default function PublicMenuPage() {
               className={cn(
                 "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
                 activeCategory === "all"
-                  ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_8px_20px_rgba(25,111,3,0.25)] scale-105"
+                  ? "bg-[#196F03] text-white border-[#196F03] scale-105"
                   : isDark
                     ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
                     : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
@@ -231,7 +233,7 @@ export default function PublicMenuPage() {
                 className={cn(
                   "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
                   activeCategory === cat.id
-                    ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_8px_20px_rgba(25,111,3,0.25)] scale-105"
+                    ? "bg-[#196F03] text-white border-[#196F03] scale-105"
                     : isDark
                       ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
                       : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
