@@ -26,87 +26,83 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "bg-white rounded-[3rem] p-6 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl hover:shadow-brand-green/10 font-sans mt-12",
+        "bg-white rounded-[2rem] p-4 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl hover:shadow-brand-green/10 font-sans flex flex-col",
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Overlapping circular Image Container */}
-      <div className="absolute -top-16 left-1/2 -translate-x-1/2 w-40 h-40">
-        <div className="relative w-full h-full">
-          {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
-            <div className="relative w-full h-full p-1 overflow-hidden rounded-full border-4 border-white shadow-2xl">
-              <img
-                src={item.imageUrl}
-                alt={item.name}
-                className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-              />
-            </div>
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-gray-200 bg-white rounded-full border-4 border-gray-50 overflow-hidden shadow-inner">
-              <Utensils className="h-10 w-10 opacity-20" />
+      {/* Image Container (Rounded Square fitting inside card) */}
+      <div className="relative w-full aspect-square mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
+        {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+          <img
+            src={item.imageUrl}
+            alt={item.name}
+            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          />
+        ) : (
+          <div className="w-full h-full flex items-center justify-center text-gray-200">
+            <Utensils className="h-10 w-10 opacity-20" />
+          </div>
+        )}
+
+        {/* Price Badge (Green pill at bottom right of image) */}
+        <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg shadow-brand-green/30">
+          ₹{item.price.replace(/[^0-9.]/g, '')}
+        </div>
+
+        {/* Availability Toggle Badge (Top Left of image) */}
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            onToggleAvailability();
+          }}
+          className={cn(
+            "absolute top-3 left-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-lg transition-all active:scale-95 z-20 backdrop-blur-md",
+            item.isAvailable 
+              ? "bg-white/90 text-[#196F03] hover:bg-white" 
+              : "bg-red-500/90 text-white hover:bg-red-600"
+          )}
+          title={item.isAvailable ? "Mark as Out of Stock" : "Mark as In Stock"}
+        >
+          <Utensils className="h-3.5 w-3.5" />
+        </button>
+
+        {/* Dietary Icon (Top Right of image) */}
+        <div className="absolute top-3 right-3 flex gap-1">
+          {item.dietaryType === "veg" && (
+            <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-[#196F03] rounded-xl flex items-center justify-center shadow-lg">
+              <Leaf className="h-4 w-4 fill-[#196F03]/20" />
             </div>
           )}
-
-          {/* Price Badge (Green pill at bottom right of image) */}
-          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-4 py-1.5 rounded-full font-semibold text-xs shadow-lg shadow-brand-green/30 border border-white/20">
-            {item.price.replace(/[^0-9.]/g, '')}
-          </div>
-
-          {/* Availability Toggle Badge (Top Left of image) */}
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onToggleAvailability();
-            }}
-            className={cn(
-              "absolute -top-2 -left-2 h-10 w-10 rounded-2xl flex items-center justify-center border shadow-xl transition-all active:scale-95 z-20",
-              item.isAvailable 
-                ? "bg-white text-[#196F03] border-gray-100 hover:border-[#196F03]" 
-                : "bg-red-500 text-white border-red-400 hover:bg-red-600 shadow-red-200"
-            )}
-            title={item.isAvailable ? "Mark as Out of Stock" : "Mark as In Stock"}
-          >
-            <Utensils className="h-4 w-4" />
-          </button>
-
-          {/* Dietary Icon (Next to image - Pure White Background) */}
-          <div className="absolute top-1/2 -right-4 -translate-y-1/2">
-            {item.dietaryType === "veg" && (
-              <div className="h-9 w-9 bg-white text-[#196F03] rounded-2xl flex items-center justify-center border border-gray-100 shadow-xl shadow-gray-200/50">
-                <Leaf className="h-4 w-4 fill-[#196F03]/10" />
-              </div>
-            )}
-            {item.dietaryType === "non-veg" && (
-              <div className="h-9 w-9 bg-white text-red-500 rounded-2xl flex items-center justify-center border border-gray-100 shadow-xl shadow-gray-200/50">
-                <Flame className="h-4 w-4 fill-red-500/10" />
-              </div>
-            )}
-          </div>
+          {item.dietaryType === "non-veg" && (
+            <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-red-500 rounded-xl flex items-center justify-center shadow-lg">
+              <Flame className="h-4 w-4 fill-red-500/20" />
+            </div>
+          )}
         </div>
       </div>
 
       {/* Content Area */}
-      <div className="pt-24 text-center space-y-2">
-        <h3 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1">
+      <div className="flex-1 flex flex-col">
+        <h3 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1 mb-1 px-1">
           {item.name}
         </h3>
 
-        <p className="text-xs text-gray-400 font-medium line-clamp-2 leading-relaxed h-8 px-2">
+        <p className="text-xs text-gray-500 font-medium line-clamp-2 leading-relaxed h-8 mb-4 px-1">
           {item.description}
         </p>
 
         {/* Action Buttons */}
-        <div className="flex gap-3 mt-4">
+        <div className="flex gap-2 mt-auto">
           <button
             onClick={onEdit}
-            className="flex-1 py-3 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
+            className="flex-1 py-2.5 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-xl hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
           >
             <Edit2 className="h-3.5 w-3.5" />
             Edit
           </button>
           <button
             onClick={onDelete}
-            className="p-3 bg-gray-50 text-red-500 rounded-[2rem] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
+            className="p-2.5 bg-gray-50 text-red-500 rounded-xl hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
           >
             <Trash2 className="h-4 w-4" />
           </button>
