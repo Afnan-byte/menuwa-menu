@@ -593,24 +593,18 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex-1 flex flex-col font-sans overflow-hidden">
-      <div className="px-4 md:px-10 pt-4 md:pt-6 pb-2 flex-shrink-0">
-        <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
-        <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
-      </div>
-
-      <div className="flex-1 flex flex-col lg:flex-row gap-8 px-4 md:px-10 pb-10 overflow-y-auto lg:overflow-hidden relative custom-scrollbar">
-        {/* Sidebar Filter Panel */}
+    <div className="flex-1 flex flex-col lg:flex-row font-sans overflow-hidden bg-gray-50/30">
+      {/* Sidebar Filter Panel (Catalogue Sidebar) */}
       <AnimatePresence>
         {isCatalogueVisible && (
           <motion.div 
             initial={{ opacity: 0, x: -20 }}
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
-            className="w-full lg:w-72 flex-shrink-0 lg:overflow-y-auto custom-scrollbar pr-2"
+            className="w-full lg:w-72 flex-shrink-0 lg:h-full bg-white border-r border-gray-100 z-10 flex flex-col"
           >
-            <div className="bg-white rounded-[2rem] md:rounded-[2.5rem] p-6 md:p-8 shadow-sm border border-gray-100/50 lg:min-h-full">
-              <div className="flex items-center justify-between mb-2 md:mb-10">
+            <div className="p-6 md:p-8 flex-1 flex flex-col overflow-y-auto custom-scrollbar">
+              <div className="flex items-center justify-between mb-8">
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
@@ -632,101 +626,107 @@ export default function MenuPage() {
                 </button>
               </div>
 
-          <AnimatePresence>
-            {isCategoriesExpanded && (
-              <motion.div 
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                className="overflow-hidden"
-              >
-                <div className="space-y-2 mt-4">
-                  <button
-                    onClick={() => setActiveCategory("all")}
-                    className={cn(
-                      "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
-                      activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
-                    )}
+              <AnimatePresence>
+                {isCategoriesExpanded && (
+                  <motion.div 
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    className="overflow-hidden flex-1"
                   >
-                    <div className="flex items-center gap-3">
-                      <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                        <LayoutGrid className="h-4 w-4" />
-                      </div>
-                      <span className="text-xs font-medium">All Items</span>
-                    </div>
-                    <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
-                  </button>
-
-                  {categories.map((cat) => (
-                    <div key={cat.id} className="relative group">
+                    <div className="space-y-2">
                       <button
-                        onClick={() => setActiveCategory(cat.id)}
+                        onClick={() => setActiveCategory("all")}
                         className={cn(
-                          "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
-                          activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                          "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
+                          activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
                         )}
                       >
                         <div className="flex items-center gap-3">
-                          <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                            <Utensils className="h-4 w-4" />
+                          <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
+                            <LayoutGrid className="h-4 w-4" />
                           </div>
-                          <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
+                          <span className="text-xs font-medium">All Items</span>
                         </div>
+                        <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
                       </button>
-                      <button
-                        onClick={(e) => handleDeleteCategory(cat.id, e)}
-                        className={cn(
-                          "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
-                          activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
-                        )}
-                      >
-                        <Trash2 className="h-3.5 w-3.5" />
-                      </button>
+
+                      {categories.map((cat) => (
+                        <div key={cat.id} className="relative group">
+                          <button
+                            onClick={() => setActiveCategory(cat.id)}
+                            className={cn(
+                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
+                              activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                            )}
+                          >
+                            <div className="flex items-center gap-3">
+                              <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
+                                <Utensils className="h-4 w-4" />
+                              </div>
+                              <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
+                            </div>
+                          </button>
+                          <button
+                            onClick={(e) => handleDeleteCategory(cat.id, e)}
+                            className={cn(
+                              "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
+                              activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
+                            )}
+                          >
+                            <Trash2 className="h-3.5 w-3.5" />
+                          </button>
+                        </div>
+                      ))}
                     </div>
-                  ))}
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
+              <div className="mt-auto pt-8">
+                <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
+                  <button
+                    onClick={() => setIsPreviewOpen(true)}
+                    className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] hover:shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
+                  >
+                    <Eye className="h-3 w-3" />
+                    View Live Menu
+                  </button>
                 </div>
-              </motion.div>
-            )}
-          </AnimatePresence>
 
-          <div className="mt-12 pt-8 border-t border-gray-50">
-            <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
-              <button
-                onClick={() => setIsPreviewOpen(true)}
-                className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] hover:shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
-              >
-                <Eye className="h-3 w-3" />
-                View Live Menu
-              </button>
-            </div>
-          </div>
-
-          <div className="mt-8 pt-8 border-t border-gray-50 flex flex-col gap-3">
-            <button
-              onClick={() => setIsCategoryModalOpen(true)}
-              className="w-full flex items-center gap-3 p-4 bg-gray-50 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all group font-medium text-xs"
-            >
-              <FolderPlus className="h-4 w-4" />
-              Add New Section
-            </button>
-            <button
-              onClick={handleClearEverything}
-              disabled={categories.length === 0 && items.length === 0}
-              className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all group font-medium text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Trash2 className="h-4 w-4" />
-              Clear Entire Menu
-            </button>
-          </div>
+                <div className="mt-6 flex flex-col gap-3">
+                  <button
+                    onClick={() => setIsCategoryModalOpen(true)}
+                    className="w-full flex items-center gap-3 p-4 bg-gray-50 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all group font-medium text-xs"
+                  >
+                    <FolderPlus className="h-4 w-4" />
+                    Add New Section
+                  </button>
+                  <button
+                    onClick={handleClearEverything}
+                    disabled={categories.length === 0 && items.length === 0}
+                    className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all group font-medium text-xs disabled:opacity-50 disabled:cursor-not-allowed"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                    Clear Entire Menu
+                  </button>
+                </div>
+              </div>
             </div>
           </motion.div>
         )}
       </AnimatePresence>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 px-2">
-        {/* Fixed Header Part */}
-        <div className="flex-shrink-0 space-y-4 mb-4">
+      <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden relative">
+        <div className="px-4 md:px-10 pt-6 md:pt-8 pb-4 flex-shrink-0 bg-white/50 backdrop-blur-md border-b border-gray-100/50 z-10">
+          <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
+          <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
+        </div>
+
+        <div className="flex-1 px-4 md:px-10 pt-6 pb-10 overflow-y-auto custom-scrollbar">
+          {/* Fixed Header Part */}
+          <div className="flex-shrink-0 space-y-4 mb-4">
           
           {/* Top Row: Filters & Add Dish */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
