@@ -165,7 +165,7 @@ export default function PublicMenuPage() {
 
   return (
     <div
-      className={cn("min-h-screen font-sans selection:bg-[#196F03]/30 pb-32 transition-colors duration-500", isDark ? "bg-[#0A0A0A] text-white" : "bg-gray-50 text-gray-900")}
+      className={cn("min-h-screen w-full overflow-x-hidden font-sans selection:bg-[#196F03]/30 pb-32 transition-colors duration-500", isDark ? "bg-[#0A0A0A] text-white" : "bg-gray-50 text-gray-900")}
       style={{ "--brand-primary": themeColor, "--brand-primary-rgb": themeRgb } as any}
       ref={containerRef}
     >
