@@ -190,53 +190,54 @@ export default function PublicMenuPage() {
           <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent to-transparent z-0", isDark ? "via-white/10" : "via-black/5")}></div>
         </header>
 
-        {/* Search & Filters - Dark Glass */}
-        <div className="px-6 relative z-30 space-y-4">
+        {/* Search & Filters - Premium Glass */}
+        <div className="px-6 relative z-30 space-y-5">
           <div className="relative group">
-            <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-4 w-4 transition-colors", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
+            <div className={cn("absolute inset-0 rounded-3xl blur-xl transition-opacity opacity-0 group-focus-within:opacity-100", isDark ? "bg-[#196F03]/20" : "bg-[#196F03]/10")} />
+            <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors z-10", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
             <input
               type="text"
               placeholder="Search our selection..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className={cn(
-                "w-full backdrop-blur-3xl border rounded-3xl py-4 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 transition-all font-medium shadow-xl",
+                "w-full relative z-10 backdrop-blur-3xl border rounded-3xl py-4.5 pl-14 pr-6 text-sm focus:outline-none focus:ring-2 focus:ring-[#196F03]/40 transition-all font-medium shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
                 isDark
-                  ? "bg-[#1A1A1A]/90 border-white/5 text-white placeholder:text-gray-600 focus:bg-[#1A1A1A]"
-                  : "bg-white/90 border-gray-200 text-gray-900 placeholder:text-gray-400 focus:bg-white"
+                  ? "bg-[#1A1A1A]/90 border-white/5 text-white placeholder:text-gray-600 focus:bg-[#1A1A1A] focus:border-[#196F03]/30"
+                  : "bg-white/90 border-gray-100 text-gray-900 placeholder:text-gray-400 focus:bg-white focus:border-[#196F03]/30"
               )}
             />
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2">
+          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 pt-1 px-1 -mx-1">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-semibold uppercase tracking-widest transition-all",
+                "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
                 activeCategory === "all"
-                  ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
+                  ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_8px_20px_rgba(25,111,3,0.25)] scale-105"
                   : isDark
-                    ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
-                    : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
+                    ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
+                    : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
               )}
             >
-              <LayoutGrid className="h-3.5 w-3.5" />
-              All Selection
+              <LayoutGrid className={cn("h-4 w-4", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
+              All
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "flex-shrink-0 flex items-center gap-2 px-6 py-4 rounded-full border text-[10px] font-semibold uppercase tracking-widest transition-all",
+                  "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
                   activeCategory === cat.id
-                    ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_0_20px_rgba(25,111,3,0.3)]"
+                    ? "bg-[#196F03] text-white border-[#196F03] shadow-[0_8px_20px_rgba(25,111,3,0.25)] scale-105"
                     : isDark
-                      ? "bg-white/5 text-gray-400 border-white/5 hover:border-white/10"
-                      : "bg-white text-gray-500 border-gray-200 hover:border-gray-300 shadow-sm"
+                      ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
+                      : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
                 )}
               >
-                <Utensils className="h-3.5 w-3.5" />
+                {activeCategory === cat.id && <Utensils className="h-4 w-4 text-white" />}
                 {cat.name}
               </button>
             ))}
@@ -246,34 +247,38 @@ export default function PublicMenuPage() {
         {/* Top Selling Products - Vertical Cards */}
         {featuredItems.length > 0 && searchQuery === "" && (
           <section className="pt-6 pb-2">
-            <div className="px-6 mb-4 flex items-center justify-between">
-              <h2 className={cn("text-xl font-semibold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
+            <div className="px-6 mb-5 flex items-center justify-between">
+              <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
             </div>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-4">
+            <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-6 -mx-2 snap-x snap-mandatory">
               {featuredItems.map((item) => (
                 <motion.div
                   key={item.id}
                   onClick={() => setSelectedItem(item)}
                   whileHover={{ scale: 1.02 }}
-                  className="flex-shrink-0 w-64 group cursor-pointer"
+                  className="flex-shrink-0 w-64 group cursor-pointer snap-center pl-2"
                 >
-                  <div className={cn("relative aspect-[3/4] rounded-[2.5rem] overflow-hidden shadow-xl border mb-3 transition-all duration-500 group-hover:border-[rgba(var(--brand-primary-rgb),0.3)]", isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
-                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-80 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
-                    {!item.isAvailable && (
-                      <div className="absolute inset-0 bg-black/10 z-10" />
-                    )}
-                    <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0A0A0A]" : "from-black/80")}></div>
+                  <div className={cn("relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 hover:shadow-[0_20px_40px_rgba(25,111,3,0.2)]", isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
+                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-90 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
                     
-                    <div className="absolute bottom-6 left-6 right-6 flex flex-col gap-2">
-                      <div className="flex items-center gap-2">
-                        <h3 className="font-serif text-2xl text-white line-clamp-1 drop-shadow-md">{item.name}</h3>
+                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
+                    
+                    <div className="absolute top-4 left-4 z-20">
+                      <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
+                        <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
+                        <span className="text-[9px] font-bold text-white uppercase tracking-widest">Bestseller</span>
+                      </div>
+                    </div>
+
+                    <div className="absolute bottom-5 left-5 right-5 flex flex-col gap-2 z-20">
+                      <div className="flex items-start gap-2 justify-between">
+                        <h3 className="font-serif text-2xl text-white leading-tight drop-shadow-md">{item.name}</h3>
                         {!item.isAvailable && (
-                          <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-0.5 bg-white rounded-lg shadow-lg">Sold Out</span>
+                          <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-white rounded-lg shadow-lg shrink-0 mt-1">Sold Out</span>
                         )}
                       </div>
-                      <div className="flex items-center justify-between">
-                         <span className="text-[13px] font-bold text-[#196F03] bg-white px-3 py-1.5 rounded-xl shadow-lg">₹{item.price.replace(/[^0-9.]/g, '')}</span>
-
+                      <div className="flex items-center mt-1">
+                         <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)]">₹{item.price.replace(/[^0-9.]/g, '')}</span>
                       </div>
                     </div>
                   </div>
