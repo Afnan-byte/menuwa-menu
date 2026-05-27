@@ -30,8 +30,8 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Image Container (Rounded Square fitting inside card) */}
-      <div className="relative w-full aspect-square mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
+      {/* Image Container (Rounded Rectangle fitting inside card) */}
+      <div className="relative w-full aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
         {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
           <img
             src={item.imageUrl}
