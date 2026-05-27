@@ -415,14 +415,14 @@ export default function PublicMenuPage() {
                   <X className="h-5 w-5" />
                 </button>
 
-                <div className="relative h-[40vh] w-full shrink-0">
+                <div className="relative h-[35vh] w-full shrink-0">
                   <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
                   <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0F0F0F]" : "from-black/70")}></div>
 
                 </div>
 
-                <div className={cn("px-12 pb-12 -mt-16 relative z-10 rounded-t-[4rem] flex-1 flex flex-col", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
-                  <div className="pt-12 space-y-8 flex-1 overflow-y-auto no-scrollbar">
+                <div className={cn("px-8 pb-8 -mt-16 relative z-10 rounded-t-[4rem] flex-1 flex flex-col", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
+                  <div className="pt-8 space-y-6 flex-1 overflow-y-auto no-scrollbar">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">
                         {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature Selection"}
@@ -430,22 +430,22 @@ export default function PublicMenuPage() {
                     </div>
 
                     <div className="flex items-center justify-between gap-4">
-                      <h2 className={cn("text-5xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                      <h2 className={cn("text-4xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
                       {selectedItem.dietaryType && selectedItem.dietaryType !== "none" && (
-                        <div className={cn("shrink-0 h-6 w-6 border-2 rounded-md flex items-center justify-center p-[4px]", selectedItem.dietaryType === 'veg' ? "border-green-600" : "border-red-600")}>
+                        <div className={cn("shrink-0 h-5 w-5 border-2 rounded-md flex items-center justify-center p-[3px]", selectedItem.dietaryType === 'veg' ? "border-green-600" : "border-red-600")}>
                           <div className={cn("h-full w-full rounded-full", selectedItem.dietaryType === 'veg' ? "bg-green-600" : "bg-red-600")} />
                         </div>
                       )}
                     </div>
-                    <p className="text-gray-500 text-lg leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
+                    <p className="text-gray-500 text-[15px] leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
 
 
                   </div>
 
-                  <div className={cn("pt-8 mt-4 shrink-0 border-t", isDark ? "border-white/5" : "border-gray-100")}>
+                  <div className={cn("pt-6 mt-4 shrink-0 border-t", isDark ? "border-white/5" : "border-gray-100")}>
                     <div className="flex items-baseline justify-between px-2">
                       <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">Total Value</span>
-                      <span className={cn("text-5xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
+                      <span className={cn("text-4xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
                     </div>
                   </div>
                 </div>
