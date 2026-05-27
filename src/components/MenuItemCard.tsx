@@ -26,7 +26,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "bg-white rounded-[4rem] p-8 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl hover:shadow-brand-green/10 font-sans mt-12",
+        "bg-white rounded-[3rem] p-6 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl hover:shadow-brand-green/10 font-sans mt-12",
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
@@ -86,27 +86,27 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
       </div>
 
       {/* Content Area */}
-      <div className="pt-28 text-center space-y-4">
-        <h3 className="text-xl font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1">
+      <div className="pt-24 text-center space-y-2">
+        <h3 className="text-lg font-bold text-primary tracking-tight group-hover:text-[#196F03] transition-colors line-clamp-1">
           {item.name}
         </h3>
 
-        <p className="text-xs text-gray-400 font-medium line-clamp-2 leading-relaxed h-10 px-4">
+        <p className="text-xs text-gray-400 font-medium line-clamp-2 leading-relaxed h-8 px-2">
           {item.description}
         </p>
 
         {/* Action Buttons */}
-        <div className="flex gap-4 mt-8">
+        <div className="flex gap-3 mt-4">
           <button
             onClick={onEdit}
-            className="flex-1 py-4 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
+            className="flex-1 py-3 bg-gray-50 text-primary font-semibold text-[10px] uppercase tracking-widest rounded-[2rem] hover:bg-[#196F03] hover:text-white transition-all flex items-center justify-center gap-2 border border-gray-100"
           >
             <Edit2 className="h-3.5 w-3.5" />
             Edit
           </button>
           <button
             onClick={onDelete}
-            className="p-4 bg-gray-50 text-red-500 rounded-[2rem] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
+            className="p-3 bg-gray-50 text-red-500 rounded-[2rem] hover:bg-red-500 hover:text-white transition-all flex items-center justify-center border border-gray-100"
           >
             <Trash2 className="h-4 w-4" />
           </button>
