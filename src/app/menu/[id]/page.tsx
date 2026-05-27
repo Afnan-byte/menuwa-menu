@@ -448,19 +448,10 @@ export default function PublicMenuPage() {
 
                   </div>
 
-                  <div className={cn("pt-12 space-y-10 border-t", isDark ? "border-white/5" : "border-gray-100")}>
+                  <div className={cn("pt-8 mt-4 shrink-0 border-t", isDark ? "border-white/5" : "border-gray-100")}>
                     <div className="flex items-baseline justify-between px-2">
                       <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">Total Value</span>
                       <span className={cn("text-5xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>₹{selectedItem.price.replace(/[^0-9.]/g, '')}</span>
-                    </div>
-
-                    <div className="flex gap-4">
-                      <button
-                        onClick={() => setSelectedItem(null)}
-                        className={cn("w-full h-20 rounded-[2rem] flex items-center justify-center transition-all shrink-0 border font-semibold text-[11px] uppercase tracking-[0.3em]", isDark ? "bg-white/5 text-white hover:bg-white/10 border-white/5" : "bg-gray-50 text-gray-600 hover:bg-gray-100 border-gray-200")}
-                      >
-                        Close
-                      </button>
                     </div>
                   </div>
                 </div>
