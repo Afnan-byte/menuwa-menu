@@ -404,21 +404,16 @@ export default function PublicMenuPage() {
                 exit={{ y: "100%" }}
                 className={cn("relative w-full max-w-md overflow-hidden shadow-2xl h-full flex flex-col border-t", isDark ? "bg-[#0F0F0F] border-white/10" : "bg-white border-white")}
               >
-                <div className="absolute top-6 inset-x-0 flex justify-center z-[110]">
-                  <div className={cn("w-12 h-1.5 rounded-full", isDark ? "bg-white/10" : "bg-black/20")} />
-                </div>
-
-                <button
-                  onClick={() => setSelectedItem(null)}
-                  className={cn("absolute top-6 right-6 z-[110] h-10 w-10 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/5 text-white border-white/20 hover:bg-black/20 shadow-lg")}
-                >
-                  <X className="h-5 w-5" />
-                </button>
-
-                <div className={cn("px-8 pt-20 pb-8 relative z-10 flex-1 flex flex-col h-full overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
+                <div className={cn("px-8 pt-8 pb-8 relative z-10 flex-1 flex flex-col h-full overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
                   <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
-                    <div className={cn("relative w-full aspect-[4/3] shrink-0 rounded-[2rem] overflow-hidden border shadow-xl mb-6", isDark ? "border-white/10" : "border-gray-200")}>
+                    <div className={cn("relative w-full aspect-[4/3] shrink-0 overflow-hidden mb-6")}>
                       <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
+                      <button
+                        onClick={() => setSelectedItem(null)}
+                        className={cn("absolute top-4 right-4 z-[110] h-10 w-10 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/20 text-white border-white/20 hover:bg-black/30 shadow-lg")}
+                      >
+                        <X className="h-5 w-5" />
+                      </button>
                     </div>
 
                     <div className="flex items-center justify-between">
