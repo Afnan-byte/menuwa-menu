@@ -410,19 +410,17 @@ export default function PublicMenuPage() {
 
                 <button
                   onClick={() => setSelectedItem(null)}
-                  className={cn("absolute top-8 right-8 z-[110] h-12 w-12 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/5 text-white border-white/20 hover:bg-black/20 shadow-lg")}
+                  className={cn("absolute top-6 right-6 z-[110] h-10 w-10 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/5 text-white border-white/20 hover:bg-black/20 shadow-lg")}
                 >
                   <X className="h-5 w-5" />
                 </button>
 
-                <div className="relative h-[35vh] w-full shrink-0">
-                  <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
-                  <div className={cn("absolute inset-0 bg-gradient-to-t via-transparent to-transparent", isDark ? "from-[#0F0F0F]" : "from-black/70")}></div>
+                <div className={cn("px-8 pt-20 pb-8 relative z-10 flex-1 flex flex-col h-full overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
+                  <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
+                    <div className={cn("relative w-full aspect-[4/3] shrink-0 rounded-[2rem] overflow-hidden border shadow-xl mb-6", isDark ? "border-white/10" : "border-gray-200")}>
+                      <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
+                    </div>
 
-                </div>
-
-                <div className={cn("px-8 pb-8 -mt-16 relative z-10 rounded-t-[4rem] flex-1 flex flex-col", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
-                  <div className="pt-8 space-y-6 flex-1 overflow-y-auto no-scrollbar">
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">
                         {categories.find(c => c.id === selectedItem.categoryId)?.name || "Signature Selection"}
