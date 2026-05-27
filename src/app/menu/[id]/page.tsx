@@ -322,14 +322,14 @@ export default function PublicMenuPage() {
                 viewport={{ once: true, margin: "-50px" }}
                 className="space-y-12"
               >
-                <div className={cn("flex items-end justify-between px-2 border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
+                <div className={cn("flex items-end justify-between border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
                   <h2 className={cn("text-xl font-semibold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>
                     {cat.name}
                   </h2>
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3 px-2">
+                <div className="grid grid-cols-2 gap-3">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
