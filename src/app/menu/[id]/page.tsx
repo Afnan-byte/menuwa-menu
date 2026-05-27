@@ -173,21 +173,15 @@ export default function PublicMenuPage() {
 
         {/* Cinematic Branding Header */}
         <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-16 pb-2">
-          {/* Co-branding Bar */}
-          <div className="absolute top-4 left-6 flex items-center gap-3 z-30">
-            <div className={cn("relative h-10 w-10 rounded-full overflow-hidden border", isDark ? "border-white/10 bg-white/5" : "border-gray-200 bg-white shadow-sm")}>
-              {restaurant?.logoUrl ? (
-                <img src={restaurant.logoUrl} alt="Restaurant" className="w-full h-full object-contain p-1" />
-              ) : (
-                <div className="h-full w-full flex items-center justify-center bg-primary/10">
-                  <Utensils className="h-5 w-5 text-primary" />
-                </div>
-              )}
-            </div>
-            <X className={cn("h-2.5 w-2.5", isDark ? "text-white/20" : "text-gray-400")} />
-            <div className="flex items-center">
-              <Image src="/logo-white.svg" alt="Menuwo" width={60} height={16} className={cn("object-contain", isDark ? "opacity-30" : "opacity-30 brightness-0")} />
-            </div>
+          {/* Branding Bar */}
+          <div className="absolute top-4 left-6 flex items-center z-30">
+            {restaurant?.logoUrl ? (
+              <img src={restaurant.logoUrl} alt="Restaurant" className="h-10 w-auto max-w-[120px] object-contain" />
+            ) : (
+              <div className="h-10 w-10 flex items-center justify-center">
+                <Utensils className="h-6 w-6 text-primary" />
+              </div>
+            )}
           </div>
 
           {/* Dynamic Background Layer */}
