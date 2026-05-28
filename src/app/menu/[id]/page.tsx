@@ -542,15 +542,23 @@ export default function PublicMenuPage() {
                       </span>
                     </div>
 
-                    <div className="flex items-center justify-between gap-4">
-                      <h2 className={cn("text-4xl font-serif tracking-tight leading-tight", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                    <div className="flex items-start justify-between gap-4">
+                      <div>
+                        <h2 className={cn("text-4xl font-serif tracking-tight leading-tight mb-2", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                        <div className="flex items-center">
+                          <span className="text-xl font-black text-[#196F03]">
+                            {selectedItem.variants && selectedItem.variants.length > 0 && <span className="text-[10px] font-bold uppercase text-gray-500 mr-1.5 opacity-80">from</span>}
+                            ₹{selectedItem.price.replace(/[^0-9.]/g, '')}
+                          </span>
+                        </div>
+                      </div>
                       {selectedItem.dietaryType && selectedItem.dietaryType !== "none" && (
-                        <div className={cn("shrink-0 h-5 w-5 border-2 rounded-md flex items-center justify-center p-[3px]", selectedItem.dietaryType === 'veg' ? "border-green-600" : "border-red-600")}>
+                        <div className={cn("shrink-0 h-5 w-5 border-2 rounded-md flex items-center justify-center p-[3px] mt-2", selectedItem.dietaryType === 'veg' ? "border-green-600" : "border-red-600")}>
                           <div className={cn("h-full w-full rounded-full", selectedItem.dietaryType === 'veg' ? "bg-green-600" : "bg-red-600")} />
                         </div>
                       )}
                     </div>
-                    <p className="text-gray-500 text-[15px] leading-relaxed font-medium opacity-90">{selectedItem.description}</p>
+                    <p className="text-gray-500 text-[15px] leading-relaxed font-medium opacity-90 mt-2">{selectedItem.description}</p>
 
                     {selectedItem.variants && selectedItem.variants.length > 0 && (
                       <div className="pt-4 space-y-3">
