@@ -150,12 +150,50 @@ export default function PublicMenuPage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-[#0A0A0A]">
-        <motion.div
-          animate={{ scale: [1, 1.2, 1], rotate: [0, 180, 360] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="h-16 w-16 border-t-2 border-r-2 border-[#196F03] rounded-full"
-        />
+      <div className="min-h-screen w-full overflow-x-hidden font-sans bg-[#0A0A0A] pb-32">
+        <div className="max-w-md mx-auto min-h-screen flex flex-col relative">
+          
+          {/* Header Skeleton */}
+          <header className="relative w-full flex flex-col items-center justify-center pt-24 pb-2">
+            <div className="absolute top-6 left-6 z-30">
+              <div className="h-16 w-16 sm:h-20 sm:w-20 rounded-full bg-white/5 animate-pulse border border-white/10" />
+            </div>
+            <div className="absolute top-0 left-0 right-0 h-[1px] bg-white/10 z-0" />
+          </header>
+
+          {/* Search & Filters Skeleton */}
+          <div className="px-6 relative z-30 space-y-5 mt-4">
+            <div className="h-14 w-full bg-white/5 rounded-3xl animate-pulse" />
+            <div className="flex items-center gap-3 overflow-x-hidden pb-2 pt-1">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-12 w-28 flex-shrink-0 bg-white/5 rounded-full animate-pulse" />
+              ))}
+            </div>
+          </div>
+
+          {/* Top Selling Skeleton */}
+          <section className="pt-6 pb-2">
+            <div className="px-6 mb-5 flex items-center justify-between">
+              <div className="h-6 w-32 bg-white/5 rounded-md animate-pulse" />
+            </div>
+            <div className="flex gap-4 overflow-x-hidden px-6 pb-6 -mx-2">
+              {[1, 2].map((i) => (
+                <div key={i} className="flex-shrink-0 w-64 aspect-[3/4] rounded-[2rem] bg-white/5 animate-pulse" />
+              ))}
+            </div>
+          </section>
+
+          {/* Categories Skeleton */}
+          <div className="px-4 mb-4">
+            <div className="h-6 w-40 bg-white/5 rounded-md animate-pulse mb-6 ml-2" />
+            <div className="grid grid-cols-2 gap-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="aspect-[3/4] rounded-[1.5rem] bg-white/5 animate-pulse" />
+              ))}
+            </div>
+          </div>
+
+        </div>
       </div>
     );
   }
