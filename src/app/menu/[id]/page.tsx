@@ -264,27 +264,9 @@ export default function PublicMenuPage() {
                 setCurrentBookPage(p => p - 1);
               }
             }}
-            className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-2xl rounded-xl"
+            className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-2xl rounded-xl border border-white/10 p-1"
           />
         </AnimatePresence>
-
-        {/* Navigation Overlays */}
-        {currentBookPage > 0 && (
-          <button 
-            onClick={() => { setDirection(-1); setCurrentBookPage(p => p - 1); }}
-            className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all z-10 shadow-xl"
-          >
-            <ChevronRight className="h-8 w-8 rotate-180" />
-          </button>
-        )}
-        {currentBookPage < restaurant.bookPages.length - 1 && (
-          <button 
-            onClick={() => { setDirection(1); setCurrentBookPage(p => p + 1); }}
-            className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all z-10 shadow-xl"
-          >
-            <ChevronRight className="h-8 w-8" />
-          </button>
-        )}
 
         {/* Page Indicators */}
         <div className="absolute bottom-8 inset-x-0 flex flex-col items-center justify-center z-10">
