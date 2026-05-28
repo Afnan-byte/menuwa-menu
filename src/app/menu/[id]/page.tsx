@@ -176,8 +176,8 @@ export default function PublicMenuPage() {
           {/* Branding Bar */}
           <div className="absolute top-6 left-6 flex items-center z-30">
             {restaurant?.logoUrl ? (
-              <div className={cn("h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
-                <img src={restaurant.logoUrl} alt="Restaurant" className="h-full w-full object-contain" />
+              <div className={cn("relative h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
+                <Image src={restaurant.logoUrl} alt="Restaurant" fill sizes="80px" priority className="object-contain" />
               </div>
             ) : (
               <div className={cn("h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
@@ -253,7 +253,7 @@ export default function PublicMenuPage() {
               <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
             </div>
             <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-6 -mx-2 snap-x snap-mandatory">
-              {featuredItems.map((item) => (
+              {featuredItems.map((item, idx) => (
                 <motion.div
                   key={item.id}
                   onClick={() => setSelectedItem(item)}
@@ -261,7 +261,14 @@ export default function PublicMenuPage() {
                   className="flex-shrink-0 w-64 group cursor-pointer snap-center pl-2"
                 >
                   <div className={cn("relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 hover:shadow-[0_20px_40px_rgba(25,111,3,0.2)]", isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
-                    <Image src={item.imageUrl} alt={item.name} fill className="object-cover opacity-90 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" />
+                    <Image 
+                      src={item.imageUrl} 
+                      alt={item.name} 
+                      fill 
+                      sizes="256px"
+                      priority={idx < 2}
+                      className="object-cover opacity-90 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105" 
+                    />
                     
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
                     
@@ -357,10 +364,13 @@ export default function PublicMenuPage() {
                           "relative w-full aspect-[4/3] mb-3 rounded-xl overflow-hidden",
                           isDark ? "bg-[#0A0A0A]" : "bg-gray-50"
                         )}>
-                          <img
+                          <Image
                             src={item.imageUrl}
                             alt={item.name}
-                            className={cn("w-full h-full object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
+                            fill
+                            sizes="(max-width: 768px) 50vw, 33vw"
+                            loading="lazy"
+                            className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
                           />
                           
                           {/* Top Left Icon */}
