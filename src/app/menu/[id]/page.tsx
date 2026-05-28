@@ -343,13 +343,11 @@ export default function PublicMenuPage() {
                           <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-white rounded-lg shadow-lg shrink-0 mt-1">Sold Out</span>
                         )}
                       </div>
-                      {(!item.variants || item.variants.length === 0) && (
-                        <div className="flex items-center mt-1">
-                           <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)] flex items-center">
-                             ₹{item.price.replace(/[^0-9.]/g, '')}
-                           </span>
-                        </div>
-                      )}
+                      <div className="flex items-center mt-1">
+                         <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)] flex items-center">
+                           ₹{item.price.replace(/[^0-9.]/g, '')}
+                         </span>
+                      </div>
                     </div>
                   </div>
                 </motion.div>
@@ -453,11 +451,9 @@ export default function PublicMenuPage() {
                           )}
 
                           {/* Price Tag */}
-                          {(!item.variants || item.variants.length === 0) && (
-                            <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
-                              ₹{item.price.replace(/[^0-9.]/g, '')}
-                            </div>
-                          )}
+                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
+                            ₹{item.price.replace(/[^0-9.]/g, '')}
+                          </div>
 
                           {/* Combo Thumbnails */}
                           {item.addons && item.addons.length > 0 && (
@@ -476,7 +472,7 @@ export default function PublicMenuPage() {
                           <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
                             {item.name}
                             {item.addons && item.addons.length > 0 && (
-                              <span className="text-[#196F03]"> + {item.addons.map(a => a.name).join(' + ')}</span>
+                              <span className={cn("opacity-90 font-medium", isDark ? "text-white" : "text-gray-900")}> + {item.addons.map(a => a.name).join(' + ')}</span>
                             )}
                           </h3>
                           {item.variants && item.variants.length > 0 && (
