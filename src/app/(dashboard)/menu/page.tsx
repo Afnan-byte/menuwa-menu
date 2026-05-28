@@ -91,9 +91,18 @@ export default function MenuPage() {
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
 
   useEffect(() => {
-    // Collapse categories by default on mobile screens
-    if (typeof window !== "undefined" && window.innerWidth < 1024) {
-      setIsCategoriesExpanded(false);
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setIsCategoriesExpanded(true);
+      }
+    };
+
+    if (typeof window !== "undefined") {
+      if (window.innerWidth < 1024) {
+        setIsCategoriesExpanded(false);
+      }
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
     }
   }, []);
 
