@@ -216,8 +216,82 @@ export default function PublicMenuPage() {
         </div>
       </div>
     );
-  }
+  }  if (restaurant?.menuType === "book" && restaurant.bookPages && restaurant.bookPages.length > 0) {
+    return (
+      <div className="fixed inset-0 bg-[#0A0A0A] overflow-hidden select-none z-[100] flex flex-col">
+        <AnimatePresence initial={false} custom={direction}>
+          <motion.img
+            key={currentBookPage}
+            src={restaurant.bookPages[currentBookPage]}
+            custom={direction}
+            variants={{
+              enter: (direction: number) => ({ x: direction > 0 ? "100%" : "-100%", opacity: 0 }),
+              center: { zIndex: 1, x: 0, opacity: 1 },
+              exit: (direction: number) => ({ zIndex: 0, x: direction < 0 ? "100%" : "-100%", opacity: 0 })
+            }}
+            initial="enter"
+            animate="center"
+            exit="exit"
+            transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+            drag="x"
+            dragConstraints={{ left: 0, right: 0 }}
+            dragElastic={1}
+            onDragEnd={(e, { offset, velocity }) => {
+              const swipe = Math.abs(offset.x) * velocity.x;
+              if (swipe < -10000 && currentBookPage < restaurant.bookPages!.length - 1) {
+                setDirection(1);
+                setCurrentBookPage(p => p + 1);
+              } else if (swipe > 10000 && currentBookPage > 0) {
+                setDirection(-1);
+                setCurrentBookPage(p => p - 1);
+              }
+            }}
+            className="absolute inset-0 w-full h-full object-cover sm:object-contain pointer-events-auto"
+          />
+        </AnimatePresence>
 
+        {/* Navigation Overlays */}
+        {currentBookPage > 0 && (
+          <button 
+            onClick={() => { setDirection(-1); setCurrentBookPage(p => p - 1); }}
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all z-10 shadow-xl"
+          >
+            <ChevronRight className="h-8 w-8 rotate-180" />
+          </button>
+        )}
+        {currentBookPage < restaurant.bookPages.length - 1 && (
+          <button 
+            onClick={() => { setDirection(1); setCurrentBookPage(p => p + 1); }}
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-14 w-14 rounded-full bg-black/40 backdrop-blur-md flex items-center justify-center text-white hover:bg-black/60 transition-all z-10 shadow-xl"
+          >
+            <ChevronRight className="h-8 w-8" />
+          </button>
+        )}
+
+        {/* Page Indicators */}
+        <div className="absolute bottom-8 inset-x-0 flex flex-col items-center justify-center z-10">
+          <div className="flex items-center gap-2 mb-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full">
+            {restaurant.bookPages.map((_, idx) => (
+              <button
+                key={idx}
+                onClick={() => {
+                  setDirection(idx > currentBookPage ? 1 : -1);
+                  setCurrentBookPage(idx);
+                }}
+                className={cn(
+                  "h-2 rounded-full transition-all duration-300 shadow-sm",
+                  currentBookPage === idx ? "w-8 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
+                )}
+              />
+            ))}
+          </div>
+          <p className="text-white/70 text-[10px] font-bold uppercase tracking-[0.2em] drop-shadow-md">
+            Swipe to flip pages
+          </p>
+        </div>
+      </div>
+    );
+  }
 
 
 
@@ -250,83 +324,7 @@ export default function PublicMenuPage() {
           <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent to-transparent z-0", isDark ? "via-white/10" : "via-black/5")}></div>
         </header>
 
-        {restaurant?.menuType === "book" && restaurant.bookPages && restaurant.bookPages.length > 0 ? (
-          /* Book Viewer Mode */
-          <div className="flex-1 flex flex-col relative w-full mt-4 pb-20">
-            <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] max-h-[70vh] flex items-center justify-center overflow-hidden rounded-[2rem] shadow-2xl bg-black/20">
-              <AnimatePresence initial={false} custom={direction}>
-                <motion.img
-                  key={currentBookPage}
-                  src={restaurant.bookPages[currentBookPage]}
-                  custom={direction}
-                  variants={{
-                    enter: (direction: number) => ({ x: direction > 0 ? 1000 : -1000, opacity: 0 }),
-                    center: { zIndex: 1, x: 0, opacity: 1 },
-                    exit: (direction: number) => ({ zIndex: 0, x: direction < 0 ? 1000 : -1000, opacity: 0 })
-                  }}
-                  initial="enter"
-                  animate="center"
-                  exit="exit"
-                  transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
-                  drag="x"
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={1}
-                  onDragEnd={(e, { offset, velocity }) => {
-                    const swipe = Math.abs(offset.x) * velocity.x;
-                    if (swipe < -10000 && currentBookPage < restaurant.bookPages!.length - 1) {
-                      setDirection(1);
-                      setCurrentBookPage(p => p + 1);
-                    } else if (swipe > 10000 && currentBookPage > 0) {
-                      setDirection(-1);
-                      setCurrentBookPage(p => p - 1);
-                    }
-                  }}
-                  className="absolute w-full h-full object-contain pointer-events-auto"
-                />
-              </AnimatePresence>
-              
-              {/* Navigation Overlays */}
-              {currentBookPage > 0 && (
-                <button 
-                  onClick={() => { setDirection(-1); setCurrentBookPage(p => p - 1); }}
-                  className="absolute left-2 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all z-10"
-                >
-                  <ChevronRight className="h-6 w-6 rotate-180" />
-                </button>
-              )}
-              {currentBookPage < restaurant.bookPages.length - 1 && (
-                <button 
-                  onClick={() => { setDirection(1); setCurrentBookPage(p => p + 1); }}
-                  className="absolute right-2 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all z-10"
-                >
-                  <ChevronRight className="h-6 w-6" />
-                </button>
-              )}
-            </div>
 
-            {/* Page Indicators */}
-            <div className="flex items-center justify-center gap-2 mt-6">
-              {restaurant.bookPages.map((_, idx) => (
-                <button
-                  key={idx}
-                  onClick={() => {
-                    setDirection(idx > currentBookPage ? 1 : -1);
-                    setCurrentBookPage(idx);
-                  }}
-                  className={cn(
-                    "h-2 rounded-full transition-all duration-300",
-                    currentBookPage === idx ? "w-6 bg-[#196F03]" : "w-2 bg-white/20 hover:bg-white/40"
-                  )}
-                />
-              ))}
-            </div>
-            <p className="text-center text-gray-500 text-xs font-medium uppercase tracking-widest mt-4">
-              Swipe to flip pages
-            </p>
-          </div>
-        ) : (
-          /* Digital Menu Mode (Original Layout) */
-          <>
             {/* Search & Filters - Premium Glass */}
             <div className="px-6 relative z-30 space-y-5 mt-4">
           <div className="relative group">
@@ -582,8 +580,7 @@ export default function PublicMenuPage() {
             );
           })}
         </div>
-        </>
-        )}
+
 
         {/* Item Details Immersive Modal */}
         <AnimatePresence>
