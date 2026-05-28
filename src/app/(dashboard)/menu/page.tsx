@@ -669,7 +669,7 @@ export default function MenuPage() {
                     initial={{ height: 0, opacity: 0 }}
                     animate={{ height: "auto", opacity: 1 }}
                     exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden flex-1"
+                    className="overflow-hidden flex-shrink-0"
                   >
                     <div className="space-y-2">
                       <button
