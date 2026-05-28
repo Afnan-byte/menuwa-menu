@@ -219,6 +219,23 @@ export default function PublicMenuPage() {
   }  if (restaurant?.menuType === "book" && restaurant.bookPages && restaurant.bookPages.length > 0) {
     return (
       <div className="fixed inset-0 bg-[#0A0A0A] overflow-hidden select-none z-[100] flex flex-col p-4 md:p-8" style={{ perspective: "1500px" }}>
+        
+        {/* Dynamic Ambient Background */}
+        <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+          <AnimatePresence>
+            <motion.img 
+              key={`bg-${currentBookPage}`}
+              src={restaurant.bookPages[currentBookPage]} 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 1 }}
+              className="absolute inset-0 w-full h-full object-cover blur-[80px] scale-125 saturate-200" 
+            />
+          </AnimatePresence>
+          <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-[#0A0A0A]" />
+        </div>
+
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
             key={currentBookPage}
@@ -267,13 +284,13 @@ export default function PublicMenuPage() {
                 setCurrentBookPage(p => p - 1);
               }
             }}
-            className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-2xl rounded-xl border border-white/10 p-1"
+            className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10"
           />
         </AnimatePresence>
 
-        {/* Page Indicators */}
-        <div className="absolute bottom-8 inset-x-0 flex flex-col items-center justify-center z-10">
-          <div className="flex items-center gap-2 mb-3 bg-black/40 backdrop-blur-md px-4 py-2 rounded-full">
+        {/* Premium Page Indicators */}
+        <div className="absolute bottom-10 inset-x-0 flex flex-col items-center justify-center z-20 pointer-events-none">
+          <div className="flex items-center gap-2 mb-5 bg-white/5 border border-white/10 backdrop-blur-xl px-5 py-3 rounded-full shadow-2xl pointer-events-auto">
             {restaurant.bookPages.map((_, idx) => (
               <button
                 key={idx}
@@ -282,15 +299,16 @@ export default function PublicMenuPage() {
                   setCurrentBookPage(idx);
                 }}
                 className={cn(
-                  "h-2 rounded-full transition-all duration-300 shadow-sm",
-                  currentBookPage === idx ? "w-8 bg-white" : "w-2 bg-white/40 hover:bg-white/60"
+                  "h-1.5 rounded-full transition-all duration-500",
+                  currentBookPage === idx ? "w-8 bg-white shadow-[0_0_12px_rgba(255,255,255,0.8)]" : "w-2 bg-white/20 hover:bg-white/40"
                 )}
               />
             ))}
           </div>
-          <p className="text-white/70 text-[10px] font-bold uppercase tracking-[0.2em] drop-shadow-md">
-            Swipe to flip pages
-          </p>
+          <div className="flex flex-col items-center gap-1.5 opacity-90">
+            <span className="text-[11px] font-bold uppercase tracking-[0.4em] text-white/90 drop-shadow-md">Menu Book</span>
+            <span className="text-[9px] uppercase tracking-[0.5em] text-white/40 font-medium">Swipe to Explore</span>
+          </div>
         </div>
       </div>
     );
