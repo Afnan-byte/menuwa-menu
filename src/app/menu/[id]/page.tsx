@@ -325,10 +325,10 @@ export default function PublicMenuPage() {
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
                     
                     {item.addons && item.addons.length > 0 && (
-                      <div className="absolute top-4 right-4 z-20 flex -space-x-2">
+                      <div className="absolute top-4 right-4 z-20 flex -space-x-3">
                         {item.addons.slice(0, 3).map((addon, i) => (
                           addon.imageUrl ? (
-                            <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-8 w-8 rounded-full border-2 border-white/20 object-cover shadow-lg" style={{ zIndex: 10 - i }} />
+                            <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-14 w-14 rounded-full border-[3px] border-white/20 object-cover shadow-xl" style={{ zIndex: 10 - i }} />
                           ) : null
                         ))}
                       </div>
@@ -464,10 +464,10 @@ export default function PublicMenuPage() {
 
                           {/* Combo Thumbnails */}
                           {item.addons && item.addons.length > 0 && (
-                            <div className="absolute bottom-4 left-4 z-20 flex -space-x-2">
+                            <div className="absolute bottom-4 left-4 z-20 flex -space-x-3">
                               {item.addons.slice(0, 3).map((addon, i) => (
                                 addon.imageUrl ? (
-                                  <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-8 w-8 rounded-full border-2 border-white object-cover shadow-lg" style={{ zIndex: 10 - i }} />
+                                  <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-14 w-14 rounded-full border-[3px] border-white object-cover shadow-xl" style={{ zIndex: 10 - i }} />
                                 ) : null
                               ))}
                             </div>
