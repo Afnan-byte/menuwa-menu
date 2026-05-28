@@ -476,7 +476,7 @@ export default function PublicMenuPage() {
 
                         {/* Content Area */}
                         <div className="flex-1 flex flex-col p-5">
-                          <h3 className={cn("text-lg font-bold tracking-tight leading-snug transition-colors", isDark ? "text-white" : "text-gray-900")}>
+                          <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
                             {item.name}
                             {item.addons && item.addons.length > 0 && (
                               <span className="text-[#196F03]"> + {item.addons.map(a => a.name).join(' + ')}</span>
