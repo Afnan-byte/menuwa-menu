@@ -484,11 +484,16 @@ export default function PublicMenuPage() {
                               <span className="text-[#196F03]"> + {item.addons.map(a => a.name).join(' + ')}</span>
                             )}
                           </h3>
-                          
-
-
-
-
+                          {item.variants && item.variants.length > 0 && (
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {item.variants.map(v => (
+                                <div key={v.id} className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-lg border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                  <span className="text-[10px] font-bold text-gray-400 uppercase">{v.name}</span>
+                                  <span className="text-[10px] font-black text-[#196F03]">₹{v.price}</span>
+                                </div>
+                              ))}
+                            </div>
+                          )}
                           {!item.isAvailable && (
                             <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-red-500/10 rounded-md mt-3 w-fit">
                               Sold Out
