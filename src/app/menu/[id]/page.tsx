@@ -228,19 +228,22 @@ export default function PublicMenuPage() {
               enter: (direction: number) => ({ 
                 rotateY: direction > 0 ? 90 : -90, 
                 opacity: 0,
-                scale: 0.85
+                scale: 0.9,
+                originX: direction > 0 ? 1 : 0
               }),
-              center: { 
+              center: (direction: number) => ({ 
                 zIndex: 1, 
                 rotateY: 0, 
                 opacity: 1,
-                scale: 1
-              },
+                scale: 1,
+                originX: direction > 0 ? 1 : 0
+              }),
               exit: (direction: number) => ({ 
                 zIndex: 0, 
                 rotateY: direction < 0 ? 90 : -90, 
                 opacity: 0,
-                scale: 0.85
+                scale: 0.9,
+                originX: direction < 0 ? 1 : 0
               })
             }}
             initial="enter"
