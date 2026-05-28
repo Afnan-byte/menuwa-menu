@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { QRCodeCanvas } from "qrcode.react";
+import { QRCodeSVG } from "qrcode.react";
 import { Download, Printer, Copy, ExternalLink, QrCode as QrIcon } from "lucide-react";
 import toast from "react-hot-toast";
 
@@ -15,14 +15,17 @@ export default function QRPage() {
     : "";
 
   const downloadQR = () => {
-    const canvas = document.querySelector("canvas");
-    if (canvas) {
-      const url = canvas.toDataURL("image/png");
+    const svg = document.getElementById("restaurant-qr-code");
+    if (svg) {
+      const svgData = new XMLSerializer().serializeToString(svg);
+      const blob = new Blob([svgData], { type: "image/svg+xml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
-      link.download = `${restaurantData?.restaurantName || "menu"}-qr.png`;
+      link.download = `${restaurantData?.restaurantName || "menu"}-qr.svg`;
       link.href = url;
       link.click();
       toast.success("QR Code downloaded!");
+      URL.revokeObjectURL(url);
     }
   };
 
@@ -81,11 +84,15 @@ export default function QRPage() {
           <div className="bg-white p-6 md:p-12 rounded-3xl border border-gray-100 shadow-xl flex flex-col items-center text-center">
             <div ref={qrRef} className="p-4 md:p-8 bg-white rounded-3xl shadow-inner border border-gray-50 mb-8 w-full max-w-[300px]">
               <div className="relative aspect-square w-full">
-                <QRCodeCanvas 
+                <QRCodeSVG 
+                  id="restaurant-qr-code"
                   value={menuUrl} 
-                  size={1024} // High res canvas, CSS will scale it
+                  size={1000}
+                  level="M"
+                  marginSize={8}
+                  fgColor="#000000"
+                  bgColor="#FFFFFF"
                   style={{ width: '100%', height: '100%' }}
-                  level="H"
                   includeMargin={true}
                 />
               </div>
@@ -99,7 +106,7 @@ export default function QRPage() {
                 className="flex-1 flex items-center justify-center gap-2 py-4 bg-primary text-white font-semibold rounded-2xl hover:bg-primary/90 transition-all shadow-md text-sm"
               >
                 <Download className="h-5 w-5" />
-                Download PNG
+                Download SVG
               </button>
               <button 
                 onClick={() => window.print()}

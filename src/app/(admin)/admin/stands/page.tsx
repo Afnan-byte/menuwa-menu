@@ -265,9 +265,12 @@ export default function StandsManager() {
                   <QRCodeSVG 
                     id={`qr-${stand.id}`}
                     value={`https://menuwo.in/s/${stand.id}`} 
-                    size={256}
-                    level="H"
-                    includeMargin={false}
+                    size={1000}
+                    level="M"
+                    marginSize={8}
+                    fgColor="#000000"
+                    bgColor="#FFFFFF"
+                    includeMargin={true}
                     className="w-full h-full"
                   />
                   {stand.status === 'assigned' && (
