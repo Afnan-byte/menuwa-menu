@@ -408,7 +408,7 @@ export default function PublicMenuPage() {
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-2 gap-3">
+                <div className="grid grid-cols-1 gap-6">
                   {categoryItems.map((item, idx) => {
                     return (
                       <motion.div
@@ -419,54 +419,56 @@ export default function PublicMenuPage() {
                         transition={{ delay: idx * 0.1 }}
                         onClick={() => setSelectedItem(item)}
                         className={cn(
-                          "group cursor-pointer relative transition-all duration-500 flex flex-col rounded-[1.5rem] p-2",
-                          isDark ? "bg-[#1A1A1A] border border-white/5" : "bg-white shadow-sm border border-gray-100",
+                        className={cn(
+                          "group cursor-pointer relative transition-all duration-500 flex flex-col rounded-[2rem] overflow-hidden",
+                          isDark ? "bg-[#1A1A1A] border border-white/5" : "bg-white shadow-xl border border-gray-100",
                           !item.isAvailable && "opacity-70"
                         )}
                       >
                         {/* Image Container */}
                         <div className={cn(
-                          "relative w-full aspect-[4/3] mb-3 rounded-xl overflow-hidden",
+                          "relative w-full aspect-[4/3] overflow-hidden",
                           isDark ? "bg-[#0A0A0A]" : "bg-gray-50"
                         )}>
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
-                            sizes="(max-width: 768px) 50vw, 33vw"
+                            sizes="(max-width: 768px) 100vw, 50vw"
                             loading="lazy"
                             className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
                           />
+                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
                           
                           {/* Top Left Icon */}
-                          <div className={cn("absolute top-2 left-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
-                            <Utensils className={cn("h-3 w-3", isDark ? "text-white" : "text-[#196F03]")} />
+                          <div className={cn("absolute top-3 left-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                            <Utensils className={cn("h-4 w-4", isDark ? "text-white" : "text-[#196F03]")} />
                           </div>
 
                           {/* Top Right Dietary Icon */}
                           {item.dietaryType === "veg" && (
-                            <div className={cn("absolute top-2 right-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20 text-[#196F03]", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
-                              <Leaf className="h-3 w-3 fill-[#196F03]/20" />
+                            <div className={cn("absolute top-3 right-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20 text-[#196F03]", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                              <Leaf className="h-4 w-4 fill-[#196F03]/20" />
                             </div>
                           )}
                           {item.dietaryType === "non-veg" && (
-                            <div className={cn("absolute top-2 right-2 h-6 w-6 rounded-lg flex items-center justify-center shadow-sm z-20 text-red-500", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
-                              <Flame className="h-3 w-3 fill-red-500/20" />
+                            <div className={cn("absolute top-3 right-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20 text-red-500", isDark ? "bg-black/60 backdrop-blur-md" : "bg-white/90 backdrop-blur-md")}>
+                              <Flame className="h-4 w-4 fill-red-500/20" />
                             </div>
                           )}
 
                           {/* Price Tag */}
-                          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-2 py-1 rounded-lg font-bold text-[10px] shadow-lg shadow-brand-green/30 flex items-center z-20">
-                            {item.variants && item.variants.length > 0 && <span className="text-[8px] font-bold uppercase mr-1 opacity-80">from</span>}
+                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
+                            {item.variants && item.variants.length > 0 && <span className="text-[9px] font-bold uppercase mr-1.5 opacity-80">from</span>}
                             ₹{item.price.replace(/[^0-9.]/g, '')}
                           </div>
 
                           {/* Combo Thumbnails */}
                           {item.addons && item.addons.length > 0 && (
-                            <div className="absolute bottom-2 left-2 z-20 flex -space-x-1.5">
+                            <div className="absolute bottom-4 left-4 z-20 flex -space-x-2">
                               {item.addons.slice(0, 3).map((addon, i) => (
                                 addon.imageUrl ? (
-                                  <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-6 w-6 rounded-full border border-white/50 object-cover shadow-md" style={{ zIndex: 10 - i }} />
+                                  <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-8 w-8 rounded-full border-2 border-white object-cover shadow-lg" style={{ zIndex: 10 - i }} />
                                 ) : null
                               ))}
                             </div>
@@ -474,19 +476,31 @@ export default function PublicMenuPage() {
                         </div>
 
                         {/* Content Area */}
-                        <div className="flex-1 flex flex-col px-1 pb-1">
-                          <h3 className={cn("text-xs font-bold tracking-tight leading-snug group-hover:text-[#196F03] transition-colors mb-1", isDark ? "text-white" : "text-gray-900")}>
+                        <div className="flex-1 flex flex-col p-5">
+                          <h3 className={cn("text-lg font-bold tracking-tight leading-snug transition-colors", isDark ? "text-white" : "text-gray-900")}>
                             {item.name}
+                            {item.addons && item.addons.length > 0 && (
+                              <span className="text-[#196F03]"> + {item.addons.map(a => a.name).join(' + ')}</span>
+                            )}
                           </h3>
                           
+                          <p className="text-sm text-gray-500 font-medium mt-1.5 line-clamp-2 leading-relaxed">
+                            {item.description}
+                          </p>
+
                           {item.variants && item.variants.length > 0 && (
-                            <div className="text-[9px] text-gray-500 font-medium truncate mb-1">
-                              {item.variants.map(v => `${v.name} ₹${v.price}`).join(" • ")}
+                            <div className="flex flex-wrap gap-2 mt-3">
+                              {item.variants.map(v => (
+                                <div key={v.id} className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-lg border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                  <span className="text-[10px] font-bold text-gray-400 uppercase">{v.name}</span>
+                                  <span className="text-[10px] font-black text-[#196F03]">₹{v.price}</span>
+                                </div>
+                              ))}
                             </div>
                           )}
 
                           {!item.isAvailable && (
-                            <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded-md mt-1 w-fit">
+                            <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-red-500/10 rounded-md mt-3 w-fit">
                               Sold Out
                             </span>
                           )}
