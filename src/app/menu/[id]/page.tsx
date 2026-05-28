@@ -73,6 +73,8 @@ interface Restaurant {
   whatsapp?: string;
   phone?: string;
   menuTheme?: "dark" | "light";
+  menuType?: "digital" | "book";
+  bookPages?: string[];
 }
 
 const hexToRgb = (hex: string) => {
@@ -92,6 +94,10 @@ export default function PublicMenuPage() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [dietaryFilter, setDietaryFilter] = useState<"all" | "veg" | "non-veg">("all");
+  
+  // Book Viewer State
+  const [currentBookPage, setCurrentBookPage] = useState(0);
+  const [direction, setDirection] = useState(0);
 
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
@@ -244,8 +250,85 @@ export default function PublicMenuPage() {
           <div className={cn("absolute top-0 left-0 right-0 h-[1px] bg-gradient-to-r from-transparent to-transparent z-0", isDark ? "via-white/10" : "via-black/5")}></div>
         </header>
 
-        {/* Search & Filters - Premium Glass */}
-        <div className="px-6 relative z-30 space-y-5 mt-4">
+        {restaurant?.menuType === "book" && restaurant.bookPages && restaurant.bookPages.length > 0 ? (
+          /* Book Viewer Mode */
+          <div className="flex-1 flex flex-col relative w-full mt-4 pb-20">
+            <div className="relative w-full aspect-[3/4] sm:aspect-[4/5] max-h-[70vh] flex items-center justify-center overflow-hidden rounded-[2rem] shadow-2xl bg-black/20">
+              <AnimatePresence initial={false} custom={direction}>
+                <motion.img
+                  key={currentBookPage}
+                  src={restaurant.bookPages[currentBookPage]}
+                  custom={direction}
+                  variants={{
+                    enter: (direction: number) => ({ x: direction > 0 ? 1000 : -1000, opacity: 0 }),
+                    center: { zIndex: 1, x: 0, opacity: 1 },
+                    exit: (direction: number) => ({ zIndex: 0, x: direction < 0 ? 1000 : -1000, opacity: 0 })
+                  }}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+                  drag="x"
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={1}
+                  onDragEnd={(e, { offset, velocity }) => {
+                    const swipe = Math.abs(offset.x) * velocity.x;
+                    if (swipe < -10000 && currentBookPage < restaurant.bookPages!.length - 1) {
+                      setDirection(1);
+                      setCurrentBookPage(p => p + 1);
+                    } else if (swipe > 10000 && currentBookPage > 0) {
+                      setDirection(-1);
+                      setCurrentBookPage(p => p - 1);
+                    }
+                  }}
+                  className="absolute w-full h-full object-contain pointer-events-auto"
+                />
+              </AnimatePresence>
+              
+              {/* Navigation Overlays */}
+              {currentBookPage > 0 && (
+                <button 
+                  onClick={() => { setDirection(-1); setCurrentBookPage(p => p - 1); }}
+                  className="absolute left-2 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all z-10"
+                >
+                  <ChevronRight className="h-6 w-6 rotate-180" />
+                </button>
+              )}
+              {currentBookPage < restaurant.bookPages.length - 1 && (
+                <button 
+                  onClick={() => { setDirection(1); setCurrentBookPage(p => p + 1); }}
+                  className="absolute right-2 top-1/2 -translate-y-1/2 h-12 w-12 rounded-full bg-white/10 backdrop-blur-md flex items-center justify-center text-white hover:bg-white/20 transition-all z-10"
+                >
+                  <ChevronRight className="h-6 w-6" />
+                </button>
+              )}
+            </div>
+
+            {/* Page Indicators */}
+            <div className="flex items-center justify-center gap-2 mt-6">
+              {restaurant.bookPages.map((_, idx) => (
+                <button
+                  key={idx}
+                  onClick={() => {
+                    setDirection(idx > currentBookPage ? 1 : -1);
+                    setCurrentBookPage(idx);
+                  }}
+                  className={cn(
+                    "h-2 rounded-full transition-all duration-300",
+                    currentBookPage === idx ? "w-6 bg-[#196F03]" : "w-2 bg-white/20 hover:bg-white/40"
+                  )}
+                />
+              ))}
+            </div>
+            <p className="text-center text-gray-500 text-xs font-medium uppercase tracking-widest mt-4">
+              Swipe to flip pages
+            </p>
+          </div>
+        ) : (
+          /* Digital Menu Mode (Original Layout) */
+          <>
+            {/* Search & Filters - Premium Glass */}
+            <div className="px-6 relative z-30 space-y-5 mt-4">
           <div className="relative group">
             <div className={cn("absolute inset-0 rounded-3xl blur-xl transition-opacity opacity-0 group-focus-within:opacity-100", isDark ? "bg-[#196F03]/20" : "bg-[#196F03]/10")} />
             <Search className={cn("absolute left-6 top-1/2 -translate-y-1/2 h-5 w-5 transition-colors z-10", isDark ? "text-gray-500 group-focus-within:text-white" : "text-gray-400 group-focus-within:text-gray-900")} />
@@ -499,7 +582,8 @@ export default function PublicMenuPage() {
             );
           })}
         </div>
-
+        </>
+        )}
 
         {/* Item Details Immersive Modal */}
         <AnimatePresence>

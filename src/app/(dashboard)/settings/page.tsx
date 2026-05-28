@@ -17,7 +17,9 @@ import {
   Layout,
   CheckCircle2,
   Star,
-  Image as ImageIcon
+  Image as ImageIcon,
+  Plus,
+  Trash2
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
@@ -34,6 +36,8 @@ export default function SettingsPage() {
     whatsapp: "",
     logoUrl: "",
     menuTheme: "dark",
+    menuType: "digital",
+    bookPages: [] as string[],
   });
 
   useEffect(() => {
@@ -44,6 +48,8 @@ export default function SettingsPage() {
         whatsapp: restaurantData.whatsapp || "",
         logoUrl: restaurantData.logoUrl || "",
         menuTheme: restaurantData.menuTheme || "dark",
+        menuType: restaurantData.menuType || "digital",
+        bookPages: restaurantData.bookPages || [],
       });
     }
   }, [restaurantData]);
@@ -141,6 +147,46 @@ export default function SettingsPage() {
     }
   };
 
+  const handlePageUpload = async (file: File) => {
+    if (!file || !user) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please upload an image file");
+      return;
+    }
+
+    const toastId = toast.loading("Uploading page...");
+    try {
+      const formPayload = new FormData();
+      formPayload.append("file", file);
+      formPayload.append("upload_preset", "od1sjbbu");
+      formPayload.append("api_key", "955253717999674");
+      formPayload.append("cloud_name", "da1edgeae1");
+
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
+        {
+          method: "POST",
+          body: formPayload,
+        }
+      );
+
+      const responseText = await response.text();
+      
+      if (!response.ok) {
+        throw new Error("Upload failed");
+      }
+
+      const data = JSON.parse(responseText);
+      
+      if (data.secure_url) {
+        setFormData(prev => ({ ...prev, bookPages: [...prev.bookPages, data.secure_url] }));
+        toast.success("Page added!", { id: toastId });
+      }
+    } catch (error: any) {
+      toast.error(`Upload failed: ${error.message}`, { id: toastId });
+    }
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -218,6 +264,101 @@ export default function SettingsPage() {
           {/* Right Column: Configuration Forms */}
           <div className="lg:col-span-2 space-y-8">
 
+            {/* Display Mode Section */}
+            <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-4 mb-10">
+                <div className="h-12 w-12 bg-purple-500/10 rounded-2xl flex items-center justify-center text-purple-500">
+                  <Layout className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-primary tracking-tight">Display Mode</h3>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Choose how your menu looks</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, menuType: "digital" })}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-8 rounded-[2rem] border-2 transition-all relative overflow-hidden",
+                    formData.menuType === "digital" ? "border-[#196F03] bg-brand-green/5 shadow-xl" : "border-gray-100 bg-gray-50 hover:bg-gray-100"
+                  )}
+                >
+                  <Layout className={cn("h-10 w-10 mb-4", formData.menuType === "digital" ? "text-[#196F03]" : "text-gray-400")} />
+                  <span className={cn("text-lg font-bold tracking-tight", formData.menuType === "digital" ? "text-[#196F03]" : "text-gray-500")}>Digital Menu</span>
+                  <span className="text-xs text-gray-400 font-medium text-center mt-2">Interactive items with categories and variants.</span>
+                  {formData.menuType === "digital" && <div className="absolute top-4 right-4 h-3 w-3 bg-[#196F03] rounded-full shadow-[0_0_10px_rgba(25,111,3,0.5)]"></div>}
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, menuType: "book" })}
+                  className={cn(
+                    "flex flex-col items-center justify-center p-8 rounded-[2rem] border-2 transition-all relative overflow-hidden",
+                    formData.menuType === "book" ? "border-brand-orange bg-brand-orange/5 shadow-xl" : "border-gray-100 bg-gray-50 hover:bg-gray-100"
+                  )}
+                >
+                  <ImageIcon className={cn("h-10 w-10 mb-4", formData.menuType === "book" ? "text-brand-orange" : "text-gray-400")} />
+                  <span className={cn("text-lg font-bold tracking-tight", formData.menuType === "book" ? "text-brand-orange" : "text-gray-500")}>Menu Book</span>
+                  <span className="text-xs text-gray-400 font-medium text-center mt-2">Swipeable pages acting like a physical menu.</span>
+                  {formData.menuType === "book" && <div className="absolute top-4 right-4 h-3 w-3 bg-brand-orange rounded-full shadow-[0_0_10px_rgba(249,115,22,0.5)]"></div>}
+                </button>
+              </div>
+
+              {formData.menuType === "book" && (
+                <div className="space-y-6 pt-8 border-t border-gray-100">
+                  <div>
+                    <h4 className="text-lg font-bold text-primary tracking-tight">Menu Pages</h4>
+                    <p className="text-xs font-medium text-gray-400 mt-1">Upload images to act as pages in your menu book.</p>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                    {formData.bookPages.map((pageUrl, idx) => (
+                      <div key={idx} className="relative group aspect-[3/4] rounded-2xl overflow-hidden shadow-sm border border-gray-200">
+                        <img src={pageUrl} alt={`Page ${idx + 1}`} className="h-full w-full object-cover" />
+                        <div className="absolute top-2 left-2 bg-black/50 backdrop-blur-md text-white text-[10px] font-bold px-2 py-1 rounded-lg">
+                          Page {idx + 1}
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const newPages = [...formData.bookPages];
+                            newPages.splice(idx, 1);
+                            setFormData({ ...formData, bookPages: newPages });
+                          }}
+                          className="absolute inset-0 bg-red-500/20 backdrop-blur-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-all text-white font-bold text-sm"
+                        >
+                          <Trash2 className="h-8 w-8 drop-shadow-md" />
+                        </button>
+                      </div>
+                    ))}
+                    
+                    <button
+                      type="button"
+                      onClick={() => document.getElementById("book-page-upload")?.click()}
+                      className="aspect-[3/4] rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 hover:bg-gray-100 transition-all flex flex-col items-center justify-center gap-2 group"
+                    >
+                      <div className="h-10 w-10 bg-white rounded-full flex items-center justify-center shadow-sm text-gray-400 group-hover:text-brand-orange transition-colors">
+                        <Plus className="h-5 w-5" />
+                      </div>
+                      <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Add Page</span>
+                    </button>
+                    <input
+                      type="file"
+                      id="book-page-upload"
+                      className="hidden"
+                      accept="image/*"
+                      multiple
+                      onChange={(e) => {
+                        const files = Array.from(e.target.files || []);
+                        files.forEach(file => handlePageUpload(file));
+                      }}
+                    />
+                  </div>
+                </div>
+              )}
+            </div>
 
             {/* General Information Section */}
             <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
