@@ -46,6 +46,18 @@ interface Category {
   name: string;
 }
 
+interface Variant {
+  id: string;
+  name: string;
+  price: string;
+}
+
+interface AddOn {
+  id: string;
+  name: string;
+  price: string;
+}
+
 interface MenuItem {
   id: string;
   categoryId: string;
@@ -57,6 +69,8 @@ interface MenuItem {
   tags: string[];
   dietaryType?: "veg" | "non-veg" | "none";
   isPopular?: boolean;
+  variants?: Variant[];
+  addons?: AddOn[];
 }
 
 export default function MenuPage() {
@@ -96,6 +110,8 @@ export default function MenuPage() {
     dietaryType: "none" as "veg" | "non-veg" | "none",
     isPopular: false,
     isAvailable: true,
+    variants: [] as Variant[],
+    addons: [] as AddOn[],
   });
 
   useEffect(() => {
@@ -550,7 +566,7 @@ export default function MenuPage() {
       }
       setIsItemModalOpen(false);
       setEditingItem(null);
-      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true });
+      setItemForm({ name: "", price: "", description: "", categoryId: "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true, variants: [], addons: [] });
     } catch (error: any) {
       toast.error("Database Error");
     } finally {
@@ -756,7 +772,7 @@ export default function MenuPage() {
               <button
                 onClick={() => {
                   setEditingItem(null);
-                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true });
+                  setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true, variants: [], addons: [] });
                   setIsItemModalOpen(true);
                 }}
                 className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#196F03] border border-transparent text-white text-xs font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all shadow-lg shadow-brand-green/20 whitespace-nowrap"
@@ -866,7 +882,9 @@ export default function MenuPage() {
                     ...item,
                     dietaryType: item.dietaryType || "none",
                     isPopular: item.isPopular || false,
-                    isAvailable: item.isAvailable !== undefined ? item.isAvailable : true
+                    isAvailable: item.isAvailable !== undefined ? item.isAvailable : true,
+                    variants: item.variants || [],
+                    addons: item.addons || []
                   });
                   setIsItemModalOpen(true);
                 }}
@@ -1097,6 +1115,58 @@ export default function MenuPage() {
                         placeholder="Image URL"
                       />
                     </div>
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Variants</label>
+                      <button type="button" onClick={() => setItemForm({ ...itemForm, variants: [...itemForm.variants, { id: Date.now().toString(), name: "", price: "" }] })} className="text-[10px] font-bold text-[#196F03] uppercase tracking-widest flex items-center gap-1"><Plus className="h-3 w-3" /> Add Variant</button>
+                    </div>
+                    {itemForm.variants.length > 0 && (
+                      <div className="space-y-3 mb-6">
+                        {itemForm.variants.map((variant, index) => (
+                          <div key={variant.id} className="flex gap-3 items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <input type="text" placeholder="e.g. Small" className="flex-1 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={variant.name} onChange={(e) => {
+                              const newVariants = [...itemForm.variants];
+                              newVariants[index].name = e.target.value;
+                              setItemForm({ ...itemForm, variants: newVariants });
+                            }} />
+                            <input type="number" placeholder="Price" className="w-24 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={variant.price} onChange={(e) => {
+                              const newVariants = [...itemForm.variants];
+                              newVariants[index].price = e.target.value;
+                              setItemForm({ ...itemForm, variants: newVariants });
+                            }} />
+                            <button type="button" onClick={() => setItemForm({ ...itemForm, variants: itemForm.variants.filter(v => v.id !== variant.id) })} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 className="h-4 w-4" /></button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="md:col-span-2">
+                    <div className="flex items-center justify-between mb-3">
+                      <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Add-ons</label>
+                      <button type="button" onClick={() => setItemForm({ ...itemForm, addons: [...itemForm.addons, { id: Date.now().toString(), name: "", price: "" }] })} className="text-[10px] font-bold text-[#196F03] uppercase tracking-widest flex items-center gap-1"><Plus className="h-3 w-3" /> Add Add-on</button>
+                    </div>
+                    {itemForm.addons.length > 0 && (
+                      <div className="space-y-3 mb-6">
+                        {itemForm.addons.map((addon, index) => (
+                          <div key={addon.id} className="flex gap-3 items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
+                            <input type="text" placeholder="e.g. Extra Cheese" className="flex-1 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.name} onChange={(e) => {
+                              const newAddons = [...itemForm.addons];
+                              newAddons[index].name = e.target.value;
+                              setItemForm({ ...itemForm, addons: newAddons });
+                            }} />
+                            <input type="number" placeholder="Price" className="w-24 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.price} onChange={(e) => {
+                              const newAddons = [...itemForm.addons];
+                              newAddons[index].price = e.target.value;
+                              setItemForm({ ...itemForm, addons: newAddons });
+                            }} />
+                            <button type="button" onClick={() => setItemForm({ ...itemForm, addons: itemForm.addons.filter(a => a.id !== addon.id) })} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 className="h-4 w-4" /></button>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
 
                   <div className="md:col-span-2">
