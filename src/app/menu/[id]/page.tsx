@@ -419,7 +419,6 @@ export default function PublicMenuPage() {
                         transition={{ delay: idx * 0.1 }}
                         onClick={() => setSelectedItem(item)}
                         className={cn(
-                        className={cn(
                           "group cursor-pointer relative transition-all duration-500 flex flex-col rounded-[2rem] overflow-hidden",
                           isDark ? "bg-[#1A1A1A] border border-white/5" : "bg-white shadow-xl border border-gray-100",
                           !item.isAvailable && "opacity-70"
