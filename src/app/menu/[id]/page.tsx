@@ -348,12 +348,13 @@ export default function PublicMenuPage() {
                           <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-white rounded-lg shadow-lg shrink-0 mt-1">Sold Out</span>
                         )}
                       </div>
-                      <div className="flex items-center mt-1">
-                         <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)] flex items-center">
-                           {item.variants && item.variants.length > 0 && <span className="text-[9px] font-bold uppercase mr-1 opacity-70">from</span>}
-                           ₹{item.price.replace(/[^0-9.]/g, '')}
-                         </span>
-                      </div>
+                      {(!item.variants || item.variants.length === 0) && (
+                        <div className="flex items-center mt-1">
+                           <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)] flex items-center">
+                             ₹{item.price.replace(/[^0-9.]/g, '')}
+                           </span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -457,10 +458,11 @@ export default function PublicMenuPage() {
                           )}
 
                           {/* Price Tag */}
-                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
-                            {item.variants && item.variants.length > 0 && <span className="text-[9px] font-bold uppercase mr-1.5 opacity-80">from</span>}
-                            ₹{item.price.replace(/[^0-9.]/g, '')}
-                          </div>
+                          {(!item.variants || item.variants.length === 0) && (
+                            <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
+                              ₹{item.price.replace(/[^0-9.]/g, '')}
+                            </div>
+                          )}
 
                           {/* Combo Thumbnails */}
                           {item.addons && item.addons.length > 0 && (
@@ -485,16 +487,7 @@ export default function PublicMenuPage() {
                           
 
 
-                          {item.variants && item.variants.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-3">
-                              {item.variants.map(v => (
-                                <div key={v.id} className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-lg border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
-                                  <span className="text-[10px] font-bold text-gray-400 uppercase">{v.name}</span>
-                                  <span className="text-[10px] font-black text-[#196F03]">₹{v.price}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
+
 
                           {!item.isAvailable && (
                             <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-red-500/10 rounded-md mt-3 w-fit">
