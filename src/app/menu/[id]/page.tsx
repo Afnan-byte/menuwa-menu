@@ -218,35 +218,53 @@ export default function PublicMenuPage() {
     );
   }  if (restaurant?.menuType === "book" && restaurant.bookPages && restaurant.bookPages.length > 0) {
     return (
-      <div className="fixed inset-0 bg-[#0A0A0A] overflow-hidden select-none z-[100] flex flex-col">
+      <div className="fixed inset-0 bg-[#0A0A0A] overflow-hidden select-none z-[100] flex flex-col p-4 md:p-8" style={{ perspective: "1500px" }}>
         <AnimatePresence initial={false} custom={direction}>
           <motion.img
             key={currentBookPage}
             src={restaurant.bookPages[currentBookPage]}
             custom={direction}
             variants={{
-              enter: (direction: number) => ({ x: direction > 0 ? "100%" : "-100%", opacity: 0 }),
-              center: { zIndex: 1, x: 0, opacity: 1 },
-              exit: (direction: number) => ({ zIndex: 0, x: direction < 0 ? "100%" : "-100%", opacity: 0 })
+              enter: (direction: number) => ({ 
+                rotateY: direction > 0 ? 90 : -90, 
+                opacity: 0,
+                scale: 0.85
+              }),
+              center: { 
+                zIndex: 1, 
+                rotateY: 0, 
+                opacity: 1,
+                scale: 1
+              },
+              exit: (direction: number) => ({ 
+                zIndex: 0, 
+                rotateY: direction < 0 ? 90 : -90, 
+                opacity: 0,
+                scale: 0.85
+              })
             }}
             initial="enter"
             animate="center"
             exit="exit"
-            transition={{ x: { type: "spring", stiffness: 300, damping: 30 }, opacity: { duration: 0.2 } }}
+            transition={{ 
+              rotateY: { type: "spring", stiffness: 200, damping: 25 }, 
+              opacity: { duration: 0.3 },
+              scale: { duration: 0.3 }
+            }}
             drag="x"
             dragConstraints={{ left: 0, right: 0 }}
-            dragElastic={1}
+            dragElastic={0.8}
             onDragEnd={(e, { offset, velocity }) => {
               const swipe = Math.abs(offset.x) * velocity.x;
-              if (swipe < -10000 && currentBookPage < restaurant.bookPages!.length - 1) {
+              if (swipe < -5000 && currentBookPage < restaurant.bookPages!.length - 1) {
                 setDirection(1);
                 setCurrentBookPage(p => p + 1);
-              } else if (swipe > 10000 && currentBookPage > 0) {
+              } else if (swipe > 5000 && currentBookPage > 0) {
                 setDirection(-1);
                 setCurrentBookPage(p => p - 1);
               }
             }}
-            className="absolute inset-0 w-full h-full object-cover sm:object-contain pointer-events-auto"
+            className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-2xl rounded-xl"
           />
         </AnimatePresence>
 
