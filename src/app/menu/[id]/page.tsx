@@ -93,40 +93,6 @@ export default function PublicMenuPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [dietaryFilter, setDietaryFilter] = useState<"all" | "veg" | "non-veg">("all");
 
-  const [selectedVariantId, setSelectedVariantId] = useState<string | null>(null);
-  const [selectedAddonIds, setSelectedAddonIds] = useState<Set<string>>(new Set());
-
-  useEffect(() => {
-    if (selectedItem) {
-      if (selectedItem.variants && selectedItem.variants.length > 0) {
-        setSelectedVariantId(selectedItem.variants[0].id);
-      } else {
-        setSelectedVariantId(null);
-      }
-      setSelectedAddonIds(new Set());
-    }
-  }, [selectedItem]);
-
-  const livePrice = useMemo(() => {
-    if (!selectedItem) return 0;
-    let basePrice = 0;
-    if (selectedVariantId && selectedItem.variants) {
-      const v = selectedItem.variants.find(v => v.id === selectedVariantId);
-      if (v) basePrice = parseFloat(v.price.replace(/[^0-9.]/g, '')) || 0;
-    } else {
-      basePrice = parseFloat(selectedItem.price.replace(/[^0-9.]/g, '')) || 0;
-    }
-
-    let addOnPrice = 0;
-    if (selectedItem.addons) {
-      selectedAddonIds.forEach(id => {
-        const a = selectedItem.addons!.find(a => a.id === id);
-        if (a) addOnPrice += parseFloat(a.price.replace(/[^0-9.]/g, '')) || 0;
-      });
-    }
-    return basePrice + addOnPrice;
-  }, [selectedItem, selectedVariantId, selectedAddonIds]);
-
   const containerRef = useRef(null);
   const { scrollY } = useScroll();
 
@@ -492,6 +458,12 @@ export default function PublicMenuPage() {
                             {item.name}
                           </h3>
                           
+                          {item.variants && item.variants.length > 0 && (
+                            <div className="text-[9px] text-gray-500 font-medium truncate mb-1">
+                              {item.variants.map(v => `${v.name} ₹${v.price}`).join(" • ")}
+                            </div>
+                          )}
+
                           {!item.isAvailable && (
                             <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded-md mt-1 w-fit">
                               Sold Out
@@ -560,27 +532,16 @@ export default function PublicMenuPage() {
                         <h3 className={cn("text-xs font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Size Options</h3>
                         <div className="grid gap-2">
                           {selectedItem.variants.map((variant) => (
-                            <button
+                            <div
                               key={variant.id}
-                              onClick={() => setSelectedVariantId(variant.id)}
                               className={cn(
-                                "flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
-                                selectedVariantId === variant.id
-                                  ? "border-[#196F03] bg-[#196F03]/10"
-                                  : isDark ? "border-white/10 hover:border-white/20" : "border-gray-200 hover:border-gray-300"
+                                "flex items-center justify-between p-4 rounded-2xl border",
+                                isDark ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50"
                               )}
                             >
-                              <div className="flex items-center gap-3">
-                                <div className={cn(
-                                  "h-4 w-4 rounded-full border-2 flex items-center justify-center transition-all",
-                                  selectedVariantId === variant.id ? "border-[#196F03]" : "border-gray-400"
-                                )}>
-                                  {selectedVariantId === variant.id && <div className="h-2 w-2 rounded-full bg-[#196F03]" />}
-                                </div>
-                                <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{variant.name}</span>
-                              </div>
+                              <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{variant.name}</span>
                               <span className="text-sm font-bold text-[#196F03]">₹{variant.price}</span>
-                            </button>
+                            </div>
                           ))}
                         </div>
                       </div>
@@ -590,51 +551,22 @@ export default function PublicMenuPage() {
                       <div className="pt-4 space-y-3">
                         <h3 className={cn("text-xs font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Add-ons</h3>
                         <div className="grid gap-2">
-                          {selectedItem.addons.map((addon) => {
-                            const isSelected = selectedAddonIds.has(addon.id);
-                            return (
-                              <button
-                                key={addon.id}
-                                onClick={() => {
-                                  const newSet = new Set(selectedAddonIds);
-                                  if (isSelected) newSet.delete(addon.id);
-                                  else newSet.add(addon.id);
-                                  setSelectedAddonIds(newSet);
-                                }}
-                                className={cn(
-                                  "flex items-center justify-between p-4 rounded-2xl border transition-all duration-300",
-                                  isSelected
-                                    ? "border-[#196F03] bg-[#196F03]/10"
-                                    : isDark ? "border-white/10 hover:border-white/20" : "border-gray-200 hover:border-gray-300"
-                                )}
-                              >
-                                <div className="flex items-center gap-3">
-                                  <div className={cn(
-                                    "h-4 w-4 rounded-md border-2 flex items-center justify-center transition-all",
-                                    isSelected ? "border-[#196F03] bg-[#196F03]" : "border-gray-400"
-                                  )}>
-                                    <div className={cn("h-full w-full rounded-sm flex items-center justify-center transition-all", isSelected ? "bg-[#196F03]" : "bg-transparent")}>
-                                       {isSelected && <svg className="w-2.5 h-2.5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={3} d="M5 13l4 4L19 7" /></svg>}
-                                    </div>
-                                  </div>
-                                  <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{addon.name}</span>
-                                </div>
-                                <span className="text-sm font-bold text-[#196F03]">+₹{addon.price}</span>
-                              </button>
-                            );
-                          })}
+                          {selectedItem.addons.map((addon) => (
+                            <div
+                              key={addon.id}
+                              className={cn(
+                                "flex items-center justify-between p-4 rounded-2xl border",
+                                isDark ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50"
+                              )}
+                            >
+                              <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{addon.name}</span>
+                              <span className="text-sm font-bold text-[#196F03]">+₹{addon.price}</span>
+                            </div>
+                          ))}
                         </div>
                       </div>
                     )}
 
-
-                  </div>
-
-                  <div className={cn("pt-6 mt-4 shrink-0 border-t", isDark ? "border-white/5" : "border-gray-100")}>
-                    <div className="flex items-baseline justify-between px-2">
-                      <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">Total Value</span>
-                      <span className={cn("text-4xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>₹{livePrice}</span>
-                    </div>
                   </div>
                 </div>
               </motion.div>
