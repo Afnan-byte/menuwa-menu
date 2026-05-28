@@ -55,7 +55,7 @@ interface Variant {
 interface AddOn {
   id: string;
   name: string;
-  price: string;
+  imageUrl?: string;
 }
 
 interface MenuItem {
@@ -1145,21 +1145,28 @@ export default function MenuPage() {
 
                   <div className="md:col-span-2">
                     <div className="flex items-center justify-between mb-3">
-                      <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Add-ons</label>
-                      <button type="button" onClick={() => setItemForm({ ...itemForm, addons: [...itemForm.addons, { id: Date.now().toString(), name: "", price: "" }] })} className="text-[10px] font-bold text-[#196F03] uppercase tracking-widest flex items-center gap-1"><Plus className="h-3 w-3" /> Add Add-on</button>
+                      <label className="text-[10px] font-bold text-gray-300 uppercase tracking-widest ml-1">Included Items (Combo)</label>
+                      <button type="button" onClick={() => setItemForm({ ...itemForm, addons: [...itemForm.addons, { id: Date.now().toString(), name: "", imageUrl: "" }] })} className="text-[10px] font-bold text-[#196F03] uppercase tracking-widest flex items-center gap-1"><Plus className="h-3 w-3" /> Add Item</button>
                     </div>
                     {itemForm.addons.length > 0 && (
                       <div className="space-y-3 mb-6">
                         {itemForm.addons.map((addon, index) => (
                           <div key={addon.id} className="flex gap-3 items-center bg-gray-50 p-3 rounded-2xl border border-gray-100">
-                            <input type="text" placeholder="e.g. Extra Cheese" className="flex-1 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.name} onChange={(e) => {
+                            {addon.imageUrl ? (
+                              <img src={addon.imageUrl} alt="" className="h-10 w-10 rounded-xl object-cover shrink-0" />
+                            ) : (
+                              <div className="h-10 w-10 rounded-xl bg-gray-200 flex items-center justify-center shrink-0">
+                                <Utensils className="h-4 w-4 text-gray-400" />
+                              </div>
+                            )}
+                            <input type="text" placeholder="e.g. French Fries" className="w-1/3 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.name} onChange={(e) => {
                               const newAddons = [...itemForm.addons];
                               newAddons[index].name = e.target.value;
                               setItemForm({ ...itemForm, addons: newAddons });
                             }} />
-                            <input type="number" placeholder="Price" className="w-24 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.price} onChange={(e) => {
+                            <input type="text" placeholder="Image URL" className="flex-1 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.imageUrl || ""} onChange={(e) => {
                               const newAddons = [...itemForm.addons];
-                              newAddons[index].price = e.target.value;
+                              newAddons[index].imageUrl = e.target.value;
                               setItemForm({ ...itemForm, addons: newAddons });
                             }} />
                             <button type="button" onClick={() => setItemForm({ ...itemForm, addons: itemForm.addons.filter(a => a.id !== addon.id) })} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 className="h-4 w-4" /></button>

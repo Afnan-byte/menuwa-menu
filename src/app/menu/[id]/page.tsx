@@ -46,7 +46,7 @@ interface Variant {
 interface AddOn {
   id: string;
   name: string;
-  price: string;
+  imageUrl?: string;
 }
 
 interface MenuItem {
@@ -324,6 +324,16 @@ export default function PublicMenuPage() {
                     
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
                     
+                    {item.addons && item.addons.length > 0 && (
+                      <div className="absolute top-4 right-4 z-20 flex -space-x-2">
+                        {item.addons.slice(0, 3).map((addon, i) => (
+                          addon.imageUrl ? (
+                            <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-8 w-8 rounded-full border-2 border-white/20 object-cover shadow-lg" style={{ zIndex: 10 - i }} />
+                          ) : null
+                        ))}
+                      </div>
+                    )}
+                    
                     <div className="absolute top-4 left-4 z-20">
                       <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
                         <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
@@ -446,10 +456,21 @@ export default function PublicMenuPage() {
                           )}
 
                           {/* Price Tag */}
-                          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-2 py-1 rounded-lg font-bold text-[10px] shadow-lg shadow-brand-green/30 flex items-center">
+                          <div className="absolute bottom-2 right-2 bg-[#196F03] text-white px-2 py-1 rounded-lg font-bold text-[10px] shadow-lg shadow-brand-green/30 flex items-center z-20">
                             {item.variants && item.variants.length > 0 && <span className="text-[8px] font-bold uppercase mr-1 opacity-80">from</span>}
                             ₹{item.price.replace(/[^0-9.]/g, '')}
                           </div>
+
+                          {/* Combo Thumbnails */}
+                          {item.addons && item.addons.length > 0 && (
+                            <div className="absolute bottom-2 left-2 z-20 flex -space-x-1.5">
+                              {item.addons.slice(0, 3).map((addon, i) => (
+                                addon.imageUrl ? (
+                                  <img key={addon.id} src={addon.imageUrl} alt={addon.name} className="h-6 w-6 rounded-full border border-white/50 object-cover shadow-md" style={{ zIndex: 10 - i }} />
+                                ) : null
+                              ))}
+                            </div>
+                          )}
                         </div>
 
                         {/* Content Area */}
@@ -549,18 +570,24 @@ export default function PublicMenuPage() {
 
                     {selectedItem.addons && selectedItem.addons.length > 0 && (
                       <div className="pt-4 space-y-3">
-                        <h3 className={cn("text-xs font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Add-ons</h3>
+                        <h3 className={cn("text-xs font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Included in this meal</h3>
                         <div className="grid gap-2">
                           {selectedItem.addons.map((addon) => (
                             <div
                               key={addon.id}
                               className={cn(
-                                "flex items-center justify-between p-4 rounded-2xl border",
+                                "flex items-center gap-4 p-3 rounded-2xl border",
                                 isDark ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50"
                               )}
                             >
+                              {addon.imageUrl ? (
+                                <img src={addon.imageUrl} alt={addon.name} className="h-12 w-12 rounded-xl object-cover shrink-0 shadow-sm border border-white/5" />
+                              ) : (
+                                <div className={cn("h-12 w-12 rounded-xl flex items-center justify-center shrink-0", isDark ? "bg-white/5 border border-white/5" : "bg-gray-100")}>
+                                  <Utensils className="h-5 w-5 text-gray-400" />
+                                </div>
+                              )}
                               <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{addon.name}</span>
-                              <span className="text-sm font-bold text-[#196F03]">+₹{addon.price}</span>
                             </div>
                           ))}
                         </div>

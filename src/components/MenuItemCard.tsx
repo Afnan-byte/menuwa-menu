@@ -15,7 +15,7 @@ interface MenuItemProps {
     tags?: string[];
     dietaryType?: "veg" | "non-veg" | "none";
     variants?: { id: string; name: string; price: string }[];
-    addons?: { id: string; name: string; price: string }[];
+    addons?: { id: string; name: string; imageUrl?: string }[];
   };
   onEdit: () => void;
   onDelete: () => void;
