@@ -360,6 +360,8 @@ export default function MenuPage() {
         const imgIdx = getIdx("Image");
         const dietIdx = getIdx("Dietary");
         const popIdx = getIdx("Popular");
+        const varIdx = getIdx("Variants");
+        const addonsIdx = getIdx("Included Items") !== -1 ? getIdx("Included Items") : getIdx("Addons");
 
         if (catIdx === -1 || nameIdx === -1 || priceIdx === -1) {
           toast.error("CSV missing required headers: Category, Name, Price", { id: toastId });
@@ -412,6 +414,29 @@ export default function MenuPage() {
             ? rawImageUrl 
             : "";
 
+          let variants: Variant[] = [];
+          if (varIdx !== -1 && row[varIdx]) {
+            const vParts = row[varIdx].split('|');
+            variants = vParts.map(v => {
+              const [name, price] = v.split(':');
+              if (!name || !price) return null;
+              return { id: Math.random().toString(36).substr(2, 9), name: name.trim(), price: price.trim() };
+            }).filter(Boolean) as Variant[];
+          }
+
+          let addons: AddOn[] = [];
+          if (addonsIdx !== -1 && row[addonsIdx]) {
+            const aParts = row[addonsIdx].split('|');
+            addons = aParts.map(a => {
+              const parts = a.split(':');
+              if (parts.length < 1) return null;
+              const name = parts[0];
+              const img = parts.slice(1).join(':').trim();
+              if (!name) return null;
+              return { id: Math.random().toString(36).substr(2, 9), name: name.trim(), imageUrl: img };
+            }).filter(Boolean) as AddOn[];
+          }
+
           const itemData = {
             restaurantId: user.uid,
             categoryId,
@@ -423,6 +448,8 @@ export default function MenuPage() {
             isPopular: row[popIdx]?.toLowerCase().trim() === "true",
             isAvailable: true,
             tags: [],
+            variants,
+            addons,
             createdAt: new Date().toISOString(),
           };
 
