@@ -183,52 +183,46 @@ export default function MenuPage() {
 
   const [isItemImageDragging, setIsItemImageDragging] = useState(false);
 
+  const uploadToCloudinary = async (file: File): Promise<string> => {
+    if (!file.type.startsWith("image/")) {
+      throw new Error("Please upload an image file");
+    }
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "od1sjbbu");
+    formData.append("api_key", "955253717999674");
+    formData.append("cloud_name", "da1edgeae1");
+
+    const response = await fetch(
+      `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
+      { method: "POST", body: formData }
+    );
+    const responseText = await response.text();
+    if (!response.ok) {
+      console.error("Cloudinary Raw Error:", responseText);
+      let errorMessage = "Upload failed";
+      try {
+        const errorData = JSON.parse(responseText);
+        errorMessage = errorData.error?.message || errorMessage;
+      } catch (e) {
+        errorMessage = responseText;
+      }
+      throw new Error(errorMessage);
+    }
+    const data = JSON.parse(responseText);
+    if (!data.secure_url) throw new Error("No URL returned");
+    return data.secure_url;
+  };
+
   const handleItemImageUpload = async (file: File) => {
     if (!file || !user) return;
-    if (!file.type.startsWith("image/")) {
-      toast.error("Please upload an image file");
-      return;
-    }
-
     const toastId = toast.loading("Uploading to Cloudinary...");
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "od1sjbbu");
-      formData.append("api_key", "955253717999674");
-      formData.append("cloud_name", "da1edgeae1");
-
-      const response = await fetch(
-        `https://api.cloudinary.com/v1_1/da1edgeae1/image/upload`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
-
-      const responseText = await response.text();
-      
-      if (!response.ok) {
-        console.error("Cloudinary Raw Error:", responseText);
-        let errorMessage = "Upload failed";
-        try {
-          const errorData = JSON.parse(responseText);
-          errorMessage = errorData.error?.message || errorMessage;
-        } catch (e) {
-          errorMessage = responseText;
-        }
-        throw new Error(errorMessage);
-      }
-
-      const data = JSON.parse(responseText);
-      
-      if (data.secure_url) {
-        setItemForm(prev => ({ ...prev, imageUrl: data.secure_url }));
-        toast.success("Dish photo uploaded!", { id: toastId });
-      }
+      const url = await uploadToCloudinary(file);
+      setItemForm(prev => ({ ...prev, imageUrl: url }));
+      toast.success("Dish photo uploaded!", { id: toastId });
     } catch (error: any) {
-      console.error("Cloudinary Full Error:", error);
-      toast.error(`Upload failed: ${error.message || 'Check Cloudinary settings'}`, { id: toastId });
+      toast.error(`Upload failed: ${error.message}`, { id: toastId });
     }
   };
 
@@ -1155,20 +1149,36 @@ export default function MenuPage() {
                             {addon.imageUrl ? (
                               <img src={addon.imageUrl} alt="" className="h-10 w-10 rounded-xl object-cover shrink-0" />
                             ) : (
-                              <div className="h-10 w-10 rounded-xl bg-gray-200 flex items-center justify-center shrink-0">
-                                <Utensils className="h-4 w-4 text-gray-400" />
-                              </div>
+                              <label className="h-10 w-10 rounded-xl bg-gray-200 flex items-center justify-center shrink-0 cursor-pointer hover:bg-gray-300 transition-colors">
+                                <Plus className="h-4 w-4 text-gray-500" />
+                                <input type="file" className="hidden" accept="image/*" onChange={async (e) => {
+                                  const file = e.target.files?.[0];
+                                  if (!file) return;
+                                  const toastId = toast.loading("Uploading image...");
+                                  try {
+                                    const url = await uploadToCloudinary(file);
+                                    const newAddons = [...itemForm.addons];
+                                    newAddons[index].imageUrl = url;
+                                    setItemForm({ ...itemForm, addons: newAddons });
+                                    toast.success("Image uploaded!", { id: toastId });
+                                  } catch (error: any) {
+                                    toast.error(error.message, { id: toastId });
+                                  }
+                                }} />
+                              </label>
                             )}
                             <input type="text" placeholder="e.g. French Fries" className="w-1/3 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.name} onChange={(e) => {
                               const newAddons = [...itemForm.addons];
                               newAddons[index].name = e.target.value;
                               setItemForm({ ...itemForm, addons: newAddons });
                             }} />
-                            <input type="text" placeholder="Image URL" className="flex-1 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.imageUrl || ""} onChange={(e) => {
-                              const newAddons = [...itemForm.addons];
-                              newAddons[index].imageUrl = e.target.value;
-                              setItemForm({ ...itemForm, addons: newAddons });
-                            }} />
+                            <div className="flex-1 relative">
+                              <input type="text" placeholder="Or paste image URL" className="w-full px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={addon.imageUrl || ""} onChange={(e) => {
+                                const newAddons = [...itemForm.addons];
+                                newAddons[index].imageUrl = e.target.value;
+                                setItemForm({ ...itemForm, addons: newAddons });
+                              }} />
+                            </div>
                             <button type="button" onClick={() => setItemForm({ ...itemForm, addons: itemForm.addons.filter(a => a.id !== addon.id) })} className="p-3 text-red-500 hover:bg-red-50 rounded-xl transition-all"><Trash2 className="h-4 w-4" /></button>
                           </div>
                         ))}
