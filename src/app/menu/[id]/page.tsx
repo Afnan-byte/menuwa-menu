@@ -334,12 +334,7 @@ export default function PublicMenuPage() {
                       </div>
                     )}
                     
-                    <div className="absolute top-4 left-4 z-20">
-                      <div className="flex items-center gap-1.5 bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/20">
-                        <Star className="h-3 w-3 text-yellow-400 fill-yellow-400" />
-                        <span className="text-[9px] font-bold text-white uppercase tracking-widest">Bestseller</span>
-                      </div>
-                    </div>
+
 
                     <div className="absolute bottom-5 left-5 right-5 flex flex-col gap-2 z-20">
                       <div className="flex items-start gap-2 justify-between">
