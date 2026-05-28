@@ -75,7 +75,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
               className={cn(
                 "flex items-center justify-between px-5 py-3.5 rounded-2xl transition-all group",
                 isActive
-                  ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/20 scale-[1.02]"
+                  ? "bg-[#196F03] text-white shadow-xl scale-[1.02]"
                   : "text-gray-500 hover:bg-gray-50 hover:text-primary"
               )}
             >

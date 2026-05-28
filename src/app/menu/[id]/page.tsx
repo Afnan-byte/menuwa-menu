@@ -344,7 +344,7 @@ export default function PublicMenuPage() {
                         )}
                       </div>
                       <div className="flex items-center mt-1">
-                         <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl shadow-[0_4px_20px_rgba(25,111,3,0.3)] flex items-center">
+                         <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl flex items-center">
                            ₹{item.price.replace(/[^0-9.]/g, '')}
                          </span>
                       </div>
@@ -451,7 +451,7 @@ export default function PublicMenuPage() {
                           )}
 
                           {/* Price Tag */}
-                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm shadow-[0_4px_20px_rgba(25,111,3,0.4)] flex items-center z-20">
+                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm flex items-center z-20">
                             ₹{item.price.replace(/[^0-9.]/g, '')}
                           </div>
 

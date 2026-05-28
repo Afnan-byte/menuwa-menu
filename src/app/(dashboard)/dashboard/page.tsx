@@ -70,7 +70,7 @@ export default function DashboardPage() {
             </Link>
             <Link 
               href="/qr" 
-              className="flex items-center gap-3 bg-[#196F03] text-white px-8 py-4 rounded-2xl text-xs font-bold shadow-xl shadow-brand-green/20 hover:scale-105 transition-all uppercase tracking-widest"
+              className="flex items-center gap-3 bg-[#196F03] text-white px-8 py-4 rounded-2xl text-xs font-bold shadow-xl hover:scale-105 transition-all uppercase tracking-widest"
             >
               <QrCode className="h-4 w-4" />
               QR Code

@@ -28,7 +28,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       className={cn(
-        "bg-white rounded-[2rem] p-4 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl hover:shadow-brand-green/10 font-sans flex flex-col",
+        "bg-white rounded-[2rem] p-4 shadow-xl shadow-gray-200/50 relative group transition-all hover:shadow-2xl font-sans flex flex-col",
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
@@ -47,7 +47,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         )}
 
         {/* Price Badge (Green pill at bottom right of image) */}
-        <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg shadow-brand-green/30">
+        <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg ">
           ₹{item.price.replace(/[^0-9.]/g, '')}
         </div>
 

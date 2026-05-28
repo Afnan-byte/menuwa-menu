@@ -676,7 +676,7 @@ export default function MenuPage() {
                         onClick={() => setActiveCategory("all")}
                         className={cn(
                           "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
-                          activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                          activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                         )}
                       >
                         <div className="flex items-center gap-3">
@@ -694,7 +694,7 @@ export default function MenuPage() {
                             onClick={() => setActiveCategory(cat.id)}
                             className={cn(
                               "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
-                              activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl shadow-brand-green/30" : "hover:bg-gray-50 text-gray-500"
+                              activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                             )}
                           >
                             <div className="flex items-center gap-3">
@@ -724,7 +724,7 @@ export default function MenuPage() {
                 <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
                   <button
                     onClick={() => setIsPreviewOpen(true)}
-                    className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] hover:shadow-brand-green/20 transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] transition-all flex items-center justify-center gap-2"
                   >
                     <Eye className="h-3 w-3" />
                     View Live Menu
@@ -796,7 +796,7 @@ export default function MenuPage() {
                   setItemForm({ name: "", price: "", description: "", categoryId: categories[0]?.id || "", imageUrl: "", tags: [], dietaryType: "none", isPopular: false, isAvailable: true, variants: [], addons: [] });
                   setIsItemModalOpen(true);
                 }}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#196F03] border border-transparent text-white text-xs font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all shadow-lg shadow-brand-green/20 whitespace-nowrap"
+                className="w-full flex items-center justify-center gap-2 px-6 py-3 bg-[#196F03] border border-transparent text-white text-xs font-bold rounded-2xl hover:bg-green-700 hover:scale-105 transition-all shadow-lg whitespace-nowrap"
               >
                 <Plus className="h-4 w-4" />
                 Add Dish
@@ -1221,7 +1221,7 @@ export default function MenuPage() {
 
                 <div className="flex gap-6 pt-10 border-t border-gray-50">
                   <button type="button" onClick={() => setIsItemModalOpen(false)} className="flex-1 py-5 font-bold text-gray-400">Discard</button>
-                  <button type="submit" disabled={isSaving} className="flex-[2] py-5 bg-[#196F03] text-white font-bold rounded-[1.5rem] shadow-xl shadow-brand-green/20 flex items-center justify-center gap-3">
+                  <button type="submit" disabled={isSaving} className="flex-[2] py-5 bg-[#196F03] text-white font-bold rounded-[1.5rem] shadow-xl flex items-center justify-center gap-3">
                     {isSaving ? <Loader2 className="h-6 w-6 animate-spin" /> : (editingItem ? "Save Changes" : "Create Item")}
                   </button>
                 </div>
