@@ -483,9 +483,7 @@ export default function PublicMenuPage() {
                             )}
                           </h3>
                           
-                          <p className="text-sm text-gray-500 font-medium mt-1.5 line-clamp-2 leading-relaxed">
-                            {item.description}
-                          </p>
+
 
                           {item.variants && item.variants.length > 0 && (
                             <div className="flex flex-wrap gap-2 mt-3">
