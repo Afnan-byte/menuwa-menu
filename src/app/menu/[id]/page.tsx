@@ -365,7 +365,7 @@ export default function PublicMenuPage() {
             />
           </div>
 
-          <div className={cn("grid grid-cols-2 sm:grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
+          <div className={cn("grid grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
