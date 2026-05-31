@@ -2,15 +2,6 @@
 
 import { useState, useEffect, useMemo, useDeferredValue } from "react";
 import { useParams } from "next/navigation";
-import { db } from "@/lib/firebase-db";
-import {
-  doc,
-  getDoc,
-  collection,
-  query,
-  where,
-  getDocs,
-} from "firebase/firestore";
 import Image from "next/image";
 import {
   Utensils,
@@ -232,35 +223,114 @@ export default function PublicMenuPage() {
 
   const fetchMenu = async () => {
     try {
-      let resSnap;
+      const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
+      const baseUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
+
+      // Step 1: find restaurant by menuId (6-char) or direct doc ID
+      let restaurantId: string | null = null;
+      let restaurantData: Restaurant | null = null;
+
       if (id && (id as string).length === 6) {
-        const q = query(collection(db, "restaurants"), where("menuId", "==", id));
-        const querySnap = await getDocs(q);
-        if (!querySnap.empty) resSnap = querySnap.docs[0];
+        // Query by menuId field
+        const queryRes = await fetch(`${baseUrl}:runQuery`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            structuredQuery: {
+              from: [{ collectionId: "restaurants" }],
+              where: {
+                fieldFilter: {
+                  field: { fieldPath: "menuId" },
+                  op: "EQUAL",
+                  value: { stringValue: id },
+                },
+              },
+              limit: 1,
+            },
+          }),
+        });
+        const queryDocs = await queryRes.json();
+        const found = queryDocs[0]?.document;
+        if (found) {
+          restaurantId = found.name.split("/").pop();
+          restaurantData = firestoreDocToObj(found.fields) as Restaurant;
+        }
       } else {
-        resSnap = await getDoc(doc(db, "restaurants", id as string));
+        // Direct document lookup
+        const res = await fetch(`${baseUrl}/restaurants/${id}`);
+        if (res.ok) {
+          const doc = await res.json();
+          restaurantId = (id as string);
+          restaurantData = firestoreDocToObj(doc.fields) as Restaurant;
+        }
       }
 
-      if (resSnap && resSnap.exists()) {
-        const data = resSnap.data() as Restaurant;
-        setRestaurant(data);
-        const restaurantId = resSnap.id;
+      if (!restaurantId || !restaurantData) return;
+      setRestaurant(restaurantData);
 
-        // FIX: parallel fetches instead of sequential awaits
-        const [catSnap, itemSnap] = await Promise.all([
-          getDocs(query(collection(db, "categories"), where("restaurantId", "==", restaurantId))),
-          getDocs(query(collection(db, "items"), where("restaurantId", "==", restaurantId))),
-        ]);
+      // Step 2: fetch categories and items in parallel — pure REST, no SDK
+      const [catRes, itemRes] = await Promise.all([
+        fetch(`${baseUrl}:runQuery`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            structuredQuery: {
+              from: [{ collectionId: "categories" }],
+              where: { fieldFilter: { field: { fieldPath: "restaurantId" }, op: "EQUAL", value: { stringValue: restaurantId } } },
+            },
+          }),
+        }),
+        fetch(`${baseUrl}:runQuery`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            structuredQuery: {
+              from: [{ collectionId: "items" }],
+              where: { fieldFilter: { field: { fieldPath: "restaurantId" }, op: "EQUAL", value: { stringValue: restaurantId } } },
+            },
+          }),
+        }),
+      ]);
 
-        setCategories(catSnap.docs.map((d) => ({ id: d.id, ...d.data() } as Category)));
-        setItems(itemSnap.docs.map((d) => ({ id: d.id, ...d.data() } as MenuItem)));
-      }
+      const [catDocs, itemDocs] = await Promise.all([catRes.json(), itemRes.json()]);
+
+      setCategories(
+        catDocs
+          .filter((d: any) => d.document)
+          .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as Category))
+      );
+      setItems(
+        itemDocs
+          .filter((d: any) => d.document)
+          .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as MenuItem))
+      );
     } catch (error) {
       console.error(error);
     } finally {
       setLoading(false);
     }
   };
+
+  // Converts Firestore REST field map to a plain JS object
+  function firestoreDocToObj(fields: Record<string, any>): Record<string, any> {
+    if (!fields) return {};
+    const result: Record<string, any> = {};
+    for (const [key, val] of Object.entries(fields)) {
+      result[key] = firestoreValueToJs(val);
+    }
+    return result;
+  }
+
+  function firestoreValueToJs(val: any): any {
+    if (val.stringValue !== undefined) return val.stringValue;
+    if (val.integerValue !== undefined) return Number(val.integerValue);
+    if (val.doubleValue !== undefined) return val.doubleValue;
+    if (val.booleanValue !== undefined) return val.booleanValue;
+    if (val.nullValue !== undefined) return null;
+    if (val.arrayValue) return (val.arrayValue.values || []).map(firestoreValueToJs);
+    if (val.mapValue) return firestoreDocToObj(val.mapValue.fields || {});
+    return null;
+  }
 
   // FIX: uses deferredQuery — input stays instant, filter runs on idle
   const filteredItems = useMemo(() => {
@@ -372,10 +442,10 @@ export default function PublicMenuPage() {
                   className="flex-shrink-0 w-64 group cursor-pointer snap-center pl-2"
                 >
                   <div className={cn(
-                    "relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500",
+                    "relative rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500",
                     isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100",
                     !item.isAvailable && "grayscale opacity-60"
-                  )}>
+                  )} style={{ paddingBottom: "133%" /* 3:4 ratio */ }}>
                     {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
                       <Image
                         src={item.imageUrl}
@@ -517,13 +587,16 @@ export default function PublicMenuPage() {
                         )}
                         style={{ animationDelay: `${Math.min(idx, 3) * 60}ms` }}
                       >
-                        {/* Image */}
-                        <div className={cn("relative w-full overflow-hidden", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")} style={{ aspectRatio: "4/3" }}>
+                        {/* Image — paddingBottom trick guarantees height on all browsers */}
+                        <div
+                          className={cn("relative w-full overflow-hidden", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}
+                          style={{ paddingBottom: "75%" /* 4:3 ratio = 3/4 = 75% */ }}
+                        >
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
-                            sizes="(max-width: 448px) 100vw, 448px"
+                            sizes="(max-width: 480px) 100vw, (max-width: 768px) 448px, 448px"
                             loading="lazy"
                             className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
                           />
@@ -622,12 +695,12 @@ export default function PublicMenuPage() {
 
                     {/* Modal image — FIX: Next Image instead of bare <img> */}
                     {selectedItem.imageUrl && (selectedItem.imageUrl.startsWith("http") || selectedItem.imageUrl.startsWith("/")) && (
-                      <div className="relative w-full overflow-hidden mb-6 rounded-2xl" style={{ aspectRatio: "4/3" }}>
+                      <div className="relative w-full overflow-hidden mb-6 rounded-2xl" style={{ paddingBottom: "75%" }}>
                         <Image
                           src={selectedItem.imageUrl}
                           alt={selectedItem.name}
                           fill
-                          sizes="(max-width: 448px) 100vw, 448px"
+                          sizes="(max-width: 480px) 100vw, 448px"
                           className="object-cover"
                           priority
                         />

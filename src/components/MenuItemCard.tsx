@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import { Utensils, Edit2, Trash2, Leaf, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
@@ -34,11 +35,13 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
     >
       {/* Conditionally render Image Container */}
       {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
-        <div className="relative w-full aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
-          <img
-            src={item.imageUrl}
+        <div className="relative w-full mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100" style={{ paddingBottom: "75%" }}>
+          <Image
+            src={item.imageUrl!}
             alt={item.name}
-            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+            fill
+            sizes="(max-width: 640px) 50vw, 320px"
+            className="object-cover group-hover:scale-105 transition-transform duration-500"
           />
 
           <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg ">
