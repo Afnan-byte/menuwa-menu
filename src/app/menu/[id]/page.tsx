@@ -365,36 +365,36 @@ export default function PublicMenuPage() {
             />
           </div>
 
-          <div className="flex items-center gap-3 overflow-x-auto no-scrollbar pb-2 pt-1 px-1 -mx-1">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pb-2 pt-1 px-1 -mx-1">
             <button
               onClick={() => setActiveCategory("all")}
               className={cn(
-                "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
+                "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                 activeCategory === "all"
-                  ? "bg-[#196F03] text-white border-[#196F03] scale-105"
+                  ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
                   : isDark
                     ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
                     : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
               )}
             >
-              <LayoutGrid className={cn("h-4 w-4", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
-              All
+              <LayoutGrid className={cn("h-4 w-4 shrink-0", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
+              <span className="truncate">All</span>
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
                 className={cn(
-                  "flex-shrink-0 flex items-center gap-2.5 px-6 py-3.5 rounded-full border text-[11px] font-bold uppercase tracking-widest transition-all duration-300",
+                  "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                   activeCategory === cat.id
-                    ? "bg-[#196F03] text-white border-[#196F03] scale-105"
+                    ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
                     : isDark
                       ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
                       : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
                 )}
               >
-                {activeCategory === cat.id && <Utensils className="h-4 w-4 text-white" />}
-                {cat.name}
+                {activeCategory === cat.id && <Utensils className="h-4 w-4 text-white shrink-0" />}
+                <span className="truncate">{cat.name}</span>
               </button>
             ))}
           </div>
