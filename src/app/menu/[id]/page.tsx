@@ -401,7 +401,7 @@ export default function PublicMenuPage() {
         </div>
 
         {/* Top Selling Products - Vertical Cards */}
-        {featuredItems.length > 0 && searchQuery === "" && (
+        {featuredItems.length > 0 && searchQuery === "" && activeCategory === "all" && (
           <section className="pt-6 pb-2">
             <div className="px-6 mb-5 flex items-center justify-between">
               <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
