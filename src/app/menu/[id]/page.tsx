@@ -390,8 +390,7 @@ export default function PublicMenuPage() {
                   setActiveCategory(cat.id);
                   const el = document.getElementById(`category-${cat.id}`);
                   if (el) {
-                    const y = el.getBoundingClientRect().top + window.scrollY - 100;
-                    window.scrollTo({ top: y, behavior: 'smooth' });
+                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
                   }
                 }}
                 className={cn(
