@@ -17,7 +17,7 @@ import {
 import { useAuth } from "./auth-provider";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
-import { auth } from "@/lib/firebase";
+import { auth } from "@/lib/firebase-auth";
 import { signOut } from "firebase/auth";
 import toast from "react-hot-toast";
 

@@ -2,7 +2,8 @@
 
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { onAuthStateChanged, User } from "firebase/auth";
-import { auth, db } from "@/lib/firebase";
+import { auth } from "@/lib/firebase-auth";
+import { db } from "@/lib/firebase-db";
 import { doc, getDoc } from "firebase/firestore";
 import { isAdmin as checkIsAdmin } from "@/lib/admin-config";
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase-db";
 import { collection, query, where, getDocs } from "firebase/firestore";
 import { 
   Utensils, 

@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/components/auth-provider";
-import { db, storage } from "@/lib/firebase";
+import { db } from "@/lib/firebase-db";
+import { storage } from "@/lib/firebase-storage";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   collection,

@@ -1,4 +1,4 @@
-import { db } from "./firebase";
+import { db } from "./firebase-db";
 import { collection, query, where, getDocs } from "firebase/firestore";
 
 const CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"; // Removed similar looking chars (0, O, 1, I, etc)

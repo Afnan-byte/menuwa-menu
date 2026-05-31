@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { db } from "@/lib/firebase";
+import { db } from "@/lib/firebase-db";
 import { collection, getDocs, addDoc, query, orderBy, limit, writeBatch, doc } from "firebase/firestore";
 import { generateUniqueShortId } from "@/lib/id-generator";
 import { 
