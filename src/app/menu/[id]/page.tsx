@@ -492,7 +492,15 @@ export default function PublicMenuPage() {
 
           {/* Categories Sections */}
           {(activeCategory === "all" ? categories : categories.filter(c => c.id === activeCategory)).map((cat, catIdx) => {
-            const categoryItems = items.filter(item => item.categoryId === cat.id);
+            const categoryItems = items
+              .filter(item => item.categoryId === cat.id)
+              .sort((a, b) => {
+                const aHasImage = a.imageUrl && (a.imageUrl.startsWith("http") || a.imageUrl.startsWith("/"));
+                const bHasImage = b.imageUrl && (b.imageUrl.startsWith("http") || b.imageUrl.startsWith("/"));
+                if (aHasImage && !bHasImage) return -1;
+                if (!aHasImage && bHasImage) return 1;
+                return 0;
+              });
             if (categoryItems.length === 0) return null;
 
             return (
