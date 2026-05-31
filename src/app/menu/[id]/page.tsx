@@ -365,23 +365,23 @@ export default function PublicMenuPage() {
             />
           </div>
 
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pb-2 pt-1 px-1 -mx-1">
+          <div className={cn("grid grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
             <button
               onClick={() => {
                 setActiveCategory("all");
                 window.scrollTo({ top: 0, behavior: 'smooth' });
               }}
               className={cn(
-                "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
+                "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                 activeCategory === "all"
-                  ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
+                  ? "bg-[#196F03] text-white"
                   : isDark
-                    ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
-                    : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
+                    ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5"
+                    : "bg-white text-gray-500 hover:bg-gray-50"
               )}
             >
-              <LayoutGrid className={cn("h-4 w-4 shrink-0", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
-              <span className="truncate">All</span>
+              <LayoutGrid className={cn("h-3.5 w-3.5 shrink-0", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
+              <span className="truncate max-w-[120px]">All</span>
             </button>
             {categories.map((cat) => (
               <button
@@ -395,16 +395,16 @@ export default function PublicMenuPage() {
                   }
                 }}
                 className={cn(
-                  "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
+                  "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                   activeCategory === cat.id
-                    ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
+                    ? "bg-[#196F03] text-white"
                     : isDark
-                      ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
-                      : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
+                      ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5"
+                      : "bg-white text-gray-500 hover:bg-gray-50"
                 )}
               >
-                {activeCategory === cat.id && <Utensils className="h-4 w-4 text-white shrink-0" />}
-                <span className="truncate">{cat.name}</span>
+                {activeCategory === cat.id && <Utensils className="h-3.5 w-3.5 text-white shrink-0" />}
+                <span className="truncate max-w-[120px]">{cat.name}</span>
               </button>
             ))}
           </div>
