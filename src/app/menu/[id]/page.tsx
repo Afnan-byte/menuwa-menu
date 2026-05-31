@@ -415,14 +415,20 @@ export default function PublicMenuPage() {
                   className="flex-shrink-0 w-64 group cursor-pointer snap-center pl-2"
                 >
                   <div className={cn("relative aspect-[3/4] rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500 hover:shadow-[0_20px_40px_rgba(25,111,3,0.2)]", isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100", !item.isAvailable && "grayscale-100 opacity-60 contrast-75")}>
-                    <Image
-                      src={item.imageUrl}
-                      alt={item.name}
-                      fill
-                      sizes="256px"
-                      priority={idx < 2}
-                      className="object-cover opacity-90 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105"
-                    />
+                    {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+                      <Image
+                        src={item.imageUrl}
+                        alt={item.name}
+                        fill
+                        sizes="256px"
+                        priority={idx < 2}
+                        className="object-cover opacity-90 group-hover:opacity-100 transition-transform duration-700 group-hover:scale-105"
+                      />
+                    ) : (
+                      <div className={cn("w-full h-full flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-100")}>
+                        <Utensils className={cn("h-16 w-16 opacity-20", isDark ? "text-white" : "text-gray-900")} />
+                      </div>
+                    )}
 
                     <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10"></div>
 
@@ -506,6 +512,7 @@ export default function PublicMenuPage() {
 
                 <div className="grid grid-cols-1 gap-6">
                   {categoryItems.map((item, idx) => {
+                    const hasImage = item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/"));
                     return (
                       <motion.div
                         key={item.id}
@@ -521,6 +528,7 @@ export default function PublicMenuPage() {
                         )}
                       >
                         {/* Image Container */}
+                        {hasImage && (
                         <div className={cn(
                           "relative w-full aspect-[4/3] overflow-hidden",
                           isDark ? "bg-[#0A0A0A]" : "bg-gray-50"
@@ -568,15 +576,27 @@ export default function PublicMenuPage() {
                             </div>
                           )}
                         </div>
+                        )}
 
                         {/* Content Area */}
                         <div className="flex-1 flex flex-col p-5">
-                          <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
-                            {item.name}
-                            {item.addons && item.addons.length > 0 && (
-                              <span className={cn("opacity-90 font-medium", isDark ? "text-white" : "text-gray-900")}> + {item.addons.map(a => a.name).join(' + ')}</span>
+                          <div className="flex justify-between items-start gap-4">
+                            <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
+                              {item.name}
+                              {item.addons && item.addons.length > 0 && (
+                                <span className={cn("opacity-90 font-medium", isDark ? "text-white" : "text-gray-900")}> + {item.addons.map(a => a.name).join(' + ')}</span>
+                              )}
+                            </h3>
+                            {!hasImage && (
+                              <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
+                                <span className="font-black text-[#196F03] text-lg leading-none">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                                <div className="flex items-center gap-1">
+                                  {item.dietaryType === "veg" && <div className={cn("h-6 w-6 rounded flex items-center justify-center", isDark ? "bg-black/60 text-[#196F03]" : "bg-green-50 text-green-600")}><Leaf className="h-3.5 w-3.5" /></div>}
+                                  {item.dietaryType === "non-veg" && <div className={cn("h-6 w-6 rounded flex items-center justify-center", isDark ? "bg-black/60 text-red-500" : "bg-red-50 text-red-500")}><Flame className="h-3.5 w-3.5" /></div>}
+                                </div>
+                              </div>
                             )}
-                          </h3>
+                          </div>
                           {item.variants && item.variants.length > 0 && (
                             <div className="flex flex-wrap gap-2 mt-3">
                               {item.variants.map(v => (
@@ -624,15 +644,28 @@ export default function PublicMenuPage() {
               >
                 <div className={cn("px-8 pt-8 pb-8 relative z-10 flex-1 flex flex-col h-full overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-white")}>
                   <div className="flex-1 overflow-y-auto no-scrollbar space-y-6">
-                    <div className={cn("relative w-full aspect-[4/3] shrink-0 overflow-hidden mb-6")}>
-                      <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
-                      <button
-                        onClick={() => setSelectedItem(null)}
-                        className={cn("absolute top-4 right-4 z-[110] h-10 w-10 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/20 text-white border-white/20 hover:bg-black/30 shadow-lg")}
-                      >
-                        <X className="h-5 w-5" />
-                      </button>
-                    </div>
+                    {selectedItem.imageUrl && (selectedItem.imageUrl.startsWith("http") || selectedItem.imageUrl.startsWith("/")) && (
+                      <div className={cn("relative w-full aspect-[4/3] shrink-0 overflow-hidden mb-6")}>
+                        <img src={selectedItem.imageUrl} alt={selectedItem.name} className="w-full h-full object-cover" />
+                        <button
+                          onClick={() => setSelectedItem(null)}
+                          className={cn("absolute top-4 right-4 z-[110] h-10 w-10 backdrop-blur-xl rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-black/20 text-white border-white/20 hover:bg-black/30 shadow-lg")}
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                    )}
+
+                    {!selectedItem.imageUrl || !(selectedItem.imageUrl.startsWith("http") || selectedItem.imageUrl.startsWith("/")) ? (
+                      <div className="flex justify-end mb-2">
+                        <button
+                          onClick={() => setSelectedItem(null)}
+                          className={cn("h-10 w-10 rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-900 border-gray-200 hover:bg-gray-200")}
+                        >
+                          <X className="h-5 w-5" />
+                        </button>
+                      </div>
+                    ) : null}
 
                     <div className="flex items-center justify-between">
                       <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em]">

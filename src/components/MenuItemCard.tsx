@@ -32,56 +32,82 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
         !item.isAvailable && "grayscale opacity-80"
       )}
     >
-      {/* Image Container (Rounded Rectangle fitting inside card) */}
-      <div className="relative w-full aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
-        {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+      {/* Conditionally render Image Container */}
+      {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+        <div className="relative w-full aspect-[4/3] mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100">
           <img
             src={item.imageUrl}
             alt={item.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           />
-        ) : (
-          <div className="w-full h-full flex items-center justify-center text-gray-200">
-            <Utensils className="h-10 w-10 opacity-20" />
+
+          <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg ">
+            ₹{item.price.replace(/[^0-9.]/g, '')}
           </div>
-        )}
 
-        {/* Price Badge (Green pill at bottom right of image) */}
-        <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg ">
-          ₹{item.price.replace(/[^0-9.]/g, '')}
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onToggleAvailability();
+            }}
+            className={cn(
+              "absolute top-3 left-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-lg transition-all active:scale-95 z-20 backdrop-blur-md",
+              item.isAvailable 
+                ? "bg-white/90 text-[#196F03] hover:bg-white" 
+                : "bg-red-500/90 text-white hover:bg-red-600"
+            )}
+            title={item.isAvailable ? "Mark as Out of Stock" : "Mark as In Stock"}
+          >
+            <Utensils className="h-3.5 w-3.5" />
+          </button>
+
+          <div className="absolute top-3 right-3 flex gap-1">
+            {item.dietaryType === "veg" && (
+              <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-[#196F03] rounded-xl flex items-center justify-center shadow-lg">
+                <Leaf className="h-4 w-4 fill-[#196F03]/20" />
+              </div>
+            )}
+            {item.dietaryType === "non-veg" && (
+              <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-red-500 rounded-xl flex items-center justify-center shadow-lg">
+                <Flame className="h-4 w-4 fill-red-500/20" />
+              </div>
+            )}
+          </div>
         </div>
-
-        {/* Availability Toggle Badge (Top Left of image) */}
-        <button
-          onClick={(e) => {
-            e.stopPropagation();
-            onToggleAvailability();
-          }}
-          className={cn(
-            "absolute top-3 left-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-lg transition-all active:scale-95 z-20 backdrop-blur-md",
-            item.isAvailable 
-              ? "bg-white/90 text-[#196F03] hover:bg-white" 
-              : "bg-red-500/90 text-white hover:bg-red-600"
-          )}
-          title={item.isAvailable ? "Mark as Out of Stock" : "Mark as In Stock"}
-        >
-          <Utensils className="h-3.5 w-3.5" />
-        </button>
-
-        {/* Dietary Icon (Top Right of image) */}
-        <div className="absolute top-3 right-3 flex gap-1">
-          {item.dietaryType === "veg" && (
-            <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-[#196F03] rounded-xl flex items-center justify-center shadow-lg">
-              <Leaf className="h-4 w-4 fill-[#196F03]/20" />
-            </div>
-          )}
-          {item.dietaryType === "non-veg" && (
-            <div className="h-8 w-8 bg-white/90 backdrop-blur-md text-red-500 rounded-xl flex items-center justify-center shadow-lg">
-              <Flame className="h-4 w-4 fill-red-500/20" />
-            </div>
-          )}
+      ) : (
+        <div className="flex items-center justify-between mb-4 mt-2">
+          <div className="flex gap-2">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                onToggleAvailability();
+              }}
+              className={cn(
+                "h-8 px-3 rounded-lg flex items-center gap-1.5 shadow-sm transition-all text-xs font-bold",
+                item.isAvailable 
+                  ? "bg-green-50 text-[#196F03] hover:bg-green-100" 
+                  : "bg-red-50 text-red-500 hover:bg-red-100"
+              )}
+            >
+              <Utensils className="h-3.5 w-3.5" />
+              {item.isAvailable ? "In Stock" : "Out of Stock"}
+            </button>
+            {item.dietaryType === "veg" && (
+              <div className="h-8 w-8 bg-green-50 text-[#196F03] rounded-lg flex items-center justify-center shadow-sm">
+                <Leaf className="h-4 w-4" />
+              </div>
+            )}
+            {item.dietaryType === "non-veg" && (
+              <div className="h-8 w-8 bg-red-50 text-red-500 rounded-lg flex items-center justify-center shadow-sm">
+                <Flame className="h-4 w-4" />
+              </div>
+            )}
+          </div>
+          <div className="bg-[#196F03] text-white px-3 py-1 rounded-lg font-bold text-sm shadow-sm ">
+            ₹{item.price.replace(/[^0-9.]/g, '')}
+          </div>
         </div>
-      </div>
+      )}
 
       {/* Content Area */}
       <div className="flex-1 flex flex-col">
