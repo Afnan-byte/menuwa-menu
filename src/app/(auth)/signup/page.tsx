@@ -71,13 +71,13 @@ export default function SignupPage() {
             >
               <Image 
                 src="/logo.svg" 
-                alt="Menuvo Logo" 
+                alt="Menuwo Logo" 
                 fill 
                 className="object-contain"
                 priority
               />
             </motion.div>
-            <h1 className="text-3xl font-bold text-primary tracking-tighter mb-2">Join Menuvo</h1>
+            <h1 className="text-3xl font-bold text-primary tracking-tighter mb-2">Join Menuwo</h1>
             <p className="text-gray-400 text-sm font-medium">Launch your digital menu in seconds</p>
           </div>
 

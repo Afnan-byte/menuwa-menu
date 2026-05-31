@@ -42,7 +42,7 @@ export default function DashboardPage() {
   };
 
   const WHATSAPP_NUMBER = "918089685278";
-  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
+  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuwo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
 
   return (
     <div className="flex-1 overflow-y-auto custom-scrollbar">

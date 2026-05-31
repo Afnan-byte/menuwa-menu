@@ -68,7 +68,7 @@ export default function LoginPage() {
             >
               <Image 
                 src="/logo.svg" 
-                alt="Menuvo Logo" 
+                alt="Menuwo Logo" 
                 fill 
                 className="object-contain"
                 priority
@@ -147,14 +147,14 @@ export default function LoginPage() {
             <p className="text-sm text-gray-400 font-medium">
               Don't have an account?{" "}
               <Link href="/signup" className="text-[#196F03] font-bold hover:underline underline-offset-4">
-                Join Menuvo
+                Join Menuwo
               </Link>
             </p>
           </div>
         </div>
         
         <p className="mt-8 text-center text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">
-          &copy; 2026 Menuvo Digital Solutions
+          &copy; 2026 Menuwo Digital Solutions
         </p>
       </motion.div>
     </div>

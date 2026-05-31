@@ -44,7 +44,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
   };
 
   const WHATSAPP_NUMBER = "918089685278";
-  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuvo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
+  const SUPPORT_URL = `https://wa.me/${WHATSAPP_NUMBER}?text=Hello%20Menuwo%20Support!%20I%20need%20help%20with%20my%20dashboard.`;
 
   return (
     <aside className="w-full h-full bg-white border-r border-gray-100 flex flex-col font-sans z-50">
