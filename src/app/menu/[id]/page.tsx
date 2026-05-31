@@ -367,10 +367,7 @@ export default function PublicMenuPage() {
 
           <div className={cn("grid grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
             <button
-              onClick={() => {
-                setActiveCategory("all");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-              }}
+              onClick={() => setActiveCategory("all")}
               className={cn(
                 "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                 activeCategory === "all"
@@ -386,13 +383,7 @@ export default function PublicMenuPage() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => {
-                  setActiveCategory(cat.id);
-                  const el = document.getElementById(`category-${cat.id}`);
-                  if (el) {
-                    el.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                  }
-                }}
+                onClick={() => setActiveCategory(cat.id)}
                 className={cn(
                   "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
                   activeCategory === cat.id
@@ -500,7 +491,7 @@ export default function PublicMenuPage() {
           )}
 
           {/* Categories Sections */}
-          {categories.map((cat, catIdx) => {
+          {(activeCategory === "all" ? categories : categories.filter(c => c.id === activeCategory)).map((cat, catIdx) => {
             const categoryItems = items
               .filter(item => item.categoryId === cat.id)
               .sort((a, b) => {
