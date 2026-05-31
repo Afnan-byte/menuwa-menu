@@ -513,6 +513,43 @@ export default function PublicMenuPage() {
                 <div className="grid grid-cols-1 gap-6">
                   {categoryItems.map((item, idx) => {
                     const hasImage = item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/"));
+                    if (!hasImage) {
+                      return (
+                        <motion.div
+                          key={item.id}
+                          initial={{ opacity: 0, y: 10 }}
+                          whileInView={{ opacity: 1, y: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: idx * 0.05 }}
+                          onClick={() => setSelectedItem(item)}
+                          className={cn(
+                            "group cursor-pointer relative flex items-center justify-between py-4 border-b last:border-b-0 transition-colors px-2 -mx-2 rounded-xl",
+                            isDark ? "border-white/5 hover:bg-white/5" : "border-gray-200 hover:bg-gray-50",
+                            !item.isAvailable && "opacity-50"
+                          )}
+                        >
+                          <div className="flex-1 min-w-0 pr-4">
+                            <div className="flex items-center gap-2 mb-1">
+                              {item.dietaryType === "veg" && <div className={cn("shrink-0 h-4 w-4 rounded flex items-center justify-center", isDark ? "bg-black/60 text-[#196F03]" : "bg-green-50 text-green-600")}><Leaf className="h-2.5 w-2.5" /></div>}
+                              {item.dietaryType === "non-veg" && <div className={cn("shrink-0 h-4 w-4 rounded flex items-center justify-center", isDark ? "bg-black/60 text-red-500" : "bg-red-50 text-red-500")}><Flame className="h-2.5 w-2.5" /></div>}
+                              <h3 className={cn("text-lg font-serif leading-tight truncate", isDark ? "text-white" : "text-gray-900")}>
+                                {item.name}
+                              </h3>
+                            </div>
+                            {item.description && <p className={cn("text-xs line-clamp-1 mt-0.5", isDark ? "text-white/50" : "text-gray-500")}>{item.description}</p>}
+                            {!item.isAvailable && <span className="text-[9px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded mt-1.5 inline-block">Sold Out</span>}
+                          </div>
+                          
+                          <div className={cn("shrink-0 pl-4 border-l flex flex-col items-end justify-center", isDark ? "border-white/10" : "border-gray-200")}>
+                             <span className="font-bold text-[#196F03] text-base">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                             {((item.variants && item.variants.length > 0) || (item.addons && item.addons.length > 0)) && (
+                               <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Options</span>
+                             )}
+                          </div>
+                        </motion.div>
+                      );
+                    }
+
                     return (
                       <motion.div
                         key={item.id}
@@ -528,7 +565,6 @@ export default function PublicMenuPage() {
                         )}
                       >
                         {/* Image Container */}
-                        {hasImage && (
                         <div className={cn(
                           "relative w-full aspect-[4/3] overflow-hidden",
                           isDark ? "bg-[#0A0A0A]" : "bg-gray-50"
@@ -576,27 +612,15 @@ export default function PublicMenuPage() {
                             </div>
                           )}
                         </div>
-                        )}
 
                         {/* Content Area */}
                         <div className="flex-1 flex flex-col p-5">
-                          <div className="flex justify-between items-start gap-4">
-                            <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
-                              {item.name}
-                              {item.addons && item.addons.length > 0 && (
-                                <span className={cn("opacity-90 font-medium", isDark ? "text-white" : "text-gray-900")}> + {item.addons.map(a => a.name).join(' + ')}</span>
-                              )}
-                            </h3>
-                            {!hasImage && (
-                              <div className="flex flex-col items-end gap-2 shrink-0 mt-1">
-                                <span className="font-black text-[#196F03] text-lg leading-none">₹{item.price.replace(/[^0-9.]/g, '')}</span>
-                                <div className="flex items-center gap-1">
-                                  {item.dietaryType === "veg" && <div className={cn("h-6 w-6 rounded flex items-center justify-center", isDark ? "bg-black/60 text-[#196F03]" : "bg-green-50 text-green-600")}><Leaf className="h-3.5 w-3.5" /></div>}
-                                  {item.dietaryType === "non-veg" && <div className={cn("h-6 w-6 rounded flex items-center justify-center", isDark ? "bg-black/60 text-red-500" : "bg-red-50 text-red-500")}><Flame className="h-3.5 w-3.5" /></div>}
-                                </div>
-                              </div>
+                          <h3 className={cn("text-2xl font-serif leading-tight transition-colors drop-shadow-sm", isDark ? "text-white" : "text-gray-900")}>
+                            {item.name}
+                            {item.addons && item.addons.length > 0 && (
+                              <span className={cn("opacity-90 font-medium", isDark ? "text-white" : "text-gray-900")}> + {item.addons.map(a => a.name).join(' + ')}</span>
                             )}
-                          </div>
+                          </h3>
                           {item.variants && item.variants.length > 0 && (
                             <div className="flex flex-wrap gap-2 mt-3">
                               {item.variants.map(v => (
