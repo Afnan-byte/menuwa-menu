@@ -94,8 +94,6 @@ export default function PublicMenuPage() {
   const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [dietaryFilter, setDietaryFilter] = useState<"all" | "veg" | "non-veg">("all");
-  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
-  const [categorySearchQuery, setCategorySearchQuery] = useState("");
 
   // Book Viewer State
   const [currentBookPage, setCurrentBookPage] = useState(0);
@@ -367,86 +365,38 @@ export default function PublicMenuPage() {
             />
           </div>
 
-          <div className="flex gap-3 relative z-40 mt-4 pb-2">
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 pb-2 pt-1 px-1 -mx-1">
             <button
-              onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+              onClick={() => setActiveCategory("all")}
               className={cn(
-                "flex items-center justify-center gap-2 px-5 py-3 rounded-2xl border text-xs font-bold tracking-widest uppercase transition-all shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
-                activeCategory !== "all" 
-                  ? "bg-[#196F03] text-white border-[#196F03]" 
-                  : isDark 
-                    ? "bg-[#1A1A1A]/90 border-white/10 text-white hover:bg-white/5" 
-                    : "bg-white/90 border-gray-200 text-gray-900 hover:bg-gray-50"
+                "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
+                activeCategory === "all"
+                  ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
+                  : isDark
+                    ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
+                    : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
               )}
             >
-              <LayoutGrid className="h-4 w-4 shrink-0" />
-              <span className="truncate max-w-[150px]">
-                {activeCategory === "all" ? "Categories" : categories.find(c => c.id === activeCategory)?.name || "Categories"}
-              </span>
+              <LayoutGrid className={cn("h-4 w-4 shrink-0", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
+              <span className="truncate">All</span>
             </button>
-
-            <AnimatePresence>
-              {isCategoryDropdownOpen && (
-                <motion.div
-                  initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                  transition={{ duration: 0.2 }}
-                  className={cn(
-                    "absolute top-full left-0 mt-3 w-full sm:w-[400px] rounded-[2rem] border shadow-2xl p-5 overflow-hidden origin-top-left",
-                    isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100"
-                  )}
-                >
-                  <div className="relative mb-5">
-                    <Search className={cn("absolute left-4 top-1/2 -translate-y-1/2 h-4 w-4", isDark ? "text-gray-500" : "text-gray-400")} />
-                    <input
-                      type="text"
-                      placeholder="Search categories..."
-                      value={categorySearchQuery}
-                      onChange={(e) => setCategorySearchQuery(e.target.value)}
-                      className={cn(
-                        "w-full rounded-2xl py-3 pl-11 pr-4 text-sm font-medium focus:outline-none transition-all",
-                        isDark ? "bg-white/5 text-white placeholder:text-gray-600 focus:bg-white/10" : "bg-gray-50 text-gray-900 placeholder:text-gray-400 focus:bg-gray-100"
-                      )}
-                    />
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-3 max-h-[40vh] overflow-y-auto no-scrollbar pb-2">
-                    <button
-                      onClick={() => { setActiveCategory("all"); setIsCategoryDropdownOpen(false); setCategorySearchQuery(""); }}
-                      className={cn(
-                        "flex items-center justify-center gap-2 px-3 py-4 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all",
-                        activeCategory === "all" 
-                          ? "bg-[#196F03] text-white border-[#196F03] shadow-md" 
-                          : isDark 
-                            ? "bg-white/5 text-gray-400 border-white/5 hover:bg-white/10" 
-                            : "bg-gray-50 text-gray-600 border-gray-100 hover:bg-gray-100"
-                      )}
-                    >
-                      <LayoutGrid className="h-3.5 w-3.5 shrink-0" />
-                      <span className="truncate">All</span>
-                    </button>
-                    {categories.filter(c => c.name.toLowerCase().includes(categorySearchQuery.toLowerCase())).map((cat) => (
-                      <button
-                        key={cat.id}
-                        onClick={() => { setActiveCategory(cat.id); setIsCategoryDropdownOpen(false); setCategorySearchQuery(""); }}
-                        className={cn(
-                          "flex items-center justify-center gap-2 px-3 py-4 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all",
-                          activeCategory === cat.id 
-                            ? "bg-[#196F03] text-white border-[#196F03] shadow-md" 
-                            : isDark 
-                              ? "bg-white/5 text-gray-400 border-white/5 hover:bg-white/10" 
-                              : "bg-gray-50 text-gray-600 border-gray-100 hover:bg-gray-100"
-                        )}
-                      >
-                        {activeCategory === cat.id && <Utensils className="h-3.5 w-3.5 shrink-0 text-white" />}
-                        <span className="truncate">{cat.name}</span>
-                      </button>
-                    ))}
-                  </div>
-                </motion.div>
-              )}
-            </AnimatePresence>
+            {categories.map((cat) => (
+              <button
+                key={cat.id}
+                onClick={() => setActiveCategory(cat.id)}
+                className={cn(
+                  "flex items-center justify-center gap-2.5 px-4 py-3.5 rounded-2xl border text-[11px] font-bold uppercase tracking-widest transition-all duration-300 w-full",
+                  activeCategory === cat.id
+                    ? "bg-[#196F03] text-white border-[#196F03] shadow-md"
+                    : isDark
+                      ? "bg-[#1A1A1A] text-gray-400 border-white/5 hover:border-white/10 hover:bg-white/5"
+                      : "bg-white text-gray-500 border-gray-100 hover:border-gray-300 shadow-sm hover:shadow-md"
+                )}
+              >
+                {activeCategory === cat.id && <Utensils className="h-4 w-4 text-white shrink-0" />}
+                <span className="truncate">{cat.name}</span>
+              </button>
+            ))}
           </div>
         </div>
 
@@ -597,12 +547,12 @@ export default function PublicMenuPage() {
                             {item.description && <p className={cn("text-xs line-clamp-1 mt-0.5", isDark ? "text-white/50" : "text-gray-500")}>{item.description}</p>}
                             {!item.isAvailable && <span className="text-[9px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded mt-1.5 inline-block">Sold Out</span>}
                           </div>
-                          
+
                           <div className={cn("shrink-0 pl-4 border-l flex flex-col items-end justify-center", isDark ? "border-white/10" : "border-gray-200")}>
-                             <span className="font-bold text-[#196F03] text-base">₹{item.price.replace(/[^0-9.]/g, '')}</span>
-                             {((item.variants && item.variants.length > 0) || (item.addons && item.addons.length > 0)) && (
-                               <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Options</span>
-                             )}
+                            <span className="font-bold text-[#196F03] text-base">₹{item.price.replace(/[^0-9.]/g, '')}</span>
+                            {((item.variants && item.variants.length > 0) || (item.addons && item.addons.length > 0)) && (
+                              <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Options</span>
+                            )}
                           </div>
                         </motion.div>
                       );
