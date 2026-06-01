@@ -378,32 +378,44 @@ export default function PublicMenuPage() {
             />
           </div>
 
-          <div className={cn("grid grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
+          <div className="grid grid-cols-4 gap-2.5 sm:gap-3 mt-6">
             <button
               onClick={() => handleCategoryClick("all")}
               className={cn(
-                "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full min-h-[44px]",
-                activeCategory === "all" ? "bg-[#196F03] text-white" : isDark ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5" : "bg-white text-gray-500 hover:bg-gray-50"
+                "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border",
+                activeCategory === "all" 
+                  ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
+                  : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
               )}
             >
-              <LayoutGrid className={cn("h-3.5 w-3.5 shrink-0", activeCategory === "all" ? "text-white" : "text-[#196F03]")} />
-              <span className="truncate max-w-[120px]">All</span>
+              <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center">
+                <LayoutGrid className={cn("h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-300", activeCategory === "all" ? "text-white scale-110" : isDark ? "text-gray-400" : "text-gray-400")} />
+              </div>
+              <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === "all" ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
+                All
+              </span>
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
                 className={cn(
-                  "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full min-h-[44px]",
-                  activeCategory === cat.id ? "bg-[#196F03] text-white" : isDark ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5" : "bg-white text-gray-500 hover:bg-gray-50"
+                  "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border group",
+                  activeCategory === cat.id 
+                    ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
+                    : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
                 )}
               >
-                {cat.icon ? (
-                  <img src={cat.icon} alt="" className={cn("h-4 w-4 object-cover rounded-sm shrink-0", activeCategory === cat.id ? "opacity-100" : "opacity-70")} />
-                ) : activeCategory === cat.id && (
-                  <Utensils className="h-3.5 w-3.5 text-white shrink-0" />
-                )}
-                <span className="truncate max-w-[120px]">{cat.name}</span>
+                <div className="h-10 w-10 sm:h-12 sm:w-12 relative flex items-center justify-center">
+                  {cat.icon ? (
+                    <img src={cat.icon} alt="" className={cn("w-full h-full object-contain drop-shadow-md transition-transform duration-300", activeCategory === cat.id ? "scale-110" : "scale-100 opacity-90 group-hover:scale-105")} />
+                  ) : (
+                    <Utensils className={cn("h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-300", activeCategory === cat.id ? (isDark ? "text-white scale-110" : "text-[#196F03] scale-110") : (isDark ? "text-gray-400 group-hover:scale-105" : "text-gray-400 group-hover:scale-105"))} />
+                  )}
+                </div>
+                <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === cat.id ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
+                  {cat.name}
+                </span>
               </button>
             ))}
           </div>
