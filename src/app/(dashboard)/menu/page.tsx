@@ -803,74 +803,7 @@ export default function MenuPage() {
 
     {/* Modals */}
     <AnimatePresence>
-        {isCategoryModalOpen && (
-          <div className="fixed inset-0 bg-primary/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
-            <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              className="bg-white rounded-[3rem] p-12 max-w-sm w-full shadow-2xl relative overflow-hidden"
-            >
-              <h2 className="text-3xl font-medium text-primary mb-2 tracking-tight">{editingCategory ? "Edit Section" : "New Section"}</h2>
-              <form onSubmit={handleCategorySubmit} className="space-y-6 mt-6">
-                <div>
-                  <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-2 block">Section Name</label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Signature Pizzas"
-                    required
-                    className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-medium outline-none text-primary"
-                    value={newCategoryName}
-                    onChange={(e) => setNewCategoryName(e.target.value)}
-                  />
-                </div>
-                
-                <div>
-                  <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-2 block">Custom Icon (Optional)</label>
-                  <div className="flex items-center gap-4">
-                    {newCategoryIcon ? (
-                      <div className="relative h-16 w-16 rounded-2xl overflow-hidden border-2 border-gray-100 shrink-0 group">
-                        <img src={newCategoryIcon} alt="Icon preview" className="w-full h-full object-cover" />
-                        <button 
-                          type="button"
-                          onClick={() => setNewCategoryIcon("")} 
-                          className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                        >
-                          <X className="h-4 w-4" />
-                        </button>
-                      </div>
-                    ) : (
-                      <div className="h-16 w-16 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center shrink-0">
-                        <ImageIcon className="h-6 w-6 text-gray-300" />
-                      </div>
-                    )}
-                    <label className="flex-1 cursor-pointer">
-                      <div className="px-6 py-5 bg-gray-50 hover:bg-gray-100 transition-colors rounded-[1.5rem] border border-transparent text-sm font-medium text-center text-primary">
-                        Upload Icon Image
-                      </div>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        className="hidden" 
-                        onChange={(e) => {
-                          const file = e.target.files?.[0];
-                          if (file) handleCategoryIconUpload(file);
-                        }} 
-                      />
-                    </label>
-                  </div>
-                </div>
 
-                <div className="flex gap-4 pt-4">
-                  <button type="button" onClick={() => setIsCategoryModalOpen(false)} className="flex-1 py-5 font-medium text-gray-400">Cancel</button>
-                  <button type="submit" disabled={isSaving} className="flex-1 py-5 bg-primary text-white font-medium rounded-2xl shadow-xl shadow-primary/10 flex items-center justify-center">
-                    {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : editingCategory ? "Save Changes" : "Create"}
-                  </button>
-                </div>
-              </form>
-            </motion.div>
-          </div>
-        )}
 
         {isItemModalOpen && (
           <div className="fixed inset-0 bg-primary/60 backdrop-blur-md z-[100] flex items-center justify-center p-4">
