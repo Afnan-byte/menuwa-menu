@@ -35,7 +35,9 @@ import {
   Flame,
   Star,
   FileUp,
-  Download
+  Download,
+  ArrowUp,
+  ArrowDown
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -45,6 +47,7 @@ import { cn } from "@/lib/utils";
 interface Category {
   id: string;
   name: string;
+  order?: number;
 }
 
 interface Variant {
@@ -277,7 +280,7 @@ export default function MenuPage() {
       const catQuery = query(collection(db, "categories"), where("restaurantId", "==", user?.uid));
       const catSnap = await getDocs(catQuery);
       const catList = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category));
-      setCategories(catList);
+      setCategories(catList.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
 
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", user?.uid));
       const itemSnap = await getDocs(itemQuery);
@@ -540,8 +543,9 @@ export default function MenuPage() {
         name: newCategoryName,
         restaurantId: user.uid,
         createdAt: new Date().toISOString(),
+        order: categories.length,
       });
-      setCategories([...categories, { id: docRef.id, name: newCategoryName }]);
+      setCategories([...categories, { id: docRef.id, name: newCategoryName, order: categories.length }]);
       setNewCategoryName("");
       setIsCategoryModalOpen(false);
       toast.success("Category added!");
@@ -573,6 +577,40 @@ export default function MenuPage() {
       toast.error("Deletion failed");
     } finally {
       setIsSaving(false);
+    }
+  };
+
+  const handleMoveCategory = async (index: number, direction: "up" | "down", e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (
+      (direction === "up" && index === 0) ||
+      (direction === "down" && index === categories.length - 1)
+    ) return;
+
+    const newIndex = direction === "up" ? index - 1 : index + 1;
+    const newCategories = [...categories];
+    
+    // Swap order property
+    const currentOrder = newCategories[index].order ?? index;
+    const targetOrder = newCategories[newIndex].order ?? newIndex;
+    
+    newCategories[index].order = targetOrder;
+    newCategories[newIndex].order = currentOrder;
+
+    // Swap elements in array for immediate UI update
+    const temp = newCategories[index];
+    newCategories[index] = newCategories[newIndex];
+    newCategories[newIndex] = temp;
+
+    setCategories(newCategories);
+
+    try {
+      const batch = writeBatch(db);
+      batch.update(doc(db, "categories", newCategories[index].id), { order: newCategories[index].order });
+      batch.update(doc(db, "categories", newCategories[newIndex].id), { order: newCategories[newIndex].order });
+      await batch.commit();
+    } catch (error) {
+      toast.error("Failed to save category order");
     }
   };
 
@@ -698,12 +736,12 @@ export default function MenuPage() {
                         <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
                       </button>
 
-                      {categories.map((cat) => (
-                        <div key={cat.id} className="relative group">
+                      {categories.map((cat, index) => (
+                        <div key={cat.id} className="relative group flex items-center">
                           <button
                             onClick={() => setActiveCategory(cat.id)}
                             className={cn(
-                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-12",
+                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-24",
                               activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                             )}
                           >
@@ -714,15 +752,37 @@ export default function MenuPage() {
                               <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
                             </div>
                           </button>
-                          <button
-                            onClick={(e) => handleDeleteCategory(cat.id, e)}
-                            className={cn(
-                              "absolute right-2 top-1/2 -translate-y-1/2 p-2 rounded-xl opacity-0 group-hover:opacity-100 transition-all hover:bg-red-50 hover:text-red-500",
-                              activeCategory === cat.id ? "text-white/40 hover:bg-white/10 hover:text-white" : "text-gray-300"
-                            )}
-                          >
-                            <Trash2 className="h-3.5 w-3.5" />
-                          </button>
+                          
+                          <div className={cn(
+                            "absolute right-2 top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 transition-all",
+                            activeCategory === cat.id ? "text-white/40" : "text-gray-400"
+                          )}>
+                            <div className="flex mr-1 items-center bg-black/5 rounded-lg p-0.5" onClick={e => e.stopPropagation()}>
+                              <button
+                                onClick={(e) => handleMoveCategory(index, "up", e)}
+                                disabled={index === 0}
+                                className={cn("p-1 rounded transition-colors disabled:opacity-30", activeCategory === cat.id ? "hover:bg-white/20 hover:text-white" : "hover:bg-white hover:text-[#196F03]")}
+                              >
+                                <ArrowUp className="h-3 w-3" />
+                              </button>
+                              <button
+                                onClick={(e) => handleMoveCategory(index, "down", e)}
+                                disabled={index === categories.length - 1}
+                                className={cn("p-1 rounded transition-colors disabled:opacity-30", activeCategory === cat.id ? "hover:bg-white/20 hover:text-white" : "hover:bg-white hover:text-[#196F03]")}
+                              >
+                                <ArrowDown className="h-3 w-3" />
+                              </button>
+                            </div>
+                            <button
+                              onClick={(e) => handleDeleteCategory(cat.id, e)}
+                              className={cn(
+                                "p-2 rounded-xl transition-all hover:bg-red-50 hover:text-red-500",
+                                activeCategory === cat.id ? "hover:bg-white/10 hover:text-white" : "hover:bg-gray-100"
+                              )}
+                            >
+                              <Trash2 className="h-3.5 w-3.5" />
+                            </button>
+                          </div>
                         </div>
                       ))}
                     </div>

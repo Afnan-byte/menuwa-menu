@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils";
 interface Category {
   id: string;
   name: string;
+  order?: number;
 }
 
 interface Variant {
@@ -244,6 +245,7 @@ export default function PublicMenuPage() {
         catDocs
           .filter((d: any) => d.document)
           .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as Category))
+          .sort((a: Category, b: Category) => (a.order ?? 0) - (b.order ?? 0))
       );
       setItems(
         itemDocs
