@@ -430,62 +430,115 @@ export default function PublicMenuPage() {
 
         {/* Top Selling */}
         {featuredItems.length > 0 && searchQuery === "" && activeCategory === "all" && (
-          <section className="pt-6 pb-2">
-            <div className="px-6 mb-5">
-              <h2 className={cn("text-xl font-bold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>Top Selling</h2>
+          <section className="pt-8 pb-4 relative">
+            <div className="px-6 mb-6 flex items-center justify-between">
+              <div>
+                <h2 className={cn("text-2xl font-serif tracking-tight", isDark ? "text-white" : "text-gray-900")}>Signature</h2>
+                <p className={cn("text-xs mt-1 font-medium uppercase tracking-widest", isDark ? "text-white/40" : "text-gray-400")}>Most Loved Choices</p>
+              </div>
+              <div className="flex gap-1">
+                <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]/40"></div>
+                <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]/20"></div>
+              </div>
             </div>
-            <div className="flex gap-4 overflow-x-auto no-scrollbar px-6 pb-6 -mx-2 snap-x snap-mandatory">
+            
+            <div className="flex gap-5 overflow-x-auto no-scrollbar px-6 pb-8 snap-x snap-mandatory">
               {featuredItems.map((item, idx) => (
                 <div
                   key={item.id}
                   onClick={() => setSelectedItem(item)}
-                  className="flex-shrink-0 w-64 group cursor-pointer snap-center pl-2"
+                  className="flex-shrink-0 w-64 group cursor-pointer snap-start relative"
                 >
                   <div className={cn(
-                    "relative rounded-[2rem] overflow-hidden shadow-2xl border transition-all duration-500",
-                    isDark ? "bg-[#1A1A1A] border-white/10" : "bg-white border-gray-100",
-                    !item.isAvailable && "grayscale opacity-60"
-                  )} style={{ paddingBottom: "133%" /* 3:4 ratio */ }}>
-                    {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
-                      <Image
-                        src={item.imageUrl}
-                        alt={item.name}
-                        fill
-                        sizes="256px"
-                        priority={idx < 2}
-                        className="object-cover transition-transform duration-700 group-hover:scale-105"
-                      />
-                    ) : (
-                      <div className={cn("w-full h-full flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-100")}>
-                        <Utensils className="h-16 w-16 opacity-20" />
-                      </div>
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-transparent to-black/90 z-10" />
-
-                    {/* Addon thumbnails — FIX: use Next Image */}
-                    {item.addons && item.addons.length > 0 && (
-                      <div className="absolute top-4 right-4 z-20 flex -space-x-3">
-                        {item.addons.slice(0, 3).map((addon, i) =>
-                          addon.imageUrl ? (
-                            <div key={addon.id} className="relative h-14 w-14 rounded-full border-[3px] border-white/20 overflow-hidden shadow-xl" style={{ zIndex: 10 - i }}>
-                              <Image src={addon.imageUrl} alt={addon.name} fill sizes="56px" className="object-cover" />
-                            </div>
-                          ) : null
-                        )}
-                      </div>
-                    )}
-
-                    <div className="absolute bottom-5 left-5 right-5 flex flex-col gap-2 z-20">
-                      <div className="flex items-start gap-2 justify-between">
-                        <h3 className="font-serif text-2xl text-white leading-tight drop-shadow-md">{item.name}</h3>
-                        {!item.isAvailable && (
-                          <span className="text-[8px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-white rounded-lg shadow-lg shrink-0 mt-1">Sold Out</span>
-                        )}
-                      </div>
-                      <span className="text-sm font-black text-[#196F03] bg-white px-3.5 py-1.5 rounded-xl inline-flex items-center w-fit">
-                        ₹{item.price.replace(/[^0-9.]/g, "")}
-                      </span>
+                    "relative flex flex-col p-3 rounded-[2rem] transition-all duration-500",
+                    isDark ? "bg-[#111111] border border-white/5 hover:bg-[#1a1a1a]" : "bg-white border border-gray-100 hover:shadow-2xl hover:shadow-gray-200/50",
+                    !item.isAvailable && "opacity-75"
+                  )}>
+                    {/* Badge */}
+                    <div className="absolute -top-3 -right-2 z-30">
+                       <div className="bg-[#196F03] text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1.5 rounded-full shadow-lg border-2 border-[#0A0A0A] transform group-hover:-translate-y-1 transition-transform duration-300">
+                          Top Seller
+                       </div>
                     </div>
+
+                    {/* Image Area */}
+                    <div className="relative w-full rounded-[1.5rem] overflow-hidden" style={{ paddingBottom: "100%" }}>
+                      {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+                        <Image
+                          src={item.imageUrl}
+                          alt={item.name}
+                          fill
+                          sizes="256px"
+                          priority={idx < 2}
+                          className={cn("object-cover transition-transform duration-700 group-hover:scale-110", !item.isAvailable && "grayscale opacity-80")}
+                        />
+                      ) : (
+                        <div className={cn("absolute inset-0 flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-100")}>
+                          <Utensils className="h-10 w-10 opacity-20" />
+                        </div>
+                      )}
+                      
+                      {/* Dietary Type Icon */}
+                      <div className="absolute top-3 left-3 flex gap-1 z-20">
+                        {item.dietaryType === "veg" && (
+                          <div className="h-8 w-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
+                            <Leaf className="h-4 w-4 text-[#196F03]" />
+                          </div>
+                        )}
+                        {item.dietaryType === "non-veg" && (
+                          <div className="h-8 w-8 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center shadow-sm">
+                            <Flame className="h-4 w-4 text-red-500" />
+                          </div>
+                        )}
+                      </div>
+
+                      {/* Addon thumbnails */}
+                      {item.addons && item.addons.length > 0 && (
+                        <div className="absolute bottom-3 right-3 z-20 flex -space-x-2">
+                          {item.addons.slice(0, 3).map((addon, i) =>
+                            addon.imageUrl ? (
+                              <div key={addon.id} className="relative h-8 w-8 rounded-full border-2 border-white/90 shadow-md overflow-hidden" style={{ zIndex: 10 - i }}>
+                                <Image src={addon.imageUrl} alt={addon.name} fill sizes="32px" className="object-cover" />
+                              </div>
+                            ) : null
+                          )}
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Text Area */}
+                    <div className="pt-5 pb-3 px-2 flex flex-col gap-1.5">
+                      <div className="flex justify-between items-start gap-2">
+                        <h3 className={cn("font-serif text-xl leading-tight line-clamp-2", isDark ? "text-white" : "text-gray-900")}>
+                          {item.name}
+                        </h3>
+                      </div>
+                      
+                      {item.description && (
+                         <p className={cn("text-xs line-clamp-1", isDark ? "text-white/40" : "text-gray-500")}>
+                           {item.description}
+                         </p>
+                      )}
+
+                      <div className="mt-3 flex items-center justify-between">
+                        <span className={cn("text-xl font-black", isDark ? "text-white" : "text-gray-900")}>
+                           <span className="text-sm text-[#196F03] mr-0.5">₹</span>{item.price.replace(/[^0-9.]/g, "")}
+                        </span>
+                        
+                        <div className={cn("h-9 w-9 rounded-full flex items-center justify-center transition-colors shadow-sm", isDark ? "bg-white/10 group-hover:bg-[#196F03]" : "bg-gray-50 group-hover:bg-[#196F03]")}>
+                           <span className={cn("text-xl font-light leading-none", isDark ? "text-white group-hover:text-white" : "text-gray-900 group-hover:text-white")}>+</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    {!item.isAvailable && (
+                       <div className="absolute inset-0 bg-black/20 backdrop-blur-[2px] rounded-[2rem] z-40 flex items-center justify-center">
+                          <span className="bg-white text-red-500 text-sm font-black uppercase tracking-widest px-4 py-2 rounded-xl shadow-2xl transform -rotate-12 border-2 border-red-500">
+                             Sold Out
+                          </span>
+                       </div>
+                    )}
                   </div>
                 </div>
               ))}
