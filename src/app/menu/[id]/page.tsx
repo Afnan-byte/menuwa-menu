@@ -57,6 +57,7 @@ interface Restaurant {
   menuTheme?: "dark" | "light";
   menuType?: "digital" | "book";
   bookPages?: string[];
+  hideTopSelling?: boolean;
 }
 
 const hexToRgb = (hex: string) => {
@@ -235,6 +236,7 @@ export default function PublicMenuPage() {
         const queryRes = await fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "restaurants" }],
@@ -257,7 +259,7 @@ export default function PublicMenuPage() {
         }
       } else {
         // Direct document lookup
-        const res = await fetch(`${baseUrl}/restaurants/${id}`);
+        const res = await fetch(`${baseUrl}/restaurants/${id}`, { cache: "no-store" });
         if (res.ok) {
           const doc = await res.json();
           restaurantId = (id as string);
@@ -273,6 +275,7 @@ export default function PublicMenuPage() {
         fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "categories" }],
@@ -283,6 +286,7 @@ export default function PublicMenuPage() {
         fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "items" }],
@@ -458,7 +462,7 @@ export default function PublicMenuPage() {
         </div>
 
         {/* Top Selling - Minimalist Elegance */}
-        {featuredItems.length > 0 && searchQuery === "" && activeCategory === "all" && (
+        {featuredItems.length > 0 && searchQuery === "" && activeCategory === "all" && !restaurant?.hideTopSelling && (
           <section className="pt-8 pb-4">
             <div className="px-6 mb-6">
               <h2 className={cn("text-2xl font-semibold tracking-tight", isDark ? "text-white" : "text-gray-900")}>
@@ -564,7 +568,7 @@ export default function PublicMenuPage() {
           )}
 
           {(activeCategory === "all" ? categories : categories.filter((c) => c.id === activeCategory)).map((cat) => {
-            const categoryItems = items
+            const categoryItems = filteredItems
               .filter((item) => item.categoryId === cat.id)
               .sort((a, b) => {
                 const aHasImg = a.imageUrl && (a.imageUrl.startsWith("http") || a.imageUrl.startsWith("/"));

@@ -39,6 +39,7 @@ export default function SettingsPage() {
     menuTheme: "dark",
     menuType: "digital",
     bookPages: [] as string[],
+    hideTopSelling: false,
   });
 
   useEffect(() => {
@@ -51,6 +52,7 @@ export default function SettingsPage() {
         menuTheme: restaurantData.menuTheme || "dark",
         menuType: restaurantData.menuType || "digital",
         bookPages: restaurantData.bookPages || [],
+        hideTopSelling: restaurantData.hideTopSelling || false,
       });
     }
   }, [restaurantData]);
@@ -359,6 +361,23 @@ export default function SettingsPage() {
                   </div>
                 </div>
               )}
+
+              <div className="pt-8 border-t border-gray-100 mt-8 flex items-center justify-between gap-4">
+                <div>
+                  <h4 className="text-lg font-bold text-primary tracking-tight">Hide "Must Try" Section</h4>
+                  <p className="text-xs font-medium text-gray-400 mt-1">If enabled, the popular items carousel will be hidden from the digital menu.</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setFormData({ ...formData, hideTopSelling: !formData.hideTopSelling })}
+                  className={cn(
+                    "relative inline-flex h-8 w-14 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none",
+                    formData.hideTopSelling ? "bg-brand-orange" : "bg-gray-200"
+                  )}
+                >
+                  <span className={cn("pointer-events-none inline-block h-7 w-7 transform rounded-full bg-white shadow ring-0 transition duration-200 ease-in-out", formData.hideTopSelling ? "translate-x-6" : "translate-x-0")} />
+                </button>
+              </div>
             </div>
 
             {/* General Information Section */}
