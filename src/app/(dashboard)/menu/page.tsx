@@ -24,6 +24,7 @@ import {
   Loader2,
   X,
   ChevronRight,
+  ChevronDown,
   LayoutGrid,
   List,
   Trash2,
@@ -96,6 +97,7 @@ export default function MenuPage() {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
   const [isCatalogueVisible, setIsCatalogueVisible] = useState(true);
   const [isCategoriesExpanded, setIsCategoriesExpanded] = useState(true);
+  const [isCategoryDropdownOpen, setIsCategoryDropdownOpen] = useState(false);
 
   useEffect(() => {
     const handleResize = () => {
@@ -664,30 +666,72 @@ export default function MenuPage() {
           {/* Second Row: Category Filters & Import/Export */}
           <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between border-b border-gray-100 pb-6 gap-6">
             
-            {/* Horizontal Category Filters */}
-            <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] overflow-x-auto w-full xl:w-auto max-w-full custom-scrollbar">
-                <button
-                  onClick={() => setActiveCategory("all")}
-                  className={cn(
-                    "px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
-                    activeCategory === "all" ? "bg-white text-[#196F03] shadow-sm" : "text-gray-400 hover:text-gray-600"
+            {/* Category Dropdown Filter */}
+            <div className="relative w-full xl:w-64">
+              <button
+                onClick={() => setIsCategoryDropdownOpen(!isCategoryDropdownOpen)}
+                className="w-full flex items-center justify-between bg-white border border-gray-200 px-5 py-3.5 rounded-[1rem] shadow-sm hover:border-[#196F03]/50 transition-all focus:outline-none focus:ring-2 focus:ring-[#196F03]/20"
+              >
+                <div className="flex items-center gap-3">
+                  {activeCategory === "all" ? (
+                    <LayoutGrid className="h-4 w-4 text-[#196F03]" />
+                  ) : (
+                    categories.find(c => c.id === activeCategory)?.icon ? (
+                      <img src={categories.find(c => c.id === activeCategory)?.icon} alt="" className="h-4 w-4 rounded-sm object-cover" />
+                    ) : (
+                      <Utensils className="h-4 w-4 text-[#196F03]" />
+                    )
                   )}
-                >
-                  All
-                </button>
-                {categories.map((cat) => (
-                  <button
-                    key={cat.id}
-                    onClick={() => setActiveCategory(cat.id)}
-                    className={cn(
-                      "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
-                      activeCategory === cat.id ? "bg-white text-[#196F03] shadow-sm" : "text-gray-400 hover:text-gray-600"
-                    )}
-                  >
-                    {cat.icon && <img src={cat.icon} className="h-4 w-4 rounded-sm object-cover" alt="" />}
-                    {cat.name}
-                  </button>
-                ))}
+                  <span className="text-sm font-semibold text-gray-900 truncate">
+                    {activeCategory === "all" ? "All Sections" : categories.find(c => c.id === activeCategory)?.name || "All Sections"}
+                  </span>
+                </div>
+                <ChevronDown className={cn("h-4 w-4 text-gray-400 transition-transform duration-300", isCategoryDropdownOpen && "rotate-180")} />
+              </button>
+
+              <AnimatePresence>
+                {isCategoryDropdownOpen && (
+                  <>
+                    <div className="fixed inset-0 z-40" onClick={() => setIsCategoryDropdownOpen(false)} />
+                    <motion.div
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -10 }}
+                      transition={{ duration: 0.15 }}
+                      className="absolute left-0 right-0 top-[calc(100%+8px)] bg-white border border-gray-100 rounded-[1rem] shadow-xl z-50 overflow-hidden max-h-[300px] overflow-y-auto custom-scrollbar"
+                    >
+                      <button
+                        onClick={() => { setActiveCategory("all"); setIsCategoryDropdownOpen(false); }}
+                        className={cn(
+                          "w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50",
+                          activeCategory === "all" ? "bg-[#196F03]/5 text-[#196F03]" : "text-gray-700"
+                        )}
+                      >
+                        <LayoutGrid className={cn("h-4 w-4", activeCategory === "all" ? "text-[#196F03]" : "text-gray-400")} />
+                        <span className="text-sm font-medium">All Sections</span>
+                      </button>
+                      
+                      {categories.map((cat) => (
+                        <button
+                          key={cat.id}
+                          onClick={() => { setActiveCategory(cat.id); setIsCategoryDropdownOpen(false); }}
+                          className={cn(
+                            "w-full flex items-center gap-3 px-5 py-3.5 text-left transition-colors hover:bg-gray-50 border-t border-gray-50",
+                            activeCategory === cat.id ? "bg-[#196F03]/5 text-[#196F03]" : "text-gray-700"
+                          )}
+                        >
+                          {cat.icon ? (
+                            <img src={cat.icon} alt="" className="h-4 w-4 rounded-sm object-cover shrink-0" />
+                          ) : (
+                            <Utensils className={cn("h-4 w-4 shrink-0", activeCategory === cat.id ? "text-[#196F03]" : "text-gray-400")} />
+                          )}
+                          <span className="text-sm font-medium truncate">{cat.name}</span>
+                        </button>
+                      ))}
+                    </motion.div>
+                  </>
+                )}
+              </AnimatePresence>
             </div>
 
             {/* Right side: Import/Export & View Toggle */}
