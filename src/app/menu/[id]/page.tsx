@@ -432,7 +432,7 @@ export default function PublicMenuPage() {
         {featuredItems.length > 0 && searchQuery === "" && activeCategory === "all" && (
           <section className="pt-8 pb-4">
             <div className="px-6 mb-6">
-              <h2 className={cn("text-2xl font-light tracking-tight", isDark ? "text-white" : "text-gray-900")}>
+              <h2 className={cn("text-2xl font-semibold tracking-tight", isDark ? "text-white" : "text-gray-900")}>
                 Must Try
               </h2>
             </div>
@@ -480,7 +480,7 @@ export default function PublicMenuPage() {
                        {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                     </div>
                     
-                    <h3 className={cn("text-[15px] font-medium leading-snug line-clamp-2", isDark ? "text-white/90" : "text-gray-800")}>
+                    <h3 className={cn("text-lg font-semibold leading-snug line-clamp-2", isDark ? "text-white" : "text-gray-900")}>
                       {item.name}
                     </h3>
                     
@@ -507,7 +507,7 @@ export default function PublicMenuPage() {
               <div className={cn("h-24 w-24 rounded-full flex items-center justify-center mb-8 border", isDark ? "bg-white/5 border-white/10" : "bg-gray-100 border-gray-200")}>
                 <Utensils className="h-8 w-8 text-gray-500" />
               </div>
-              <h3 className={cn("text-2xl font-serif mb-3", isDark ? "text-white" : "text-gray-900")}>No matches found</h3>
+              <h3 className={cn("text-2xl font-semibold mb-3", isDark ? "text-white" : "text-gray-900")}>No matches found</h3>
               <p className="text-gray-500 text-sm max-w-[240px] leading-relaxed">We couldn&apos;t find any dishes matching your current selection.</p>
               <button
                 onClick={() => { setSearchQuery(""); setDietaryFilter("all"); setActiveCategory("all"); }}
@@ -534,7 +534,7 @@ export default function PublicMenuPage() {
             return (
               <section key={cat.id} id={`category-${cat.id}`} className="space-y-12 menu-category-section">
                 <div className={cn("flex items-end justify-between border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
-                  <h2 className={cn("text-xl font-semibold uppercase tracking-widest", isDark ? "text-white" : "text-gray-900")}>{cat.name}</h2>
+                  <h2 className={cn("text-2xl font-semibold tracking-tight", isDark ? "text-white" : "text-gray-900")}>{cat.name}</h2>
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
@@ -567,7 +567,7 @@ export default function PublicMenuPage() {
                                   <Flame className="h-2.5 w-2.5" />
                                 </div>
                               )}
-                              <h3 className={cn("text-lg font-serif leading-tight truncate", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
+                              <h3 className={cn("text-lg font-semibold leading-snug truncate", isDark ? "text-white" : "text-gray-900")}>{item.name}</h3>
                             </div>
                             {item.description && <p className={cn("text-xs line-clamp-1 mt-0.5", isDark ? "text-white/50" : "text-gray-500")}>{item.description}</p>}
                             {!item.isAvailable && <span className="text-[9px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded mt-1.5 inline-block">Sold Out</span>}
@@ -645,7 +645,7 @@ export default function PublicMenuPage() {
 
                         {/* Content */}
                         <div className="flex-1 flex flex-col p-5">
-                          <h3 className={cn("text-2xl font-serif leading-tight", isDark ? "text-white" : "text-gray-900")}>
+                          <h3 className={cn("text-lg font-semibold leading-snug", isDark ? "text-white" : "text-gray-900")}>
                             {item.name}
                             {item.addons && item.addons.length > 0 && (
                               <span className="opacity-90 font-medium"> + {item.addons.map((a) => a.name).join(" + ")}</span>
@@ -741,7 +741,7 @@ export default function PublicMenuPage() {
 
                     <div className="flex items-start justify-between gap-4">
                       <div>
-                        <h2 className={cn("text-4xl font-serif tracking-tight leading-tight mb-2", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
+                        <h2 className={cn("text-2xl font-semibold tracking-tight mb-2", isDark ? "text-white" : "text-gray-900")}>{selectedItem.name}</h2>
                         <span className="text-xl font-black text-[#196F03]">
                           {selectedItem.variants && selectedItem.variants.length > 0 && (
                             <span className="text-[10px] font-bold uppercase text-gray-500 mr-1.5">from</span>
