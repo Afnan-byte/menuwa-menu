@@ -232,17 +232,7 @@ export default function MenuPage() {
     return data.secure_url;
   };
 
-  const handleCategoryIconUpload = async (file: File) => {
-    if (!file || !user) return;
-    const toastId = toast.loading("Uploading icon...");
-    try {
-      const url = await uploadToCloudinary(file);
-      setNewCategoryIcon(url);
-      toast.success("Category icon uploaded!", { id: toastId });
-    } catch (error: any) {
-      toast.error(`Upload failed: ${error.message}`, { id: toastId });
-    }
-  };
+
 
   const handleItemImageUpload = async (file: File) => {
     if (!file || !user) return;
@@ -554,96 +544,7 @@ export default function MenuPage() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleCategorySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!newCategoryName.trim() || !user) return;
-    setIsSaving(true);
-    try {
-      if (editingCategory) {
-        await updateDoc(doc(db, "categories", editingCategory.id), {
-          name: newCategoryName,
-          icon: newCategoryIcon,
-        });
-        setCategories(categories.map(c => c.id === editingCategory.id ? { ...c, name: newCategoryName, icon: newCategoryIcon } : c));
-        toast.success("Category updated!");
-      } else {
-        const docRef = await addDoc(collection(db, "categories"), {
-          name: newCategoryName,
-          icon: newCategoryIcon,
-          restaurantId: user.uid,
-          createdAt: new Date().toISOString(),
-          order: categories.length,
-        });
-        setCategories([...categories, { id: docRef.id, name: newCategoryName, icon: newCategoryIcon, order: categories.length }]);
-        toast.success("Category added!");
-      }
-      setNewCategoryName("");
-      setNewCategoryIcon("");
-      setEditingCategory(null);
-      setIsCategoryModalOpen(false);
-    } catch (error: any) {
-      toast.error("Database Error");
-    } finally {
-      setIsSaving(false);
-    }
-  };
 
-  const handleDeleteCategory = async (catId: string, e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (!confirm("Are you sure? This will delete the category and ALL items inside it.")) return;
-
-    setIsSaving(true);
-    try {
-      const batch = writeBatch(db);
-      batch.delete(doc(db, "categories", catId));
-      const categoryItems = items.filter(i => i.categoryId === catId);
-      categoryItems.forEach(item => {
-        batch.delete(doc(db, "items", item.id));
-      });
-      await batch.commit();
-      setCategories(categories.filter(c => c.id !== catId));
-      setItems(items.filter(i => i.categoryId !== catId));
-      if (activeCategory === catId) setActiveCategory("all");
-      toast.success("Category and items removed");
-    } catch (error) {
-      toast.error("Deletion failed");
-    } finally {
-      setIsSaving(false);
-    }
-  };
-
-  const handleMoveCategory = async (index: number, direction: "up" | "down", e: React.MouseEvent) => {
-    e.stopPropagation();
-    if (
-      (direction === "up" && index === 0) ||
-      (direction === "down" && index === categories.length - 1)
-    ) return;
-
-    const newIndex = direction === "up" ? index - 1 : index + 1;
-    const newCategories = [...categories];
-    
-    // Swap elements in array for immediate UI update
-    const temp = newCategories[index];
-    newCategories[index] = newCategories[newIndex];
-    newCategories[newIndex] = temp;
-
-    // Force strict 0-based ordering for all items to guarantee stability
-    newCategories.forEach((cat, idx) => {
-      cat.order = idx;
-    });
-
-    setCategories(newCategories);
-
-    try {
-      const batch = writeBatch(db);
-      newCategories.forEach((cat) => {
-        batch.update(doc(db, "categories", cat.id), { order: cat.order });
-      });
-      await batch.commit();
-    } catch (error) {
-      toast.error("Failed to save category order");
-    }
-  };
 
   const handleItemSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -709,181 +610,7 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex-1 flex flex-col lg:flex-row font-sans overflow-hidden bg-gray-50/30">
-      {/* Sidebar Filter Panel (Catalogue Sidebar) */}
-      <AnimatePresence>
-        {isCatalogueVisible && (
-          <motion.div 
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -20 }}
-            className="w-full lg:w-72 flex-shrink-0 lg:h-full bg-white border-r border-gray-100 z-10 flex flex-col"
-          >
-            <div className="p-6 md:p-8 flex-1 flex flex-col overflow-y-auto custom-scrollbar">
-              <div className="flex items-center justify-between mb-8">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-medium text-primary tracking-tight">Catalogue</h2>
-                    <button 
-                      onClick={() => setIsCategoriesExpanded(!isCategoriesExpanded)}
-                      className="lg:hidden p-2 hover:bg-gray-100 rounded-xl text-gray-400 transition-colors flex items-center gap-2"
-                    >
-                      <span className="text-[10px] font-bold uppercase tracking-widest">{isCategoriesExpanded ? "Hide" : "Show"}</span>
-                      {isCategoriesExpanded ? <ChevronRight className="h-5 w-5 rotate-90 transition-transform" /> : <ChevronRight className="h-5 w-5 transition-transform" />}
-                    </button>
-                  </div>
-                  <p className="hidden md:block text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
-                </div>
-                <button
-                  onClick={() => {
-                    setEditingCategory(null);
-                    setNewCategoryName("");
-                    setNewCategoryIcon("");
-                    setIsCategoryModalOpen(true);
-                  }}
-                  className="p-3 bg-gray-100 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all shadow-sm group"
-                >
-                  <FolderPlus className="h-5 w-5" />
-                </button>
-              </div>
-
-              <AnimatePresence>
-                {isCategoriesExpanded && (
-                  <motion.div 
-                    initial={{ height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={{ height: 0, opacity: 0 }}
-                    className="overflow-hidden flex-shrink-0"
-                  >
-                    <div className="space-y-2">
-                      <button
-                        onClick={() => setActiveCategory("all")}
-                        className={cn(
-                          "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left",
-                          activeCategory === "all" ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
-                        )}
-                      >
-                        <div className="flex items-center gap-3">
-                          <div className={cn("p-2 rounded-xl transition-colors", activeCategory === "all" ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                            <LayoutGrid className="h-4 w-4" />
-                          </div>
-                          <span className="text-xs font-medium">All Items</span>
-                        </div>
-                        <ChevronRight className={cn("h-4 w-4 opacity-50", activeCategory === "all" ? "text-white" : "text-gray-300")} />
-                      </button>
-
-                      {categories.map((cat, index) => (
-                        <div key={cat.id} className="relative group flex items-center">
-                          <button
-                            onClick={() => setActiveCategory(cat.id)}
-                            className={cn(
-                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-32",
-                              activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
-                            )}
-                          >
-                            <div className="flex items-center gap-3 flex-1">
-                              <div className={cn("p-2 rounded-xl transition-colors shrink-0", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                                {cat.icon ? (
-                                  <img src={cat.icon} alt="" className="h-4 w-4 object-cover rounded-sm" />
-                                ) : (
-                                  <Utensils className="h-4 w-4" />
-                                )}
-                              </div>
-                              <span className="text-xs font-medium whitespace-normal break-words text-left">{cat.name}</span>
-                            </div>
-                          </button>
-                          
-                          <div className={cn(
-                            "absolute right-2 top-1/2 -translate-y-1/2 flex items-center opacity-0 group-hover:opacity-100 transition-all",
-                            activeCategory === cat.id ? "text-white/40" : "text-gray-400"
-                          )}>
-                            <div className="flex mr-1 items-center bg-black/5 rounded-lg p-0.5" onClick={e => e.stopPropagation()}>
-                              <button
-                                onClick={(e) => handleMoveCategory(index, "up", e)}
-                                disabled={index === 0}
-                                className={cn("p-1 rounded transition-colors disabled:opacity-30", activeCategory === cat.id ? "hover:bg-white/20 hover:text-white" : "hover:bg-white hover:text-[#196F03]")}
-                              >
-                                <ArrowUp className="h-3 w-3" />
-                              </button>
-                              <button
-                                onClick={(e) => handleMoveCategory(index, "down", e)}
-                                disabled={index === categories.length - 1}
-                                className={cn("p-1 rounded transition-colors disabled:opacity-30", activeCategory === cat.id ? "hover:bg-white/20 hover:text-white" : "hover:bg-white hover:text-[#196F03]")}
-                              >
-                                <ArrowDown className="h-3 w-3" />
-                              </button>
-                            </div>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setEditingCategory(cat);
-                                setNewCategoryName(cat.name);
-                                setNewCategoryIcon(cat.icon || "");
-                                setIsCategoryModalOpen(true);
-                              }}
-                              className={cn(
-                                "p-2 rounded-xl transition-all mr-1 hover:bg-blue-50 hover:text-blue-500",
-                                activeCategory === cat.id ? "hover:bg-white/10 hover:text-white" : "hover:bg-gray-100"
-                              )}
-                            >
-                              <Pencil className="h-3.5 w-3.5" />
-                            </button>
-                            <button
-                              onClick={(e) => handleDeleteCategory(cat.id, e)}
-                              className={cn(
-                                "p-2 rounded-xl transition-all hover:bg-red-50 hover:text-red-500",
-                                activeCategory === cat.id ? "hover:bg-white/10 hover:text-white" : "hover:bg-gray-100"
-                              )}
-                            >
-                              <Trash2 className="h-3.5 w-3.5" />
-                            </button>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-
-              <div className="mt-auto pt-8">
-                <div className="bg-primary/5 rounded-[2rem] p-6 text-center border border-primary/5">
-                  <button
-                    onClick={() => setIsPreviewOpen(true)}
-                    className="w-full py-3 bg-primary text-white font-medium text-[10px] uppercase tracking-widest rounded-xl shadow-lg shadow-primary/20 hover:bg-[#196F03] transition-all flex items-center justify-center gap-2"
-                  >
-                    <Eye className="h-3 w-3" />
-                    View Live Menu
-                  </button>
-                </div>
-
-                <div className="mt-6 flex flex-col gap-3">
-                  <button
-                    onClick={() => {
-                      setEditingCategory(null);
-                      setNewCategoryName("");
-                      setNewCategoryIcon("");
-                      setIsCategoryModalOpen(true);
-                    }}
-                    className="w-full flex items-center gap-3 p-4 bg-gray-50 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all group font-medium text-xs"
-                  >
-                    <FolderPlus className="h-4 w-4" />
-                    Add New Section
-                  </button>
-                  <button
-                    onClick={handleClearEverything}
-                    disabled={categories.length === 0 && items.length === 0}
-                    className="w-full flex items-center gap-3 p-4 bg-red-50 text-red-500 rounded-2xl hover:bg-red-500 hover:text-white transition-all group font-medium text-xs disabled:opacity-50 disabled:cursor-not-allowed"
-                  >
-                    <Trash2 className="h-4 w-4" />
-                    Clear Entire Menu
-                  </button>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
+    <div className="flex-1 flex flex-col font-sans overflow-hidden bg-gray-50/30">
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden relative">
         <div className="px-4 md:px-10 pt-6 md:pt-8 pb-4 flex-shrink-0 bg-white/50 backdrop-blur-md border-b border-gray-100/50 z-10">
@@ -934,23 +661,45 @@ export default function MenuPage() {
             </div>
           </div>
 
-          {/* Second Row: Tabs & Import/Export */}
+          {/* Second Row: Category Filters & Import/Export */}
           <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between border-b border-gray-100 pb-6 gap-6">
             
-            {/* Tabs */}
-            <div className="flex items-center gap-6">
-              <button className="text-xs font-medium text-[#196F03] border-b-2 border-brand-green pb-6 -mb-[26px]">All Dishes</button>
-              <button 
-                onClick={handleClearEverything}
-                disabled={categories.length === 0 && items.length === 0}
-                className="text-xs font-bold text-red-500 hover:text-red-600 pb-6 -mb-[26px] disabled:opacity-50 transition-colors uppercase tracking-widest"
-              >
-                Clear Menu
-              </button>
+            {/* Horizontal Category Filters */}
+            <div className="flex bg-gray-100/50 p-1.5 rounded-[1.5rem] overflow-x-auto w-full xl:w-auto max-w-full custom-scrollbar">
+                <button
+                  onClick={() => setActiveCategory("all")}
+                  className={cn(
+                    "px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+                    activeCategory === "all" ? "bg-white text-[#196F03] shadow-sm" : "text-gray-400 hover:text-gray-600"
+                  )}
+                >
+                  All
+                </button>
+                {categories.map((cat) => (
+                  <button
+                    key={cat.id}
+                    onClick={() => setActiveCategory(cat.id)}
+                    className={cn(
+                      "flex items-center gap-2 px-6 py-3 rounded-xl text-[10px] font-bold uppercase tracking-widest transition-all whitespace-nowrap",
+                      activeCategory === cat.id ? "bg-white text-[#196F03] shadow-sm" : "text-gray-400 hover:text-gray-600"
+                    )}
+                  >
+                    {cat.icon && <img src={cat.icon} className="h-4 w-4 rounded-sm object-cover" alt="" />}
+                    {cat.name}
+                  </button>
+                ))}
             </div>
 
             {/* Right side: Import/Export & View Toggle */}
             <div className="flex flex-wrap items-center gap-4 xl:ml-auto w-full xl:w-auto">
+              <button 
+                onClick={handleClearEverything}
+                disabled={categories.length === 0 && items.length === 0}
+                className="flex items-center gap-2 px-4 py-2.5 bg-red-50 text-red-500 text-xs font-semibold rounded-xl hover:bg-red-500 hover:text-white transition-all shadow-sm whitespace-nowrap disabled:opacity-50"
+              >
+                <Trash2 className="h-4 w-4" />
+                Clear Menu
+              </button>
               {/* Drag & Drop zone for CSV */}
               <div 
                 onDragOver={(e) => { e.preventDefault(); e.currentTarget.classList.add('bg-brand-green/5', 'border-brand-green'); }}

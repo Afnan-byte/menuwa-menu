@@ -5,6 +5,7 @@ import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Utensils,
+  FolderTree,
   QrCode,
   Settings,
   LogOut,
@@ -23,6 +24,7 @@ import toast from "react-hot-toast";
 
 const navItems = [
   { icon: LayoutDashboard, label: "Overview", href: "/dashboard" },
+  { icon: FolderTree, label: "Categories", href: "/categories" },
   { icon: Utensils, label: "Menu Manager", href: "/menu" },
   { icon: QrCode, label: "QR Code", href: "/qr" },
   { icon: Settings, label: "Settings", href: "/settings" },
