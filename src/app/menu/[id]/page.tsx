@@ -244,8 +244,11 @@ export default function PublicMenuPage() {
       setCategories(
         catDocs
           .filter((d: any) => d.document)
-          .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as Category))
-          .sort((a: Category, b: Category) => (a.order ?? 0) - (b.order ?? 0))
+          .map((d: any, idx: number) => {
+            const data = firestoreDocToObj(d.document.fields);
+            return { id: d.document.name.split("/").pop(), ...data, order: data.order ?? idx } as Category;
+          })
+          .sort((a: Category, b: Category) => a.order! - b.order!)
       );
       setItems(
         itemDocs

@@ -279,8 +279,11 @@ export default function MenuPage() {
     try {
       const catQuery = query(collection(db, "categories"), where("restaurantId", "==", user?.uid));
       const catSnap = await getDocs(catQuery);
-      const catList = catSnap.docs.map(doc => ({ id: doc.id, ...doc.data() } as Category));
-      setCategories(catList.sort((a, b) => (a.order ?? 0) - (b.order ?? 0)));
+      const catList = catSnap.docs.map((doc, idx) => {
+        const data = doc.data();
+        return { id: doc.id, ...data, order: data.order ?? idx } as Category;
+      });
+      setCategories(catList.sort((a, b) => a.order! - b.order!));
 
       const itemQuery = query(collection(db, "items"), where("restaurantId", "==", user?.uid));
       const itemSnap = await getDocs(itemQuery);
@@ -745,11 +748,11 @@ export default function MenuPage() {
                               activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                             )}
                           >
-                            <div className="flex items-center gap-3">
-                              <div className={cn("p-2 rounded-xl transition-colors", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
+                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                              <div className={cn("p-2 rounded-xl transition-colors shrink-0", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
                                 <Utensils className="h-4 w-4" />
                               </div>
-                              <span className="text-xs font-medium truncate max-w-[120px]">{cat.name}</span>
+                              <span className="text-xs font-medium truncate flex-1 min-w-0 text-left">{cat.name}</span>
                             </div>
                           </button>
                           
