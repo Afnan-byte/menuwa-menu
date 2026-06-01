@@ -35,7 +35,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
     >
       {/* Conditionally render Image Container */}
       {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
-        <div className="relative w-full mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100" style={{ paddingBottom: "75%" }}>
+        <div className="relative w-full mb-4 rounded-2xl overflow-hidden bg-gray-50 border border-gray-100" style={{ paddingBottom: "100%" }}>
           <Image
             src={item.imageUrl!}
             alt={item.name}

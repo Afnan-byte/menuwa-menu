@@ -597,7 +597,7 @@ export default function PublicMenuPage() {
                         {/* Image — paddingBottom trick guarantees height on all browsers */}
                         <div
                           className={cn("relative w-full overflow-hidden", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}
-                          style={{ paddingBottom: "75%" /* 4:3 ratio = 3/4 = 75% */ }}
+                          style={{ paddingBottom: "100%" /* 1:1 ratio */ }}
                         >
                           <Image
                             src={item.imageUrl}
@@ -702,7 +702,7 @@ export default function PublicMenuPage() {
 
                     {/* Modal image — FIX: Next Image instead of bare <img> */}
                     {selectedItem.imageUrl && (selectedItem.imageUrl.startsWith("http") || selectedItem.imageUrl.startsWith("/")) && (
-                      <div className="relative w-full overflow-hidden mb-6 rounded-2xl" style={{ paddingBottom: "75%" }}>
+                      <div className="relative w-full overflow-hidden mb-6 rounded-2xl" style={{ paddingBottom: "100%" }}>
                         <Image
                           src={selectedItem.imageUrl}
                           alt={selectedItem.name}
