@@ -365,19 +365,48 @@ export default function PublicMenuPage() {
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
         {/* Header */}
-        <header className="relative w-full overflow-hidden flex flex-col items-center justify-center pt-24 pb-2">
-          <div className="absolute top-6 left-6 flex items-center z-30">
+        <header className="relative w-full pt-16 pb-8 flex flex-col items-center justify-center overflow-hidden">
+          {/* Dynamic Background Sweep */}
+          <div 
+             className="absolute top-0 inset-x-0 h-64 opacity-20 z-0 pointer-events-none" 
+             style={{ 
+               background: `radial-gradient(circle at 50% 0%, var(--brand-primary) 0%, transparent 70%)` 
+             }} 
+          />
+          
+          <div className="relative z-10 flex flex-col items-center text-center px-6">
             {restaurant?.logoUrl ? (
-              <div className={cn("relative h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center p-2 shadow-xl border overflow-hidden", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
-                <Image src={restaurant.logoUrl} alt={restaurant.restaurantName || "Restaurant"} fill sizes="80px" priority className="object-contain" />
+              <div className={cn(
+                  "relative h-28 w-28 rounded-[2rem] mb-6 flex items-center justify-center p-1.5 transition-transform duration-700 hover:scale-105", 
+                  isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
+                )}
+              >
+                <div className={cn("relative w-full h-full rounded-2xl overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-gray-50")}>
+                   <Image src={restaurant.logoUrl} alt={restaurant.restaurantName || "Restaurant"} fill sizes="112px" priority className="object-cover" />
+                </div>
               </div>
             ) : (
-              <div className={cn("h-16 w-16 sm:h-20 sm:w-20 rounded-full flex items-center justify-center shadow-xl border", isDark ? "bg-black border-white/10" : "bg-white border-gray-200")}>
-                <Utensils className="h-8 w-8 text-[#196F03]" />
+              <div className={cn(
+                  "h-28 w-28 rounded-[2rem] flex items-center justify-center mb-6 transition-transform duration-700 hover:scale-105", 
+                  isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
+                )}
+              >
+                <Utensils className="h-10 w-10 text-[var(--brand-primary)]" />
               </div>
             )}
+            
+            <h1 className={cn("text-3xl font-semibold tracking-tight mb-2.5", isDark ? "text-white" : "text-gray-900")}>
+              {restaurant?.restaurantName || "Welcome"}
+            </h1>
+            
+            <div className="flex items-center gap-3 opacity-80">
+              <div className="h-px w-6 bg-gradient-to-r from-transparent to-[var(--brand-primary)]" />
+              <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--brand-primary)]">
+                 Artisan Menu
+              </span>
+              <div className="h-px w-6 bg-gradient-to-l from-transparent to-[var(--brand-primary)]" />
+            </div>
           </div>
-          <div className={cn("absolute inset-0 z-0", isDark ? "bg-[#0A0A0A]" : "bg-white")} />
         </header>
 
         {/* Search & filters */}
@@ -484,6 +513,22 @@ export default function PublicMenuPage() {
                       {item.name}
                     </h3>
                     
+                    {item.variants && item.variants.length > 0 && (
+                      <div className="flex flex-wrap gap-1 mt-1">
+                        {item.variants.slice(0, 2).map((v) => (
+                          <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                            <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
+                            <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
+                          </div>
+                        ))}
+                        {item.variants.length > 2 && (
+                          <div className={cn("flex items-center px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                            <span className="text-[8px] font-bold text-gray-500">+{item.variants.length - 2}</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+                    
                     <div className="flex items-center justify-between mt-2">
                        <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
                          ₹{item.price.replace(/[^0-9.]/g, "")}
@@ -538,18 +583,17 @@ export default function PublicMenuPage() {
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
-                <div className="grid grid-cols-1 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-3 gap-x-4 gap-y-8">
                   {categoryItems.map((item, idx) => {
                     const hasImage = item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/"));
 
                     if (!hasImage) {
                       return (
-                        // FIX: CSS animation replaces framer whileInView — runs on compositor
                         <div
                           key={item.id}
                           onClick={() => setSelectedItem(item)}
                           className={cn(
-                            "menu-item-card group cursor-pointer relative flex items-center justify-between py-4 border-b last:border-b-0 transition-colors px-2 -mx-2 rounded-xl min-h-[44px]",
+                            "menu-item-card col-span-2 sm:col-span-3 group cursor-pointer relative flex items-center justify-between py-4 border-b last:border-b-0 transition-colors px-2 -mx-2 rounded-xl min-h-[44px]",
                             isDark ? "border-white/5 hover:bg-white/5" : "border-gray-200 hover:bg-gray-50",
                             !item.isAvailable && "opacity-50"
                           )}
@@ -583,89 +627,78 @@ export default function PublicMenuPage() {
                     }
 
                     return (
-                      // FIX: CSS animation replaces framer whileInView
-                      <div
-                        key={item.id}
-                        onClick={() => setSelectedItem(item)}
-                        className={cn(
-                          "menu-item-card group cursor-pointer relative transition-all duration-500 flex flex-col rounded-[2rem] overflow-hidden",
-                          isDark ? "bg-[#1A1A1A] border border-white/5" : "bg-white shadow-xl border border-gray-100",
-                          !item.isAvailable && "opacity-70"
-                        )}
-                        style={{ animationDelay: `${Math.min(idx, 3) * 60}ms` }}
-                      >
-                        {/* Image — paddingBottom trick guarantees height on all browsers */}
-                        <div
-                          className={cn("relative w-full overflow-hidden", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}
-                          style={{ paddingBottom: "100%" /* 1:1 ratio */ }}
-                        >
+                    <div
+                      key={item.id}
+                      onClick={() => setSelectedItem(item)}
+                      className="group cursor-pointer flex flex-col"
+                      style={{ animationDelay: `${Math.min(idx, 8) * 40}ms` }}
+                    >
+                      {/* Image Container */}
+                      <div className="relative w-full rounded-2xl overflow-hidden mb-3 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-black/5" style={{ paddingBottom: "100%" }}>
+                        {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
                           <Image
                             src={item.imageUrl}
                             alt={item.name}
                             fill
-                            sizes="(max-width: 480px) 100vw, (max-width: 768px) 448px, 448px"
-                            loading="lazy"
+                            sizes="(max-width: 640px) 50vw, 33vw"
                             className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
-
-                          <div className={cn("absolute top-3 left-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20", isDark ? "bg-black/60" : "bg-white/90")}
-                            style={isDark ? {} : {}}>
-                            <Utensils className={cn("h-4 w-4", isDark ? "text-white" : "text-[#196F03]")} />
+                        ) : (
+                          <div className={cn("absolute inset-0 flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-50")}>
+                            <Utensils className="h-8 w-8 opacity-20" />
                           </div>
-
-                          {item.dietaryType === "veg" && (
-                            <div className={cn("absolute top-3 right-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20 text-[#196F03]", isDark ? "bg-black/60" : "bg-white/90")}>
-                              <Leaf className="h-4 w-4 fill-[#196F03]/20" />
-                            </div>
-                          )}
-                          {item.dietaryType === "non-veg" && (
-                            <div className={cn("absolute top-3 right-3 h-8 w-8 rounded-xl flex items-center justify-center shadow-sm z-20 text-red-500", isDark ? "bg-black/60" : "bg-white/90")}>
-                              <Flame className="h-4 w-4 fill-red-500/20" />
-                            </div>
-                          )}
-
-                          <div className="absolute bottom-4 right-4 bg-[#196F03] text-white px-3 py-1.5 rounded-xl font-black text-sm z-20">
-                            ₹{item.price.replace(/[^0-9.]/g, "")}
+                        )}
+                        
+                        {!item.isAvailable && (
+                          <div className="absolute inset-0 bg-white/10 flex items-center justify-center backdrop-blur-sm">
+                             <span className={cn("text-[10px] font-medium tracking-widest uppercase px-3 py-1 rounded-full", isDark ? "bg-black/60 text-white" : "bg-white/80 text-black")}>
+                                Sold Out
+                             </span>
                           </div>
+                        )}
+                      </div>
 
-                          {/* Addon thumbnails — FIX: Next Image */}
-                          {item.addons && item.addons.length > 0 && (
-                            <div className="absolute bottom-4 left-4 z-20 flex -space-x-3">
-                              {item.addons.slice(0, 3).map((addon, i) =>
-                                addon.imageUrl ? (
-                                  <div key={addon.id} className="relative h-14 w-14 rounded-full border-[3px] border-white overflow-hidden shadow-xl" style={{ zIndex: 10 - i }}>
-                                    <Image src={addon.imageUrl} alt={addon.name} fill sizes="56px" className="object-cover" />
-                                  </div>
-                                ) : null
-                              )}
-                            </div>
-                          )}
+                      {/* Info Area */}
+                      <div className="flex flex-col gap-1 px-0.5">
+                        <div className="flex items-center gap-1.5 mb-1">
+                           <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
+                              {cat.name}
+                           </span>
+                           {item.dietaryType === "veg" && <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]" />}
+                           {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                         </div>
-
-                        {/* Content */}
-                        <div className="flex-1 flex flex-col p-5">
-                          <h3 className={cn("text-lg font-semibold leading-snug", isDark ? "text-white" : "text-gray-900")}>
-                            {item.name}
-                            {item.addons && item.addons.length > 0 && (
-                              <span className="opacity-90 font-medium"> + {item.addons.map((a) => a.name).join(" + ")}</span>
+                        
+                        <h3 className={cn("text-[15px] font-semibold leading-snug line-clamp-2", isDark ? "text-white/90" : "text-gray-800")}>
+                          {item.name}
+                        </h3>
+                        
+                        {item.variants && item.variants.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mt-1">
+                            {item.variants.slice(0, 2).map((v) => (
+                              <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
+                                <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
+                              </div>
+                            ))}
+                            {item.variants.length > 2 && (
+                              <div className={cn("flex items-center px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                <span className="text-[8px] font-bold text-gray-500">+{item.variants.length - 2}</span>
+                              </div>
                             )}
-                          </h3>
-                          {item.variants && item.variants.length > 0 && (
-                            <div className="flex flex-wrap gap-2 mt-3">
-                              {item.variants.map((v) => (
-                                <div key={v.id} className={cn("flex items-center gap-1.5 px-2.5 py-1 rounded-lg border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
-                                  <span className="text-[10px] font-bold text-gray-400 uppercase">{v.name}</span>
-                                  <span className="text-[10px] font-black text-[#196F03]">₹{v.price}</span>
-                                </div>
-                              ))}
-                            </div>
-                          )}
-                          {!item.isAvailable && (
-                            <span className="text-[10px] font-black text-red-500 uppercase tracking-widest px-2 py-1 bg-red-500/10 rounded-md mt-3 w-fit">Sold Out</span>
-                          )}
+                          </div>
+                        )}
+                        
+                        <div className="flex items-center justify-between mt-1.5">
+                           <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
+                             ₹{item.price.replace(/[^0-9.]/g, "")}
+                           </span>
+                           
+                           <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
+                              <span className="text-sm font-light leading-none mb-px">+</span>
+                           </div>
                         </div>
                       </div>
+                    </div>
                     );
                   })}
                 </div>
