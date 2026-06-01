@@ -10,6 +10,8 @@ import {
   Leaf,
   Flame,
   Search,
+  ArrowRight,
+  ChevronUp,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -108,90 +110,7 @@ function MenuSkeleton() {
   );
 }
 
-// ─── Book viewer ────────────────────────────────────────────────────────────
-function BookViewer({ pages }: { pages: string[] }) {
-  const [currentPage, setCurrentPage] = useState(0);
-  const [direction, setDirection] = useState(0);
 
-  return (
-    <div
-      className="fixed inset-0 bg-[#0A0A0A] overflow-hidden select-none z-[100] flex flex-col p-4 md:p-8"
-      style={{ perspective: "1500px" }}
-    >
-      {/* Ambient background — CSS transition, no JS animation */}
-      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img
-          src={pages[currentPage]}
-          alt=""
-          aria-hidden
-          className="absolute inset-0 w-full h-full object-cover scale-110 transition-opacity duration-700"
-          style={{ filter: "blur(40px) saturate(1.5)", opacity: 0.25 }}
-        />
-        <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/60 to-[#0A0A0A]" />
-      </div>
-
-      <AnimatePresence initial={false} custom={direction}>
-        <motion.img
-          key={currentPage}
-          src={pages[currentPage]}
-          alt={`Menu page ${currentPage + 1}`}
-          custom={direction}
-          variants={{
-            enter: (d: number) => ({ rotateY: d > 0 ? 90 : -90, opacity: 0, scale: 0.9, originX: d > 0 ? 1 : 0 }),
-            center: (d: number) => ({ zIndex: 1, rotateY: 0, opacity: 1, scale: 1, originX: d > 0 ? 1 : 0 }),
-            exit: (d: number) => ({ zIndex: 0, rotateY: d < 0 ? 90 : -90, opacity: 0, scale: 0.9, originX: d < 0 ? 1 : 0 }),
-          }}
-          initial="enter"
-          animate="center"
-          exit="exit"
-          transition={{
-            rotateY: { type: "spring", stiffness: 200, damping: 25 },
-            opacity: { duration: 0.3 },
-            scale: { duration: 0.3 },
-          }}
-          drag="x"
-          dragConstraints={{ left: 0, right: 0 }}
-          dragElastic={0.8}
-          onDragEnd={(_, { offset, velocity }) => {
-            const swipe = Math.abs(offset.x) * velocity.x;
-            if (swipe < -5000 && currentPage < pages.length - 1) {
-              setDirection(1);
-              setCurrentPage((p) => p + 1);
-            } else if (swipe > 5000 && currentPage > 0) {
-              setDirection(-1);
-              setCurrentPage((p) => p - 1);
-            }
-          }}
-          className="absolute inset-0 m-auto w-full h-full max-w-5xl object-contain pointer-events-auto drop-shadow-[0_20px_50px_rgba(0,0,0,0.8)] z-10"
-        />
-      </AnimatePresence>
-
-      <div className="absolute bottom-10 inset-x-0 flex flex-col items-center justify-center z-20 pointer-events-none">
-        <div className="flex items-center gap-2 mb-5 bg-white/5 border border-white/10 px-5 py-3 rounded-full shadow-2xl pointer-events-auto"
-          style={{ backdropFilter: "blur(16px)", WebkitBackdropFilter: "blur(16px)" }}>
-          {pages.map((_, idx) => (
-            <button
-              key={idx}
-              onClick={() => {
-                setDirection(idx > currentPage ? 1 : -1);
-                setCurrentPage(idx);
-              }}
-              className={cn(
-                "h-1.5 rounded-full transition-all duration-500",
-                currentPage === idx ? "w-8 bg-white" : "w-2 bg-white/20 hover:bg-white/40"
-              )}
-            />
-          ))}
-        </div>
-        <div className="flex flex-col items-center gap-1.5 opacity-90">
-          <span className="text-[11px] font-bold uppercase tracking-[0.4em] text-white/90 drop-shadow-md">Menu Book</span>
-          <span className="text-[9px] uppercase tracking-[0.5em] text-white/40 font-medium">Swipe to Explore</span>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 // ─── Main page ──────────────────────────────────────────────────────────────
 export default function PublicMenuPage() {
@@ -208,8 +127,7 @@ export default function PublicMenuPage() {
   const deferredQuery = useDeferredValue(searchQuery);
 
   const [dietaryFilter, setDietaryFilter] = useState<"all" | "veg" | "non-veg">("all");
-  const [currentBookPage, setCurrentBookPage] = useState(0);
-  const [direction, setDirection] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
 
   const themeColor = restaurant?.themeColor || "#196F03";
   const themeRgb = useMemo(() => hexToRgb(themeColor), [themeColor]);
@@ -221,6 +139,30 @@ export default function PublicMenuPage() {
     if (id) fetchMenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setShowScrollTop(window.scrollY > 300);
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const handleCategoryClick = (categoryId: string) => {
+    setActiveCategory(categoryId);
+    setTimeout(() => {
+      const contentEl = document.getElementById("menu-content-area");
+      if (contentEl) {
+        const headerOffset = 90; // Approx height of sticky categories bar
+        const elementPosition = contentEl.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - headerOffset;
+        window.scrollTo({
+          top: offsetPosition,
+          behavior: "smooth"
+        });
+      }
+    }, 50);
+  };
 
   const fetchMenu = async () => {
     try {
@@ -354,10 +296,6 @@ export default function PublicMenuPage() {
 
   if (loading) return <MenuSkeleton />;
 
-  if (restaurant?.menuType === "book" && restaurant.bookPages?.length) {
-    return <BookViewer pages={restaurant.bookPages} />;
-  }
-
   return (
     <div
       className={cn(
@@ -436,7 +374,7 @@ export default function PublicMenuPage() {
 
           <div className={cn("grid grid-cols-3 border rounded-2xl overflow-hidden mt-4", isDark ? "border-white/10 divide-white/10" : "border-gray-200 divide-gray-200", "divide-y divide-x")}>
             <button
-              onClick={() => setActiveCategory("all")}
+              onClick={() => handleCategoryClick("all")}
               className={cn(
                 "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full min-h-[44px]",
                 activeCategory === "all" ? "bg-[#196F03] text-white" : isDark ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5" : "bg-white text-gray-500 hover:bg-gray-50"
@@ -448,7 +386,7 @@ export default function PublicMenuPage() {
             {categories.map((cat) => (
               <button
                 key={cat.id}
-                onClick={() => setActiveCategory(cat.id)}
+                onClick={() => handleCategoryClick(cat.id)}
                 className={cn(
                   "flex items-center justify-center gap-2 px-2 py-4 text-[10px] font-bold uppercase tracking-widest transition-all duration-300 w-full min-h-[44px]",
                   activeCategory === cat.id ? "bg-[#196F03] text-white" : isDark ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5" : "bg-white text-gray-500 hover:bg-gray-50"
@@ -550,7 +488,7 @@ export default function PublicMenuPage() {
         )}
 
         {/* Menu content */}
-        <div className="px-6 py-8 space-y-16 min-h-[400px]">
+        <div id="menu-content-area" className="px-6 py-8 space-y-16 min-h-[400px]">
           {filteredItems.length === 0 && (
             <div className="flex flex-col items-center justify-center py-20 text-center">
               <div className={cn("h-24 w-24 rounded-full flex items-center justify-center mb-8 border", isDark ? "bg-white/5 border-white/10" : "bg-gray-100 border-gray-200")}>
@@ -698,7 +636,7 @@ export default function PublicMenuPage() {
                            </span>
                            
                            <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
-                              <span className="text-sm font-light leading-none mb-px">+</span>
+                              <ArrowRight className="h-3.5 w-3.5" />
                            </div>
                         </div>
                       </div>
@@ -846,6 +784,25 @@ export default function PublicMenuPage() {
           <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
           <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/10" : "bg-gray-200")} />
         </footer>
+
+        {/* Scroll to top button */}
+        <AnimatePresence>
+          {showScrollTop && (
+            <motion.button
+              initial={{ opacity: 0, scale: 0.8, y: 20 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.8, y: 20 }}
+              onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+              className={cn(
+                "fixed bottom-6 right-6 z-50 h-12 w-12 rounded-full flex items-center justify-center shadow-2xl transition-all hover:scale-105 active:scale-95",
+                isDark ? "bg-white text-black" : "bg-[#196F03] text-white"
+              )}
+              aria-label="Scroll to top"
+            >
+              <ChevronUp className="h-6 w-6" />
+            </motion.button>
+          )}
+        </AnimatePresence>
       </div>
     </div>
   );
