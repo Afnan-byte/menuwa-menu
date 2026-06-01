@@ -37,7 +37,9 @@ import {
   FileUp,
   Download,
   ArrowUp,
-  ArrowDown
+  ArrowDown,
+  Pencil,
+  ImageIcon
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import MenuItemCard from "@/components/MenuItemCard";
@@ -48,6 +50,7 @@ interface Category {
   id: string;
   name: string;
   order?: number;
+  icon?: string;
 }
 
 interface Variant {
@@ -112,6 +115,8 @@ export default function MenuPage() {
 
   // Form States
   const [newCategoryName, setNewCategoryName] = useState("");
+  const [newCategoryIcon, setNewCategoryIcon] = useState("");
+  const [editingCategory, setEditingCategory] = useState<Category | null>(null);
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
   const [itemForm, setItemForm] = useState({
     name: "",
@@ -225,6 +230,18 @@ export default function MenuPage() {
     const data = JSON.parse(responseText);
     if (!data.secure_url) throw new Error("No URL returned");
     return data.secure_url;
+  };
+
+  const handleCategoryIconUpload = async (file: File) => {
+    if (!file || !user) return;
+    const toastId = toast.loading("Uploading icon...");
+    try {
+      const url = await uploadToCloudinary(file);
+      setNewCategoryIcon(url);
+      toast.success("Category icon uploaded!", { id: toastId });
+    } catch (error: any) {
+      toast.error(`Upload failed: ${error.message}`, { id: toastId });
+    }
   };
 
   const handleItemImageUpload = async (file: File) => {
@@ -537,21 +554,33 @@ export default function MenuPage() {
 
   const [isSaving, setIsSaving] = useState(false);
 
-  const handleAddCategory = async (e: React.FormEvent) => {
+  const handleCategorySubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newCategoryName.trim() || !user) return;
     setIsSaving(true);
     try {
-      const docRef = await addDoc(collection(db, "categories"), {
-        name: newCategoryName,
-        restaurantId: user.uid,
-        createdAt: new Date().toISOString(),
-        order: categories.length,
-      });
-      setCategories([...categories, { id: docRef.id, name: newCategoryName, order: categories.length }]);
+      if (editingCategory) {
+        await updateDoc(doc(db, "categories", editingCategory.id), {
+          name: newCategoryName,
+          icon: newCategoryIcon,
+        });
+        setCategories(categories.map(c => c.id === editingCategory.id ? { ...c, name: newCategoryName, icon: newCategoryIcon } : c));
+        toast.success("Category updated!");
+      } else {
+        const docRef = await addDoc(collection(db, "categories"), {
+          name: newCategoryName,
+          icon: newCategoryIcon,
+          restaurantId: user.uid,
+          createdAt: new Date().toISOString(),
+          order: categories.length,
+        });
+        setCategories([...categories, { id: docRef.id, name: newCategoryName, icon: newCategoryIcon, order: categories.length }]);
+        toast.success("Category added!");
+      }
       setNewCategoryName("");
+      setNewCategoryIcon("");
+      setEditingCategory(null);
       setIsCategoryModalOpen(false);
-      toast.success("Category added!");
     } catch (error: any) {
       toast.error("Database Error");
     } finally {
@@ -706,7 +735,12 @@ export default function MenuPage() {
                   <p className="hidden md:block text-[10px] font-medium text-gray-300 uppercase tracking-widest mt-1">Manage Categories</p>
                 </div>
                 <button
-                  onClick={() => setIsCategoryModalOpen(true)}
+                  onClick={() => {
+                    setEditingCategory(null);
+                    setNewCategoryName("");
+                    setNewCategoryIcon("");
+                    setIsCategoryModalOpen(true);
+                  }}
                   className="p-3 bg-gray-100 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all shadow-sm group"
                 >
                   <FolderPlus className="h-5 w-5" />
@@ -743,13 +777,17 @@ export default function MenuPage() {
                           <button
                             onClick={() => setActiveCategory(cat.id)}
                             className={cn(
-                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-24",
+                              "w-full flex items-center justify-between p-4 rounded-2xl transition-all group text-left pr-32",
                               activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                             )}
                           >
                             <div className="flex items-center gap-3 flex-1">
                               <div className={cn("p-2 rounded-xl transition-colors shrink-0", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
-                                <Utensils className="h-4 w-4" />
+                                {cat.icon ? (
+                                  <img src={cat.icon} alt="" className="h-4 w-4 object-cover rounded-sm" />
+                                ) : (
+                                  <Utensils className="h-4 w-4" />
+                                )}
                               </div>
                               <span className="text-xs font-medium whitespace-normal break-words text-left">{cat.name}</span>
                             </div>
@@ -775,6 +813,21 @@ export default function MenuPage() {
                                 <ArrowDown className="h-3 w-3" />
                               </button>
                             </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                setEditingCategory(cat);
+                                setNewCategoryName(cat.name);
+                                setNewCategoryIcon(cat.icon || "");
+                                setIsCategoryModalOpen(true);
+                              }}
+                              className={cn(
+                                "p-2 rounded-xl transition-all mr-1 hover:bg-blue-50 hover:text-blue-500",
+                                activeCategory === cat.id ? "hover:bg-white/10 hover:text-white" : "hover:bg-gray-100"
+                              )}
+                            >
+                              <Pencil className="h-3.5 w-3.5" />
+                            </button>
                             <button
                               onClick={(e) => handleDeleteCategory(cat.id, e)}
                               className={cn(
@@ -805,7 +858,12 @@ export default function MenuPage() {
 
                 <div className="mt-6 flex flex-col gap-3">
                   <button
-                    onClick={() => setIsCategoryModalOpen(true)}
+                    onClick={() => {
+                      setEditingCategory(null);
+                      setNewCategoryName("");
+                      setNewCategoryIcon("");
+                      setIsCategoryModalOpen(true);
+                    }}
                     className="w-full flex items-center gap-3 p-4 bg-gray-50 text-[#196F03] rounded-2xl hover:bg-[#196F03] hover:text-white transition-all group font-medium text-xs"
                   >
                     <FolderPlus className="h-4 w-4" />
@@ -1004,19 +1062,60 @@ export default function MenuPage() {
               exit={{ scale: 0.9, opacity: 0 }}
               className="bg-white rounded-[3rem] p-12 max-w-sm w-full shadow-2xl relative overflow-hidden"
             >
-              <h2 className="text-3xl font-medium text-primary mb-2 tracking-tight">New Section</h2>
-              <form onSubmit={handleAddCategory} className="space-y-8 mt-6">
-                <input
-                  type="text"
-                  placeholder="e.g. Signature Pizzas"
-                  className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-medium outline-none text-primary"
-                  value={newCategoryName}
-                  onChange={(e) => setNewCategoryName(e.target.value)}
-                />
-                <div className="flex gap-4">
+              <h2 className="text-3xl font-medium text-primary mb-2 tracking-tight">{editingCategory ? "Edit Section" : "New Section"}</h2>
+              <form onSubmit={handleCategorySubmit} className="space-y-6 mt-6">
+                <div>
+                  <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-2 block">Section Name</label>
+                  <input
+                    type="text"
+                    placeholder="e.g. Signature Pizzas"
+                    required
+                    className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-sm font-medium outline-none text-primary"
+                    value={newCategoryName}
+                    onChange={(e) => setNewCategoryName(e.target.value)}
+                  />
+                </div>
+                
+                <div>
+                  <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-2 block">Custom Icon (Optional)</label>
+                  <div className="flex items-center gap-4">
+                    {newCategoryIcon ? (
+                      <div className="relative h-16 w-16 rounded-2xl overflow-hidden border-2 border-gray-100 shrink-0 group">
+                        <img src={newCategoryIcon} alt="Icon preview" className="w-full h-full object-cover" />
+                        <button 
+                          type="button"
+                          onClick={() => setNewCategoryIcon("")} 
+                          className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="h-16 w-16 rounded-2xl border-2 border-dashed border-gray-200 bg-gray-50 flex items-center justify-center shrink-0">
+                        <ImageIcon className="h-6 w-6 text-gray-300" />
+                      </div>
+                    )}
+                    <label className="flex-1 cursor-pointer">
+                      <div className="px-6 py-5 bg-gray-50 hover:bg-gray-100 transition-colors rounded-[1.5rem] border border-transparent text-sm font-medium text-center text-primary">
+                        Upload Icon Image
+                      </div>
+                      <input 
+                        type="file" 
+                        accept="image/*" 
+                        className="hidden" 
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleCategoryIconUpload(file);
+                        }} 
+                      />
+                    </label>
+                  </div>
+                </div>
+
+                <div className="flex gap-4 pt-4">
                   <button type="button" onClick={() => setIsCategoryModalOpen(false)} className="flex-1 py-5 font-medium text-gray-400">Cancel</button>
                   <button type="submit" disabled={isSaving} className="flex-1 py-5 bg-primary text-white font-medium rounded-2xl shadow-xl shadow-primary/10 flex items-center justify-center">
-                    {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : "Create"}
+                    {isSaving ? <Loader2 className="h-5 w-5 animate-spin" /> : editingCategory ? "Save Changes" : "Create"}
                   </button>
                 </div>
               </form>

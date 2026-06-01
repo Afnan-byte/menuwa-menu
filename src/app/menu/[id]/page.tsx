@@ -20,6 +20,7 @@ interface Category {
   id: string;
   name: string;
   order?: number;
+  icon?: string;
 }
 
 interface Variant {
@@ -397,7 +398,11 @@ export default function PublicMenuPage() {
                   activeCategory === cat.id ? "bg-[#196F03] text-white" : isDark ? "bg-[#1A1A1A] text-gray-400 hover:bg-white/5" : "bg-white text-gray-500 hover:bg-gray-50"
                 )}
               >
-                {activeCategory === cat.id && <Utensils className="h-3.5 w-3.5 text-white shrink-0" />}
+                {cat.icon ? (
+                  <img src={cat.icon} alt="" className={cn("h-4 w-4 object-cover rounded-sm shrink-0", activeCategory === cat.id ? "opacity-100" : "opacity-70")} />
+                ) : activeCategory === cat.id && (
+                  <Utensils className="h-3.5 w-3.5 text-white shrink-0" />
+                )}
                 <span className="truncate max-w-[120px]">{cat.name}</span>
               </button>
             ))}
@@ -526,7 +531,12 @@ export default function PublicMenuPage() {
             return (
               <section key={cat.id} id={`category-${cat.id}`} className="space-y-12 menu-category-section">
                 <div className={cn("flex items-end justify-between border-b pb-4", isDark ? "border-white/5" : "border-gray-200")}>
-                  <h2 className={cn("text-2xl font-semibold tracking-tight", isDark ? "text-white" : "text-gray-900")}>{cat.name}</h2>
+                  <div className="flex items-center gap-3">
+                    {cat.icon && (
+                      <img src={cat.icon} alt="" className="h-6 w-6 object-cover rounded" />
+                    )}
+                    <h2 className={cn("text-2xl font-semibold tracking-tight", isDark ? "text-white" : "text-gray-900")}>{cat.name}</h2>
+                  </div>
                   <span className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.4em] mb-1">{categoryItems.length} Selection</span>
                 </div>
 
