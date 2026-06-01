@@ -593,24 +593,23 @@ export default function MenuPage() {
     const newIndex = direction === "up" ? index - 1 : index + 1;
     const newCategories = [...categories];
     
-    // Swap order property
-    const currentOrder = newCategories[index].order ?? index;
-    const targetOrder = newCategories[newIndex].order ?? newIndex;
-    
-    newCategories[index].order = targetOrder;
-    newCategories[newIndex].order = currentOrder;
-
     // Swap elements in array for immediate UI update
     const temp = newCategories[index];
     newCategories[index] = newCategories[newIndex];
     newCategories[newIndex] = temp;
 
+    // Force strict 0-based ordering for all items to guarantee stability
+    newCategories.forEach((cat, idx) => {
+      cat.order = idx;
+    });
+
     setCategories(newCategories);
 
     try {
       const batch = writeBatch(db);
-      batch.update(doc(db, "categories", newCategories[index].id), { order: newCategories[index].order });
-      batch.update(doc(db, "categories", newCategories[newIndex].id), { order: newCategories[newIndex].order });
+      newCategories.forEach((cat) => {
+        batch.update(doc(db, "categories", cat.id), { order: cat.order });
+      });
       await batch.commit();
     } catch (error) {
       toast.error("Failed to save category order");
@@ -748,11 +747,11 @@ export default function MenuPage() {
                               activeCategory === cat.id ? "bg-[#196F03] text-white shadow-xl " : "hover:bg-gray-50 text-gray-500"
                             )}
                           >
-                            <div className="flex items-center gap-3 flex-1 min-w-0">
+                            <div className="flex items-center gap-3 flex-1">
                               <div className={cn("p-2 rounded-xl transition-colors shrink-0", activeCategory === cat.id ? "bg-white/20 text-white" : "bg-gray-100 group-hover:bg-white text-gray-400 group-hover:text-[#196F03]")}>
                                 <Utensils className="h-4 w-4" />
                               </div>
-                              <span className="text-xs font-medium truncate flex-1 min-w-0 text-left">{cat.name}</span>
+                              <span className="text-xs font-medium whitespace-normal break-words text-left">{cat.name}</span>
                             </div>
                           </button>
                           
