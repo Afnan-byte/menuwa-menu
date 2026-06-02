@@ -12,6 +12,8 @@ import {
   Search,
   ArrowRight,
   ChevronUp,
+  Instagram,
+  Globe,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -153,10 +155,9 @@ export default function PublicMenuPage() {
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId);
     setTimeout(() => {
-      const targetId = categoryId === "all" ? "menu-content-area" : `category-${categoryId}`;
-      const contentEl = document.getElementById(targetId);
+      const contentEl = document.getElementById("menu-content-area");
       if (contentEl) {
-        const headerOffset = 40; 
+        const headerOffset = 90; // Approx height of sticky categories bar
         const elementPosition = contentEl.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.scrollY - headerOffset;
         window.scrollTo({
@@ -289,14 +290,15 @@ export default function PublicMenuPage() {
   const filteredItems = useMemo(() => {
     const q = deferredQuery.toLowerCase();
     return items.filter((item) => {
+      const matchesCategory = activeCategory === "all" || item.categoryId === activeCategory;
       const matchesSearch =
         !q ||
         item.name.toLowerCase().includes(q) ||
         item.description?.toLowerCase().includes(q);
       const matchesDietary = dietaryFilter === "all" || item.dietaryType === dietaryFilter;
-      return matchesSearch && matchesDietary;
+      return matchesCategory && matchesSearch && matchesDietary;
     });
-  }, [items, deferredQuery, dietaryFilter]);
+  }, [items, activeCategory, deferredQuery, dietaryFilter]);
 
   const featuredItems = useMemo(() => items.filter((i) => i.isPopular), [items]);
 
@@ -315,42 +317,42 @@ export default function PublicMenuPage() {
         {/* Header */}
         <header className="relative w-full pt-16 pb-8 flex flex-col items-center justify-center overflow-hidden">
           {/* Dynamic Background Sweep */}
-          <div 
-             className="absolute top-0 inset-x-0 h-64 opacity-20 z-0 pointer-events-none" 
-             style={{ 
-               background: `radial-gradient(circle at 50% 0%, var(--brand-primary) 0%, transparent 70%)` 
-             }} 
+          <div
+            className="absolute top-0 inset-x-0 h-64 opacity-20 z-0 pointer-events-none"
+            style={{
+              background: `radial-gradient(circle at 50% 0%, var(--brand-primary) 0%, transparent 70%)`
+            }}
           />
-          
+
           <div className="relative z-10 flex flex-col items-center text-center px-6">
             {restaurant?.logoUrl ? (
               <div className={cn(
-                  "relative h-28 w-28 rounded-[2rem] mb-6 flex items-center justify-center p-1.5 transition-transform duration-700 hover:scale-105", 
-                  isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
-                )}
+                "relative h-28 w-28 rounded-[2rem] mb-6 flex items-center justify-center p-1.5 transition-transform duration-700 hover:scale-105",
+                isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
+              )}
               >
                 <div className={cn("relative w-full h-full rounded-2xl overflow-hidden", isDark ? "bg-[#0F0F0F]" : "bg-gray-50")}>
-                   <Image src={restaurant.logoUrl} alt={restaurant.restaurantName || "Restaurant"} fill sizes="112px" priority className="object-cover" />
+                  <Image src={restaurant.logoUrl} alt={restaurant.restaurantName || "Restaurant"} fill sizes="112px" priority className="object-cover" />
                 </div>
               </div>
             ) : (
               <div className={cn(
-                  "h-28 w-28 rounded-[2rem] flex items-center justify-center mb-6 transition-transform duration-700 hover:scale-105", 
-                  isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
-                )}
+                "h-28 w-28 rounded-[2rem] flex items-center justify-center mb-6 transition-transform duration-700 hover:scale-105",
+                isDark ? "bg-white/5 border border-white/10" : "bg-white shadow-2xl shadow-gray-200 border border-gray-100"
+              )}
               >
                 <Utensils className="h-10 w-10 text-[var(--brand-primary)]" />
               </div>
             )}
-            
+
             <h1 className={cn("text-3xl font-semibold tracking-tight mb-2.5", isDark ? "text-white" : "text-gray-900")}>
               {restaurant?.restaurantName || "Welcome"}
             </h1>
-            
+
             <div className="flex items-center gap-3 opacity-80">
               <div className="h-px w-6 bg-gradient-to-r from-transparent to-[var(--brand-primary)]" />
               <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--brand-primary)]">
-                 Artisan Menu
+                Artisan Menu
               </span>
               <div className="h-px w-6 bg-gradient-to-l from-transparent to-[var(--brand-primary)]" />
             </div>
@@ -383,7 +385,7 @@ export default function PublicMenuPage() {
               onClick={() => handleCategoryClick("all")}
               className={cn(
                 "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border",
-                activeCategory === "all" 
+                activeCategory === "all"
                   ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
                   : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
               )}
@@ -401,7 +403,7 @@ export default function PublicMenuPage() {
                 onClick={() => handleCategoryClick(cat.id)}
                 className={cn(
                   "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border group",
-                  activeCategory === cat.id 
+                  activeCategory === cat.id
                     ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
                     : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
                 )}
@@ -429,7 +431,7 @@ export default function PublicMenuPage() {
                 Must Try
               </h2>
             </div>
-            
+
             <div className="flex gap-5 overflow-x-auto no-scrollbar px-6 pb-6 snap-x snap-mandatory">
               {featuredItems.map((item, idx) => (
                 <div
@@ -453,12 +455,12 @@ export default function PublicMenuPage() {
                         <Utensils className="h-8 w-8 opacity-20" />
                       </div>
                     )}
-                    
+
                     {!item.isAvailable && (
                       <div className="absolute inset-0 bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                         <span className={cn("text-[10px] font-medium tracking-widest uppercase px-3 py-1 rounded-full", isDark ? "bg-black/60 text-white" : "bg-white/80 text-black")}>
-                            Sold Out
-                         </span>
+                        <span className={cn("text-[10px] font-medium tracking-widest uppercase px-3 py-1 rounded-full", isDark ? "bg-black/60 text-white" : "bg-white/80 text-black")}>
+                          Sold Out
+                        </span>
                       </div>
                     )}
                   </div>
@@ -466,17 +468,17 @@ export default function PublicMenuPage() {
                   {/* Info Area */}
                   <div className="flex flex-col gap-1 px-0.5">
                     <div className="flex items-center gap-1.5 mb-1">
-                       <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#196F03]">
-                          Signature
-                       </span>
-                       {item.dietaryType === "veg" && <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]" />}
-                       {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
+                      <span className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#196F03]">
+                        Signature
+                      </span>
+                      {item.dietaryType === "veg" && <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]" />}
+                      {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                     </div>
-                    
+
                     <h3 className={cn("text-lg font-semibold leading-snug line-clamp-2", isDark ? "text-white" : "text-gray-900")}>
                       {item.name}
                     </h3>
-                    
+
                     {item.variants && item.variants.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-1">
                         {item.variants.slice(0, 2).map((v) => (
@@ -492,15 +494,15 @@ export default function PublicMenuPage() {
                         )}
                       </div>
                     )}
-                    
+
                     <div className="flex items-center justify-between mt-2">
-                       <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
-                         ₹{item.price.replace(/[^0-9.]/g, "")}
-                       </span>
-                       
-                       <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
-                          <span className="text-sm font-light leading-none mb-px">+</span>
-                       </div>
+                      <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
+                        ₹{item.price.replace(/[^0-9.]/g, "")}
+                      </span>
+
+                      <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
+                        <span className="text-sm font-light leading-none mb-px">+</span>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -527,7 +529,7 @@ export default function PublicMenuPage() {
             </div>
           )}
 
-          {categories.map((cat) => {
+          {(activeCategory === "all" ? categories : categories.filter((c) => c.id === activeCategory)).map((cat) => {
             const categoryItems = filteredItems
               .filter((item) => item.categoryId === cat.id)
               .sort((a, b) => {
@@ -596,78 +598,78 @@ export default function PublicMenuPage() {
                     }
 
                     return (
-                    <div
-                      key={item.id}
-                      onClick={() => setSelectedItem(item)}
-                      className="group cursor-pointer flex flex-col"
-                      style={{ animationDelay: `${Math.min(idx, 8) * 40}ms` }}
-                    >
-                      {/* Image Container */}
-                      <div className="relative w-full rounded-2xl overflow-hidden mb-3 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-black/5" style={{ paddingBottom: "100%" }}>
-                        {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
-                          <Image
-                            src={item.imageUrl}
-                            alt={item.name}
-                            fill
-                            sizes="(max-width: 640px) 50vw, 33vw"
-                            className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
-                          />
-                        ) : (
-                          <div className={cn("absolute inset-0 flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-50")}>
-                            <Utensils className="h-8 w-8 opacity-20" />
-                          </div>
-                        )}
-                        
-                        {!item.isAvailable && (
-                          <div className="absolute inset-0 bg-white/10 flex items-center justify-center backdrop-blur-sm">
-                             <span className={cn("text-[10px] font-medium tracking-widest uppercase px-3 py-1 rounded-full", isDark ? "bg-black/60 text-white" : "bg-white/80 text-black")}>
-                                Sold Out
-                             </span>
-                          </div>
-                        )}
-                      </div>
+                      <div
+                        key={item.id}
+                        onClick={() => setSelectedItem(item)}
+                        className="group cursor-pointer flex flex-col"
+                        style={{ animationDelay: `${Math.min(idx, 8) * 40}ms` }}
+                      >
+                        {/* Image Container */}
+                        <div className="relative w-full rounded-2xl overflow-hidden mb-3 shadow-sm group-hover:shadow-md transition-shadow duration-300 bg-black/5" style={{ paddingBottom: "100%" }}>
+                          {item.imageUrl && (item.imageUrl.startsWith("http") || item.imageUrl.startsWith("/")) ? (
+                            <Image
+                              src={item.imageUrl}
+                              alt={item.name}
+                              fill
+                              sizes="(max-width: 640px) 50vw, 33vw"
+                              className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
+                            />
+                          ) : (
+                            <div className={cn("absolute inset-0 flex items-center justify-center", isDark ? "bg-white/5" : "bg-gray-50")}>
+                              <Utensils className="h-8 w-8 opacity-20" />
+                            </div>
+                          )}
 
-                      {/* Info Area */}
-                      <div className="flex flex-col gap-1 px-0.5">
-                        <div className="flex items-center gap-1.5 mb-1">
-                           <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
-                              {cat.name}
-                           </span>
-                           {item.dietaryType === "veg" && <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]" />}
-                           {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
+                          {!item.isAvailable && (
+                            <div className="absolute inset-0 bg-white/10 flex items-center justify-center backdrop-blur-sm">
+                              <span className={cn("text-[10px] font-medium tracking-widest uppercase px-3 py-1 rounded-full", isDark ? "bg-black/60 text-white" : "bg-white/80 text-black")}>
+                                Sold Out
+                              </span>
+                            </div>
+                          )}
                         </div>
-                        
-                        <h3 className={cn("text-[15px] font-semibold leading-snug line-clamp-2", isDark ? "text-white/90" : "text-gray-800")}>
-                          {item.name}
-                        </h3>
-                        
-                        {item.variants && item.variants.length > 0 && (
-                          <div className="flex flex-wrap gap-1 mt-1">
-                            {item.variants.slice(0, 2).map((v) => (
-                              <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
-                                <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
-                                <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
-                              </div>
-                            ))}
-                            {item.variants.length > 2 && (
-                              <div className={cn("flex items-center px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
-                                <span className="text-[8px] font-bold text-gray-500">+{item.variants.length - 2}</span>
-                              </div>
-                            )}
+
+                        {/* Info Area */}
+                        <div className="flex flex-col gap-1 px-0.5">
+                          <div className="flex items-center gap-1.5 mb-1">
+                            <span className="text-[9px] font-medium uppercase tracking-[0.2em] text-gray-400">
+                              {cat.name}
+                            </span>
+                            {item.dietaryType === "veg" && <div className="w-1.5 h-1.5 rounded-full bg-[#196F03]" />}
+                            {item.dietaryType === "non-veg" && <div className="w-1.5 h-1.5 rounded-full bg-red-500" />}
                           </div>
-                        )}
-                        
-                        <div className="flex items-center justify-between mt-1.5">
-                           <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
-                             ₹{item.price.replace(/[^0-9.]/g, "")}
-                           </span>
-                           
-                           <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
+
+                          <h3 className={cn("text-[15px] font-semibold leading-snug line-clamp-2", isDark ? "text-white/90" : "text-gray-800")}>
+                            {item.name}
+                          </h3>
+
+                          {item.variants && item.variants.length > 0 && (
+                            <div className="flex flex-wrap gap-1 mt-1">
+                              {item.variants.slice(0, 2).map((v) => (
+                                <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                  <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
+                                  <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
+                                </div>
+                              ))}
+                              {item.variants.length > 2 && (
+                                <div className={cn("flex items-center px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
+                                  <span className="text-[8px] font-bold text-gray-500">+{item.variants.length - 2}</span>
+                                </div>
+                              )}
+                            </div>
+                          )}
+
+                          <div className="flex items-center justify-between mt-1.5">
+                            <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
+                              ₹{item.price.replace(/[^0-9.]/g, "")}
+                            </span>
+
+                            <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
                               <ArrowRight className="h-3.5 w-3.5" />
-                           </div>
+                            </div>
+                          </div>
                         </div>
                       </div>
-                    </div>
                     );
                   })}
                 </div>
@@ -806,9 +808,29 @@ export default function PublicMenuPage() {
         {/* Footer */}
         <footer className="pt-20 pb-20 mt-10 text-center px-6">
           <div className="mb-8">
-            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity", isDark ? "opacity-60" : "opacity-40")} />
+            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://menuwo.com', '_blank')} />
           </div>
           <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
+          
+          <div className="flex items-center justify-center gap-4 mb-6">
+            <a 
+              href="https://menuwo.com" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
+            >
+              <Globe className="h-4 w-4" />
+            </a>
+            <a 
+              href="https://instagram.com/menuwo" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
+            >
+              <Instagram className="h-4 w-4" />
+            </a>
+          </div>
+
           <div className={cn("h-1 w-12 mx-auto rounded-full", isDark ? "bg-white/10" : "bg-gray-200")} />
         </footer>
 
