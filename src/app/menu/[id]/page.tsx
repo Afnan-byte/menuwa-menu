@@ -153,9 +153,10 @@ export default function PublicMenuPage() {
   const handleCategoryClick = (categoryId: string) => {
     setActiveCategory(categoryId);
     setTimeout(() => {
-      const contentEl = document.getElementById("menu-content-area");
+      const targetId = categoryId === "all" ? "menu-content-area" : `category-${categoryId}`;
+      const contentEl = document.getElementById(targetId);
       if (contentEl) {
-        const headerOffset = 90; // Approx height of sticky categories bar
+        const headerOffset = 40; 
         const elementPosition = contentEl.getBoundingClientRect().top;
         const offsetPosition = elementPosition + window.scrollY - headerOffset;
         window.scrollTo({
@@ -288,15 +289,14 @@ export default function PublicMenuPage() {
   const filteredItems = useMemo(() => {
     const q = deferredQuery.toLowerCase();
     return items.filter((item) => {
-      const matchesCategory = activeCategory === "all" || item.categoryId === activeCategory;
       const matchesSearch =
         !q ||
         item.name.toLowerCase().includes(q) ||
         item.description?.toLowerCase().includes(q);
       const matchesDietary = dietaryFilter === "all" || item.dietaryType === dietaryFilter;
-      return matchesCategory && matchesSearch && matchesDietary;
+      return matchesSearch && matchesDietary;
     });
-  }, [items, activeCategory, deferredQuery, dietaryFilter]);
+  }, [items, deferredQuery, dietaryFilter]);
 
   const featuredItems = useMemo(() => items.filter((i) => i.isPopular), [items]);
 
@@ -527,7 +527,7 @@ export default function PublicMenuPage() {
             </div>
           )}
 
-          {(activeCategory === "all" ? categories : categories.filter((c) => c.id === activeCategory)).map((cat) => {
+          {categories.map((cat) => {
             const categoryItems = filteredItems
               .filter((item) => item.categoryId === cat.id)
               .sort((a, b) => {
