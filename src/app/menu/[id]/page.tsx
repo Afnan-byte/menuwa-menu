@@ -808,13 +808,13 @@ export default function PublicMenuPage() {
         {/* Footer */}
         <footer className="pt-20 pb-20 mt-10 text-center px-6">
           <div className="mb-8">
-            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://menuwo.com', '_blank')} />
+            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://www.menuwo.in/', '_blank')} />
           </div>
           <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
           
           <div className="flex items-center justify-center gap-4 mb-6">
             <a 
-              href="https://menuwo.com" 
+              href="https://www.menuwo.in/" 
               target="_blank" 
               rel="noopener noreferrer"
               className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
@@ -822,7 +822,7 @@ export default function PublicMenuPage() {
               <Globe className="h-4 w-4" />
             </a>
             <a 
-              href="https://instagram.com/menuwo" 
+              href="https://www.instagram.com/menuw.o/" 
               target="_blank" 
               rel="noopener noreferrer"
               className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
