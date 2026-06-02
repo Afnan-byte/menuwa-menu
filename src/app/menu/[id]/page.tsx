@@ -715,10 +715,10 @@ export default function PublicMenuPage() {
                         />
                         <button
                           onClick={() => setSelectedItem(null)}
-                          className={cn("absolute top-4 right-4 z-[110] h-10 w-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/10 text-white border-white/20 hover:bg-white/20" : "bg-black/20 text-white border-white/20 hover:bg-black/30")}
+                          className="absolute top-4 right-4 z-[110] h-10 w-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border-2 border-red-500 bg-black/40 hover:bg-black/60 transition-all backdrop-blur-sm"
                           aria-label="Close"
                         >
-                          <X className="h-5 w-5" />
+                          <X className="h-5 w-5 text-red-500" />
                         </button>
                       </div>
                     )}
@@ -727,10 +727,10 @@ export default function PublicMenuPage() {
                       <div className="flex justify-end mb-2">
                         <button
                           onClick={() => setSelectedItem(null)}
-                          className={cn("h-10 w-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border transition-all", isDark ? "bg-white/5 text-white border-white/10 hover:bg-white/10" : "bg-gray-100 text-gray-900 border-gray-200")}
+                          className="h-10 w-10 min-w-[44px] min-h-[44px] rounded-full flex items-center justify-center border-2 border-red-500 bg-red-50/10 hover:bg-red-50/20 transition-all"
                           aria-label="Close"
                         >
-                          <X className="h-5 w-5" />
+                          <X className="h-5 w-5 text-red-500" />
                         </button>
                       </div>
                     )}
