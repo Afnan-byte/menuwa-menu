@@ -351,7 +351,7 @@ export default function PublicMenuPage() {
             <div className="flex items-center gap-3 opacity-80">
               <div className="h-px w-6 bg-gradient-to-r from-transparent to-[var(--brand-primary)]" />
               <span className="text-[10px] font-bold uppercase tracking-[0.25em] text-[var(--brand-primary)]">
-                Artisan Menu
+                Digital Menu
               </span>
               <div className="h-px w-6 bg-gradient-to-l from-transparent to-[var(--brand-primary)]" />
             </div>
