@@ -313,6 +313,19 @@ export default function PublicMenuPage() {
     >
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
+        {/* Menuwo Logo (Top Left) */}
+        <div className="absolute top-6 left-6 z-50">
+          <a href="https://www.menuwo.in" target="_blank" rel="noopener noreferrer">
+            <Image
+              src={isDark ? "/logo-white.svg" : "/menuwo.svg"}
+              alt="Menuwo"
+              width={72}
+              height={20}
+              className="opacity-70 transition-opacity hover:opacity-100"
+            />
+          </a>
+        </div>
+
         {/* Header */}
         <header className="relative w-full pt-16 pb-8 flex flex-col items-center justify-center overflow-hidden">
           {/* Dynamic Background Sweep */}
@@ -809,39 +822,24 @@ export default function PublicMenuPage() {
           <div className="mb-8">
             <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://www.menuwo.in/', '_blank')} />
           </div>
-          <p className="text-[10px] font-semibold text-gray-500 uppercase tracking-[0.5em] mb-6">Designed by Menuwo</p>
           
-          <div className="flex items-center justify-center gap-4 mb-6">
-            <a 
-              href="https://www.menuwo.in/" 
-              target="_blank" 
-              rel="noopener noreferrer"
-              className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
-            >
-              <Globe className="h-4 w-4" />
-            </a>
+          <div className="flex flex-col items-center justify-center gap-3 mb-8">
             <a 
               href="https://www.instagram.com/menuw.o/" 
               target="_blank" 
               rel="noopener noreferrer"
-              className={cn("h-10 w-10 rounded-full flex items-center justify-center transition-all hover:scale-110", isDark ? "bg-white/5 text-white/70 hover:text-white hover:bg-white/10" : "bg-gray-100 text-gray-500 hover:text-gray-900 hover:bg-gray-200")}
+              className={cn("text-sm font-medium transition-colors underline-offset-4 hover:underline", isDark ? "text-white/60 hover:text-white" : "text-gray-500 hover:text-gray-900")}
             >
-              <svg 
-                xmlns="http://www.w3.org/2000/svg" 
-                width="16" 
-                height="16" 
-                viewBox="0 0 24 24" 
-                fill="none" 
-                stroke="currentColor" 
-                strokeWidth="2" 
-                strokeLinecap="round" 
-                strokeLinejoin="round" 
-                className="h-4 w-4"
-              >
-                <rect width="20" height="20" x="2" y="2" rx="5" ry="5"/>
-                <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-                <line x1="17.5" x2="17.51" y1="6.5" y2="6.5"/>
-              </svg>
+              Follow Menuwo on Instagram
+            </a>
+            
+            <a 
+              href="https://www.menuwo.in/" 
+              target="_blank" 
+              rel="noopener noreferrer"
+              className={cn("text-sm font-medium transition-colors underline-offset-4 hover:underline", isDark ? "text-white/60 hover:text-white" : "text-gray-500 hover:text-gray-900")}
+            >
+              Visit our Website
             </a>
           </div>
 
