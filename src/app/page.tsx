@@ -12,7 +12,7 @@ export default function Home() {
       <header className="px-10 h-20 flex items-center bg-white/70 backdrop-blur-xl sticky top-0 z-50 border-b border-gray-100/50">
         <Link className="flex items-center justify-center" href="/">
           <div className="relative h-18 w-28 mr-3 transition-transform">
-            <Image src="/menuwo-new.webp" alt="Menuwo Logo" fill className="object-contain" />
+            <Image src="/logo.svg" alt="Menuwo Logo" fill className="object-contain" />
           </div>
         </Link>
         <nav className="ml-auto flex items-center gap-8">
@@ -104,7 +104,7 @@ export default function Home() {
           <div className="flex flex-col gap-6">
             <Link className="flex items-center gap-3" href="/">
               <div className="relative h-24 w-24 transition-transform">
-                <Image src="/menuwo-new.webp" alt="Menuwo Logo" fill className="object-contain" />
+                <Image src="/logo.svg" alt="Menuwo Logo" fill className="object-contain" />
               </div>
             </Link>
             <div className="flex flex-col gap-4 text-sm font-medium text-gray-500">

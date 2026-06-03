@@ -57,7 +57,7 @@ export default function SignupPage() {
         <div className="absolute bottom-[-10%] left-[-10%] w-[40%] h-[40%] bg-brand-green/5 rounded-full blur-[120px]" />
       </div>
 
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="max-w-[480px] w-full"
@@ -65,15 +65,15 @@ export default function SignupPage() {
         <div className="bg-white rounded-[3rem] p-10 md:p-12 shadow-[0_20px_70px_-10px_rgba(25,111,3,0.1)] border border-gray-100 relative overflow-hidden">
           {/* Logo Section */}
           <div className="flex flex-col items-center mb-10">
-            <motion.div 
+            <motion.div
               initial={{ scale: 0.8 }}
               animate={{ scale: 1 }}
               className="relative h-20 w-20 mb-6"
             >
-              <Image 
-                src="/menuwo-new.webp" 
-                alt="Menuwo Logo" 
-                fill 
+              <Image
+                src="/logo.svg"
+                alt="Menuwo Logo"
+                fill
                 className="object-contain"
                 priority
               />
@@ -177,7 +177,7 @@ export default function SignupPage() {
             </p>
           </div>
         </div>
-        
+
         <p className="mt-8 text-center text-[10px] font-bold text-gray-300 uppercase tracking-[0.3em]">
           Join 100+ premium restaurants globally
         </p>

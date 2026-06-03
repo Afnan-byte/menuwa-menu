@@ -317,12 +317,10 @@ export default function PublicMenuPage() {
         <div className="absolute top-6 left-6 z-50">
           <a href="https://www.menuwo.in" target="_blank" rel="noopener noreferrer">
             <Image
-              src="/menuwo-new.webp"
+              src={isDark ? "/logo-white.svg" : "/menuwo.svg"}
               alt="Menuwo"
-              width={0}
-              height={0}
-              sizes="100vw"
-              style={{ width: '72px', height: 'auto' }}
+              width={72}
+              height={20}
               className="opacity-70 transition-opacity hover:opacity-100"
             />
           </a>
@@ -822,22 +820,22 @@ export default function PublicMenuPage() {
         {/* Footer */}
         <footer className="pt-20 pb-20 mt-10 text-center px-6">
           <div className="mb-8">
-            <Image src="/menuwo-new.webp" alt="Menuwo" width={0} height={0} sizes="100vw" style={{ width: '120px', height: 'auto' }} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://www.menuwo.in/', '_blank')} />
+            <Image src="/logo-white.svg" alt="Menuwo" width={120} height={40} className={cn("mx-auto transition-opacity hover:opacity-100 cursor-pointer", isDark ? "opacity-60" : "opacity-40")} onClick={() => window.open('https://www.menuwo.in/', '_blank')} />
           </div>
-          
+
           <div className="flex flex-col items-center justify-center gap-3 mb-8">
-            <a 
-              href="https://www.instagram.com/menuw.o/" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/menuw.o/"
+              target="_blank"
               rel="noopener noreferrer"
               className={cn("text-sm font-medium transition-colors underline-offset-4 hover:underline", isDark ? "text-white/60 hover:text-white" : "text-gray-500 hover:text-gray-900")}
             >
               Follow Menuwo on Instagram
             </a>
-            
-            <a 
-              href="https://www.menuwo.in/" 
-              target="_blank" 
+
+            <a
+              href="https://www.menuwo.in/"
+              target="_blank"
               rel="noopener noreferrer"
               className={cn("text-sm font-medium transition-colors underline-offset-4 hover:underline", isDark ? "text-white/60 hover:text-white" : "text-gray-500 hover:text-gray-900")}
             >
