@@ -313,8 +313,8 @@ export default function PublicMenuPage() {
     >
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
-        {/* Menuwo Logo (Top Left) */}
-        <div className="absolute top-6 left-6 z-50">
+        {/* Menuwo Nav Bar */}
+        <div className={cn("absolute top-0 inset-x-0 z-50 flex items-center px-6 h-16 border-b", isDark ? "border-white/10 bg-[#0A0A0A]/80 backdrop-blur-md" : "border-gray-200 bg-gray-50/80 backdrop-blur-md")}>
           <a href="https://www.menuwo.in" target="_blank" rel="noopener noreferrer">
             <Image
               src="/menuwo-new.webp"
@@ -322,14 +322,14 @@ export default function PublicMenuPage() {
               width={0}
               height={0}
               sizes="100vw"
-              style={{ width: '72px', height: 'auto' }}
-              className="opacity-70 transition-opacity hover:opacity-100"
+              style={{ width: '100px', height: 'auto' }}
+              className="opacity-90 transition-opacity hover:opacity-100"
             />
           </a>
         </div>
 
         {/* Header */}
-        <header className="relative w-full pt-16 pb-8 flex flex-col items-center justify-center overflow-hidden">
+        <header className="relative w-full pt-20 pb-8 flex flex-col items-center justify-center overflow-hidden">
           {/* Dynamic Background Sweep */}
           <div
             className="absolute top-0 inset-x-0 h-64 opacity-20 z-0 pointer-events-none"
