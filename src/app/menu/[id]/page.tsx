@@ -398,40 +398,44 @@ export default function PublicMenuPage() {
             <button
               onClick={() => handleCategoryClick("all")}
               className={cn(
-                "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border",
+                "flex flex-col items-center justify-start pt-3 pb-2 px-1 rounded-2xl transition-all duration-300 aspect-square border overflow-hidden",
                 activeCategory === "all"
                   ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
                   : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
               )}
             >
-              <div className="h-10 w-10 sm:h-12 sm:w-12 flex items-center justify-center">
-                <LayoutGrid className={cn("h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-300", activeCategory === "all" ? "text-white scale-110" : isDark ? "text-gray-400" : "text-gray-400")} />
+              <div className="h-9 w-9 sm:h-10 sm:w-10 relative flex items-center justify-center shrink-0 mb-1">
+                <LayoutGrid className={cn("h-6 w-6 sm:h-7 sm:w-7 transition-transform duration-300", activeCategory === "all" ? "text-white scale-110" : isDark ? "text-gray-400" : "text-gray-400")} />
               </div>
-              <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === "all" ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
-                All
-              </span>
+              <div className="h-8 flex flex-col items-center justify-center w-full">
+                <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === "all" ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
+                  All
+                </span>
+              </div>
             </button>
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => handleCategoryClick(cat.id)}
                 className={cn(
-                  "flex flex-col items-center justify-center gap-2.5 p-2 rounded-2xl transition-all duration-300 aspect-square border group",
+                  "flex flex-col items-center justify-start pt-3 pb-2 px-1 rounded-2xl transition-all duration-300 aspect-square border group overflow-hidden",
                   activeCategory === cat.id
                     ? (isDark ? "bg-white/10 border-white/20 shadow-lg shadow-white/5" : "bg-white border-[#196F03]/20 shadow-md shadow-[#196F03]/10 ring-1 ring-[#196F03]/20")
                     : (isDark ? "bg-white/[0.03] border-white/5 hover:bg-white/10" : "bg-white border-gray-100 shadow-sm hover:shadow-md hover:border-gray-200")
                 )}
               >
-                <div className="h-10 w-10 sm:h-12 sm:w-12 relative flex items-center justify-center">
+                <div className="h-9 w-9 sm:h-10 sm:w-10 relative flex items-center justify-center shrink-0 mb-1">
                   {cat.icon ? (
                     <img src={cat.icon} alt="" className={cn("w-full h-full object-contain drop-shadow-md transition-transform duration-300", activeCategory === cat.id ? "scale-110" : "scale-100 opacity-90 group-hover:scale-105")} />
                   ) : (
-                    <Utensils className={cn("h-7 w-7 sm:h-8 sm:w-8 transition-transform duration-300", activeCategory === cat.id ? (isDark ? "text-white scale-110" : "text-[#196F03] scale-110") : (isDark ? "text-gray-400 group-hover:scale-105" : "text-gray-400 group-hover:scale-105"))} />
+                    <Utensils className={cn("h-6 w-6 sm:h-7 sm:w-7 transition-transform duration-300", activeCategory === cat.id ? (isDark ? "text-white scale-110" : "text-[#196F03] scale-110") : (isDark ? "text-gray-400 group-hover:scale-105" : "text-gray-400 group-hover:scale-105"))} />
                   )}
                 </div>
-                <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === cat.id ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
-                  {cat.name}
-                </span>
+                <div className="h-8 flex flex-col items-center justify-center w-full">
+                  <span className={cn("text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-center leading-tight line-clamp-2 px-1", activeCategory === cat.id ? (isDark ? "text-white" : "text-[#196F03]") : (isDark ? "text-gray-400" : "text-gray-500"))}>
+                    {cat.name}
+                  </span>
+                </div>
               </button>
             ))}
           </div>
