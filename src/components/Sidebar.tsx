@@ -57,7 +57,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
           </div>
         </Link>
         {onClose && (
-          <button
+          <button 
             onClick={onClose}
             className="p-2 hover:bg-gray-100 rounded-xl lg:hidden text-gray-400"
           >
@@ -119,7 +119,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
           </div>
           <p className="text-[10px] text-gray-400 font-medium mb-4 leading-relaxed">Need help? Chat with our experts directly.</p>
           <div className="flex flex-col gap-2">
-            <a
+            <a 
               href={SUPPORT_URL}
               target="_blank"
               rel="noopener noreferrer"
@@ -128,7 +128,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
               <MessageCircle className="h-3 w-3 text-[#196F03] group-hover:text-white transition-colors" />
               WhatsApp
             </a>
-            <a
+            <a 
               href="mailto:info@menuwo.in"
               className="w-full py-3 bg-white border border-gray-100 rounded-xl text-[9px] font-bold text-primary uppercase tracking-widest hover:bg-[#196F03] hover:text-white hover:border-[#196F03] transition-all shadow-sm flex items-center justify-center gap-2 group"
             >
