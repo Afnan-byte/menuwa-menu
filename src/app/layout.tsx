@@ -20,7 +20,7 @@ export const metadata: Metadata = {
   title: "Menuwo - Digital Menu Solutions",
   description: "Modern QR-based digital menu for restaurants, cafes, and hotels.",
   icons: {
-    icon: "/menuwo.svg",
+    icon: "/menuwo-new.webp",
   },
 };
 

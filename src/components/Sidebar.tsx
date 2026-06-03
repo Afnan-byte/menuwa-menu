@@ -53,7 +53,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
       <div className="h-20 flex items-center justify-between px-8 border-b border-gray-50/50 mb-4">
         <Link href="/dashboard" className="flex items-center">
           <div className="relative h-10 w-32 transition-transform hover:scale-105">
-            <img src="/logo.svg" alt="Logo" className="h-full w-full object-contain object-left" />
+            <img src="/menuwo-new.webp" alt="Logo" className="h-full w-full object-contain object-left" />
           </div>
         </Link>
         {onClose && (

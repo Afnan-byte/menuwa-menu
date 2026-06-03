@@ -71,7 +71,7 @@ export default function SignupPage() {
               className="relative h-20 w-20 mb-6"
             >
               <Image 
-                src="/logo.svg" 
+                src="/menuwo-new.webp" 
                 alt="Menuwo Logo" 
                 fill 
                 className="object-contain"

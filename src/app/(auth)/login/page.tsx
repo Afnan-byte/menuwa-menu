@@ -67,7 +67,7 @@ export default function LoginPage() {
               className="relative h-24 w-24 mb-6"
             >
               <Image 
-                src="/logo.svg" 
+                src="/menuwo-new.webp" 
                 alt="Menuwo Logo" 
                 fill 
                 className="object-contain"
