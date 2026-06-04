@@ -45,11 +45,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ 
-      user, 
-      restaurantData, 
-      loading, 
-      isAdmin: checkIsAdmin(user?.email) 
+    <AuthContext.Provider value={{
+      user,
+      restaurantData,
+      loading,
+      isAdmin: checkIsAdmin(user?.email)
     }}>
       {children}
     </AuthContext.Provider>

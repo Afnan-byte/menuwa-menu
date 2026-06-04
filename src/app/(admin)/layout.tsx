@@ -1,11 +1,12 @@
 "use client";
 
-import { useAuth } from "@/components/auth-provider";
+import { useAuth, AuthProvider } from "@/components/auth-provider";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 import { Loader2 } from "lucide-react";
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+// Inner component — can safely call useAuth() because AuthProvider is above it
+function AdminLayoutInner({ children }: { children: React.ReactNode }) {
   const { user, isAdmin, loading } = useAuth();
   const router = useRouter();
 
@@ -41,11 +42,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               <p className="text-[10px] text-gray-500 font-medium">Platform Management</p>
             </div>
           </div>
-          
+
           <div className="flex items-center gap-8">
             <a href="/admin" className="text-[10px] font-bold uppercase tracking-widest hover:text-[#196F03] transition-colors">Overview</a>
             <a href="/admin/stands" className="text-[10px] font-bold uppercase tracking-widest hover:text-[#196F03] transition-colors">QR Stands</a>
             <a href="/admin/users" className="text-[10px] font-bold uppercase tracking-widest hover:text-[#196F03] transition-colors">Restaurants</a>
+            <a href="/admin/icons" className="text-[10px] font-bold uppercase tracking-widest hover:text-[#196F03] transition-colors">Category Icons</a>
           </div>
         </div>
       </nav>
@@ -54,5 +56,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         {children}
       </main>
     </div>
+  );
+}
+
+// AuthProvider wraps the inner layout — (admin) is a separate route group
+// from (dashboard) so it needs its own provider
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <AuthProvider>
+      <AdminLayoutInner>{children}</AdminLayoutInner>
+    </AuthProvider>
   );
 }
