@@ -132,14 +132,14 @@ export default function SettingsPage() {
       );
 
       const responseText = await response.text();
-      
+
       if (!response.ok) {
         console.error("Cloudinary Logo Error:", responseText);
         throw new Error("Upload failed. Check settings.");
       }
 
       const data = JSON.parse(responseText);
-      
+
       if (data.secure_url) {
         setFormData(prev => ({ ...prev, logoUrl: data.secure_url }));
         toast.success("Logo uploaded successfully!", { id: toastId });
@@ -174,13 +174,13 @@ export default function SettingsPage() {
       );
 
       const responseText = await response.text();
-      
+
       if (!response.ok) {
         throw new Error("Upload failed");
       }
 
       const data = JSON.parse(responseText);
-      
+
       if (data.secure_url) {
         setFormData(prev => ({ ...prev, bookPages: [...prev.bookPages, data.secure_url] }));
         toast.success("Page added!", { id: toastId });
@@ -334,7 +334,7 @@ export default function SettingsPage() {
 
                 <div className="md:col-span-2">
                   <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Restaurant Logo</label>
-                  <div 
+                  <div
                     onDragOver={(e) => { e.preventDefault(); setIsDragging(true); }}
                     onDragLeave={() => setIsDragging(false)}
                     onDrop={(e) => {

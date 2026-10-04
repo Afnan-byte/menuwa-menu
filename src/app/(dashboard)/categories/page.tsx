@@ -23,7 +23,8 @@ import {
   ArrowUp,
   ArrowDown,
   Pencil,
-  ImageIcon
+  ImageIcon,
+  Globe
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -157,14 +158,14 @@ export default function CategoriesPage() {
     try {
       const itemQuery = query(collection(db, "items"), where("categoryId", "==", catId));
       const itemSnap = await getDocs(itemQuery);
-      
+
       const batch = writeBatch(db);
       batch.delete(doc(db, "categories", catId));
       itemSnap.docs.forEach(itemDoc => {
         batch.delete(doc(db, "items", itemDoc.id));
       });
       await batch.commit();
-      
+
       setCategories(categories.filter(c => c.id !== catId));
       toast.success("Category and items removed");
     } catch (error) {
@@ -182,7 +183,7 @@ export default function CategoriesPage() {
 
     const newIndex = direction === "up" ? index - 1 : index + 1;
     const newCategories = [...categories];
-    
+
     // Swap elements in array for immediate UI update
     const temp = newCategories[index];
     newCategories[index] = newCategories[newIndex];
@@ -255,7 +256,7 @@ export default function CategoriesPage() {
                       </div>
                       <span className="text-sm font-medium text-gray-900 truncate">{cat.name}</span>
                     </div>
-                    
+
                     <div className="absolute right-4 top-1/2 -translate-y-1/2 flex items-center gap-2 opacity-0 group-hover:opacity-100 transition-all">
                       <div className="flex items-center bg-white border border-gray-100 rounded-xl p-1 shadow-sm">
                         <button
@@ -273,7 +274,7 @@ export default function CategoriesPage() {
                           <ArrowDown className="h-4 w-4" />
                         </button>
                       </div>
-                      
+
                       <button
                         onClick={() => {
                           setEditingCategory(cat);
@@ -285,7 +286,7 @@ export default function CategoriesPage() {
                       >
                         <Pencil className="h-4 w-4" />
                       </button>
-                      
+
                       <button
                         onClick={() => handleDeleteCategory(cat.id)}
                         className="p-2.5 bg-white border border-gray-100 rounded-xl hover:bg-red-50 hover:text-red-600 hover:border-red-100 transition-all shadow-sm text-gray-400"
@@ -324,16 +325,16 @@ export default function CategoriesPage() {
                     onChange={(e) => setNewCategoryName(e.target.value)}
                   />
                 </div>
-                
+
                 <div>
                   <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-2 block">Custom Icon (Optional)</label>
                   <div className="flex items-center gap-4">
                     {newCategoryIcon ? (
                       <div className="relative h-16 w-16 rounded-2xl overflow-hidden border-2 border-gray-100 shrink-0 group">
                         <img src={newCategoryIcon} alt="Icon preview" className="w-full h-full object-cover" />
-                        <button 
+                        <button
                           type="button"
-                          onClick={() => setNewCategoryIcon("")} 
+                          onClick={() => setNewCategoryIcon("")}
                           className="absolute inset-0 bg-black/50 text-white flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
                         >
                           <X className="h-4 w-4" />
@@ -348,16 +349,30 @@ export default function CategoriesPage() {
                       <div className="px-6 py-5 bg-gray-50 hover:bg-gray-100 transition-colors rounded-[1.5rem] border border-transparent text-sm font-medium text-center text-primary">
                         Upload Icon Image
                       </div>
-                      <input 
-                        type="file" 
-                        accept="image/*" 
-                        className="hidden" 
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
                         onChange={(e) => {
                           const file = e.target.files?.[0];
                           if (file) handleCategoryIconUpload(file);
-                        }} 
+                        }}
                       />
                     </label>
+                  </div>
+                  <div className="mt-3 flex items-center gap-2 px-1">
+                    <div className="h-1 w-1 rounded-full bg-gray-300"></div>
+                    <p className="text-[9px] font-bold text-gray-300 uppercase tracking-widest">Or paste a direct icon link below</p>
+                  </div>
+                  <div className="mt-2 relative">
+                    <Globe className="absolute left-5 top-1/2 -translate-y-1/2 h-4 w-4 text-gray-300" />
+                    <input
+                      type="text"
+                      placeholder="Icon Image URL"
+                      className="w-full pl-12 pr-6 py-4 bg-gray-50/70 border-transparent rounded-2xl focus:bg-white focus:ring-4 focus:ring-brand-green/5 transition-all text-xs font-medium outline-none text-primary"
+                      value={newCategoryIcon}
+                      onChange={(e) => setNewCategoryIcon(e.target.value)}
+                    />
                   </div>
                 </div>
 

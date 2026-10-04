@@ -13,6 +13,7 @@ import {
   ArrowRight,
   ChevronUp,
   Globe,
+  ExternalLink,
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -314,8 +315,17 @@ export default function PublicMenuPage() {
       <div className={cn("max-w-md mx-auto min-h-screen flex flex-col relative", isDark ? "bg-[#0A0A0A]" : "bg-gray-50")}>
 
         {/* Menuwo Nav Bar */}
-        <div className={cn("absolute top-0 inset-x-0 z-50 flex items-center px-6 h-16 border-b", isDark ? "border-white/10 bg-[#0A0A0A]/80 backdrop-blur-md" : "border-gray-200 bg-gray-50/80 backdrop-blur-md")}>
-          <a href="https://www.menuwo.in" target="_blank" rel="noopener noreferrer">
+        <div className={cn("absolute top-0 inset-x-0 z-50 flex items-center justify-between px-6 h-16 border-b", isDark ? "border-white/10 bg-[#0A0A0A]/80 backdrop-blur-md" : "border-gray-200 bg-gray-50/80 backdrop-blur-md")}>
+          <a
+            href="https://www.menuwo.in"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cn("text-[13px] font-medium flex items-center gap-1.5 transition-opacity hover:opacity-80", isDark ? "text-gray-200" : "text-gray-700")}
+          >
+            Powered by <span className={cn("font-medium tracking-tight", isDark ? "text-white" : "text-black")}>menuwo.in</span>
+            <ExternalLink className="h-3.5 w-3.5" />
+          </a>
+          <a href="https://www.menuwo.in" target="_blank" rel="noopener noreferrer" className="flex shrink-0">
             <Image
               src="/menuwo-new.webp"
               alt="Menuwo"
