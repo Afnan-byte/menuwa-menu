@@ -25,6 +25,7 @@ import {
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
+import { GoogleIcon, InstagramIcon } from "@/components/social-icons";
 
 
 
@@ -40,6 +41,8 @@ export default function SettingsPage() {
     menuType: "digital",
     bookPages: [] as string[],
     hideTopSelling: false,
+    googleReviewUrl: "",
+    instagramUrl: "",
   });
 
   useEffect(() => {
@@ -53,6 +56,8 @@ export default function SettingsPage() {
         menuType: restaurantData.menuType || "digital",
         bookPages: restaurantData.bookPages || [],
         hideTopSelling: restaurantData.hideTopSelling || false,
+        googleReviewUrl: restaurantData.googleReviewUrl || restaurantData.googleReview || "",
+        instagramUrl: restaurantData.instagramUrl || restaurantData.instagram || "",
       });
     }
   }, [restaurantData]);
@@ -260,6 +265,18 @@ export default function SettingsPage() {
                   <span>Menu Theme</span>
                   <div className="h-4 w-4 rounded-full shadow-sm border bg-[#0A0A0A] border-gray-700"></div>
                 </div>
+                <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-gray-300">
+                  <span>Google Reviews</span>
+                  <span className={cn("text-xs font-semibold normal-case", formData.googleReviewUrl ? "text-emerald-500" : "text-gray-300")}>
+                    {formData.googleReviewUrl ? "Linked" : "Not set"}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-gray-300">
+                  <span>Instagram</span>
+                  <span className={cn("text-xs font-semibold normal-case", formData.instagramUrl ? "text-emerald-500" : "text-gray-300")}>
+                    {formData.instagramUrl ? "Linked" : "Not set"}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
@@ -410,6 +427,55 @@ export default function SettingsPage() {
                       placeholder="e.g. 918089685278"
                     />
                   </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Social & Review Links Section */}
+            <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-4 mb-10">
+                <div className="h-12 w-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-emerald-600">
+                  <Star className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-primary tracking-tight">Social & Reviews</h3>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Google Reviews & Instagram Links</p>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Google Review Link</label>
+                  <div className="relative">
+                    <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                      <GoogleIcon className="h-5 w-5" />
+                    </div>
+                    <input
+                      type="url"
+                      value={formData.googleReviewUrl}
+                      onChange={(e) => setFormData({ ...formData, googleReviewUrl: e.target.value })}
+                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
+                      placeholder="e.g. https://g.page/r/.../review"
+                    />
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-2 ml-1">Displays a Google Reviews button on your digital menu</p>
+                </div>
+
+                <div>
+                  <label className="block text-[10px] font-bold text-gray-300 uppercase tracking-widest mb-3 ml-1">Instagram Link or Username</label>
+                  <div className="relative">
+                    <div className="absolute left-6 top-1/2 -translate-y-1/2 flex items-center justify-center pointer-events-none">
+                      <InstagramIcon className="h-5 w-5" />
+                    </div>
+                    <input
+                      type="text"
+                      value={formData.instagramUrl}
+                      onChange={(e) => setFormData({ ...formData, instagramUrl: e.target.value })}
+                      className="w-full pl-16 pr-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-medium outline-none text-primary"
+                      placeholder="e.g. https://instagram.com/yourpage or @yourpage"
+                    />
+                  </div>
+                  <p className="text-[11px] text-gray-400 mt-2 ml-1">Displays an Instagram button on your digital menu</p>
                 </div>
               </div>
             </div>

@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { GoogleIcon, InstagramIcon } from "@/components/social-icons";
 
 interface Category {
   id: string;
@@ -64,7 +65,30 @@ interface Restaurant {
   menuType?: "digital" | "book";
   bookPages?: string[];
   hideTopSelling?: boolean;
+  googleReviewUrl?: string;
+  instagramUrl?: string;
+  googleReview?: string;
+  instagram?: string;
 }
+
+const getInstagramHref = (url?: string) => {
+  if (!url) return "#";
+  const trimmed = url.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  const handle = trimmed.replace(/^@/, "").replace(/^instagram\.com\//, "");
+  return `https://instagram.com/${handle}`;
+};
+
+const getGoogleReviewHref = (url?: string) => {
+  if (!url) return "#";
+  const trimmed = url.trim();
+  if (trimmed.startsWith("http://") || trimmed.startsWith("https://")) {
+    return trimmed;
+  }
+  return `https://${trimmed}`;
+};
 
 const hexToRgb = (hex: string) => {
   const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -339,7 +363,7 @@ export default function PublicMenuPage() {
         </div>
 
         {/* Header */}
-        <header className="relative w-full pt-20 pb-8 flex flex-col items-center justify-center overflow-hidden">
+        <header className="relative w-full pt-20 pb-5 flex flex-col items-center justify-center overflow-hidden">
           {/* Dynamic Background Sweep */}
           <div
             className="absolute top-0 inset-x-0 h-64 opacity-20 z-0 pointer-events-none"
@@ -380,6 +404,64 @@ export default function PublicMenuPage() {
               </span>
               <div className="h-px w-6 bg-gradient-to-l from-transparent to-[var(--brand-primary)]" />
             </div>
+
+            {/* Social & Review Links */}
+            {((restaurant?.googleReviewUrl || restaurant?.googleReview) ||
+              (restaurant?.instagramUrl || restaurant?.instagram)) && (
+              <div className="flex items-center justify-center gap-7 mt-5">
+                {(restaurant?.googleReviewUrl || restaurant?.googleReview) && (
+                  <a
+                    href={getGoogleReviewHref(restaurant?.googleReviewUrl || restaurant?.googleReview)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 active:scale-95"
+                  >
+                    <div
+                      className={cn(
+                        "h-[50px] w-[50px] rounded-full border border-[var(--brand-primary)] flex items-center justify-center transition-all duration-300 shadow-[0_0_12px_rgba(25,111,3,0.3)] group-hover:shadow-[0_0_18px_rgba(25,111,3,0.5)] group-hover:border-[var(--brand-primary)]",
+                        isDark ? "bg-black/60" : "bg-white shadow-[0_0_10px_rgba(25,111,3,0.15)]"
+                      )}
+                    >
+                      <GoogleIcon className="h-6 w-6" />
+                    </div>
+                    <span
+                      className={cn(
+                        "text-[11px] font-medium tracking-tight transition-colors",
+                        isDark ? "text-white/90 group-hover:text-white" : "text-gray-800 group-hover:text-black"
+                      )}
+                    >
+                      Google Reviews
+                    </span>
+                  </a>
+                )}
+
+                {(restaurant?.instagramUrl || restaurant?.instagram) && (
+                  <a
+                    href={getInstagramHref(restaurant?.instagramUrl || restaurant?.instagram)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex flex-col items-center gap-2 group transition-transform duration-300 hover:scale-105 active:scale-95"
+                  >
+                    <div
+                      className={cn(
+                        "h-[50px] w-[50px] rounded-full border border-[var(--brand-primary)] flex items-center justify-center transition-all duration-300 shadow-[0_0_12px_rgba(25,111,3,0.3)] group-hover:shadow-[0_0_18px_rgba(25,111,3,0.5)] group-hover:border-[var(--brand-primary)]",
+                        isDark ? "bg-black/60" : "bg-white shadow-[0_0_10px_rgba(25,111,3,0.15)]"
+                      )}
+                    >
+                      <InstagramIcon className="h-6 w-6" />
+                    </div>
+                    <span
+                      className={cn(
+                        "text-[11px] font-medium tracking-tight transition-colors",
+                        isDark ? "text-white/90 group-hover:text-white" : "text-gray-800 group-hover:text-black"
+                      )}
+                    >
+                      Instagram
+                    </span>
+                  </a>
+                )}
+              </div>
+            )}
           </div>
         </header>
 
