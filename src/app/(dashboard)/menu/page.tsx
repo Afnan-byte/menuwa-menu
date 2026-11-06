@@ -612,15 +612,15 @@ export default function MenuPage() {
   }, [items, activeCategory, searchQuery, stockFilter]);
 
   return (
-    <div className="flex-1 flex flex-col font-sans overflow-hidden bg-gray-50/30">
-      {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:overflow-hidden relative">
-        <div className="px-4 md:px-10 pt-6 md:pt-8 pb-4 flex-shrink-0 bg-white/50 backdrop-blur-md border-b border-gray-100/50 z-10">
-          <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
-          <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
-        </div>
+    <div className="flex-1 flex flex-col min-h-0 min-w-0 font-sans bg-gray-50/30 overflow-hidden relative">
+      {/* Title */}
+      <div className="px-4 md:px-10 pt-6 md:pt-8 pb-4 flex-shrink-0 bg-white/50 backdrop-blur-md border-b border-gray-100/50 z-10">
+        <h1 className="text-4xl font-extrabold text-primary tracking-tight">Menu Manager</h1>
+        <p className="text-gray-400 font-medium mt-1">Found {items.length} items in your collection.</p>
+      </div>
 
-        <div className="flex-1 px-4 md:px-10 pt-6 pb-10 overflow-y-auto custom-scrollbar">
+      {/* Main Scrollable Content */}
+      <div className="flex-1 min-h-0 px-4 md:px-10 pt-6 pb-10 overflow-y-auto custom-scrollbar">
           {/* Fixed Header Part */}
           <div className="flex-shrink-0 space-y-4 mb-4">
           
@@ -803,8 +803,8 @@ export default function MenuPage() {
           </div>
         </div>
 
-        {/* Scrollable Content Part */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar pr-1 pb-32">
+        {/* Items Grid / List */}
+        <div className="pr-1 pb-32">
 
         {loading ? (
           <div className="flex flex-col items-center justify-center py-40">
@@ -1157,7 +1157,6 @@ export default function MenuPage() {
           </div>
         )}
       </AnimatePresence>
-    </div>
     </div>
   );
 }

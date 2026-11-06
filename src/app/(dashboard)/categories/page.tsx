@@ -208,7 +208,7 @@ export default function CategoriesPage() {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-gray-50/30 p-6 md:p-10 font-sans">
+    <div className="flex-1 min-h-0 overflow-y-auto bg-gray-50/30 p-6 md:p-10 font-sans">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-8">
           <div>

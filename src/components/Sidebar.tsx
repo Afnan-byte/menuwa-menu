@@ -66,7 +66,7 @@ export default function Sidebar({ onClose }: { onClose?: () => void }) {
         )}
       </div>
 
-      <nav className="flex-1 px-4 space-y-1.5">
+      <nav className="flex-1 px-4 space-y-1.5 overflow-y-auto custom-scrollbar">
         <p className="px-5 text-[10px] font-bold text-gray-300 uppercase tracking-[0.2em] mb-4 mt-6 opacity-70">Main Menu</p>
         {navItems.map((item) => {
           const isActive = pathname === item.href;

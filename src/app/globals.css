@@ -84,6 +84,7 @@ body {
 .custom-scrollbar {
   scrollbar-width: thin;
   scrollbar-color: rgba(0, 0, 0, 0.05) transparent;
+  -webkit-overflow-scrolling: touch;
 }
 
 /* ─── Menu item card entrance animation ───────────────────────────────────
