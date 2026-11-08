@@ -40,6 +40,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
             src={item.imageUrl!}
             alt={item.name}
             fill
+            unoptimized
             sizes="(max-width: 640px) 50vw, 320px"
             className="object-cover group-hover:scale-105 transition-transform duration-500"
           />

@@ -3,7 +3,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { db } from "@/lib/firebase-db";
-import { collection, query, where, getDocs } from "firebase/firestore";
+import { collection, query, where, getCountFromServer } from "firebase/firestore";
 import { 
   Utensils, 
   Plus,
@@ -32,8 +32,8 @@ export default function DashboardPage() {
   const fetchStats = async () => {
     try {
       const q = query(collection(db, "items"), where("restaurantId", "==", user?.uid));
-      const snap = await getDocs(q);
-      setItemCount(snap.size);
+      const snap = await getCountFromServer(q);
+      setItemCount(snap.data().count);
     } catch (error) {
       console.error(error);
     } finally {

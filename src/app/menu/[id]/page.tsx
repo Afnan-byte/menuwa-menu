@@ -192,7 +192,48 @@ export default function PublicMenuPage() {
     }, 50);
   };
 
+  const MENU_CACHE_PREFIX = "menuwo_menu_v1_";
+  const CACHE_TTL_MS = 5 * 60 * 1000; // 5 minutes
+
+  const getCachedMenu = (menuKey: string) => {
+    if (typeof window === "undefined") return null;
+    try {
+      const raw = localStorage.getItem(`${MENU_CACHE_PREFIX}${menuKey}`);
+      if (!raw) return null;
+      return JSON.parse(raw);
+    } catch {
+      return null;
+    }
+  };
+
+  const setCachedMenu = (menuKey: string, data: { restaurant: Restaurant; categories: Category[]; items: MenuItem[] }) => {
+    if (typeof window === "undefined") return;
+    try {
+      localStorage.setItem(
+        `${MENU_CACHE_PREFIX}${menuKey}`,
+        JSON.stringify({ ...data, cachedAt: Date.now() })
+      );
+    } catch {}
+  };
+
   const fetchMenu = async () => {
+    const menuKey = id as string;
+    const cached = getCachedMenu(menuKey);
+    const isFresh = cached && (Date.now() - (cached.cachedAt || 0) < CACHE_TTL_MS);
+
+    // If cached data exists, load it immediately with 0 delay
+    if (cached?.restaurant) {
+      setRestaurant(cached.restaurant);
+      setCategories(cached.categories || []);
+      setItems(cached.items || []);
+      setLoading(false);
+
+      // If fresh within 5 minutes, skip network entirely — 0 Firestore reads!
+      if (isFresh) {
+        return;
+      }
+    }
+
     try {
       const projectId = process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID;
       const baseUrl = `https://firestore.googleapis.com/v1/projects/${projectId}/databases/(default)/documents`;
@@ -206,7 +247,6 @@ export default function PublicMenuPage() {
         const queryRes = await fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "restaurants" }],
@@ -229,7 +269,7 @@ export default function PublicMenuPage() {
         }
       } else {
         // Direct document lookup
-        const res = await fetch(`${baseUrl}/restaurants/${id}`, { cache: "no-store" });
+        const res = await fetch(`${baseUrl}/restaurants/${id}`);
         if (res.ok) {
           const doc = await res.json();
           restaurantId = (id as string);
@@ -245,7 +285,6 @@ export default function PublicMenuPage() {
         fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "categories" }],
@@ -256,7 +295,6 @@ export default function PublicMenuPage() {
         fetch(`${baseUrl}:runQuery`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          cache: "no-store",
           body: JSON.stringify({
             structuredQuery: {
               from: [{ collectionId: "items" }],
@@ -268,22 +306,35 @@ export default function PublicMenuPage() {
 
       const [catDocs, itemDocs] = await Promise.all([catRes.json(), itemRes.json()]);
 
-      setCategories(
-        catDocs
-          .filter((d: any) => d.document)
-          .map((d: any, idx: number) => {
-            const data = firestoreDocToObj(d.document.fields);
-            return { id: d.document.name.split("/").pop(), ...data, order: data.order ?? idx } as Category;
-          })
-          .sort((a: Category, b: Category) => a.order! - b.order!)
-      );
-      setItems(
-        itemDocs
-          .filter((d: any) => d.document)
-          .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as MenuItem))
-      );
+      const sortedCategories = catDocs
+        .filter((d: any) => d.document)
+        .map((d: any, idx: number) => {
+          const data = firestoreDocToObj(d.document.fields);
+          return { id: d.document.name.split("/").pop(), ...data, order: data.order ?? idx } as Category;
+        })
+        .sort((a: Category, b: Category) => a.order! - b.order!);
+
+      const itemList = itemDocs
+        .filter((d: any) => d.document)
+        .map((d: any) => ({ id: d.document.name.split("/").pop(), ...firestoreDocToObj(d.document.fields) } as MenuItem));
+
+      setCategories(sortedCategories);
+      setItems(itemList);
+
+      // Save to local cache for 0-read subsequent visits
+      setCachedMenu(menuKey, {
+        restaurant: restaurantData,
+        categories: sortedCategories,
+        items: itemList,
+      });
     } catch (error) {
       console.error(error);
+      // If network fails (or quota exceeded), check if any older cache exists
+      if (cached?.restaurant) {
+        setRestaurant(cached.restaurant);
+        setCategories(cached.categories || []);
+        setItems(cached.items || []);
+      }
     } finally {
       setLoading(false);
     }
@@ -721,6 +772,7 @@ export default function PublicMenuPage() {
                               src={item.imageUrl}
                               alt={item.name}
                               fill
+                              unoptimized
                               sizes="(max-width: 640px) 50vw, 33vw"
                               className={cn("object-cover transition-transform duration-700 group-hover:scale-105", !item.isAvailable && "grayscale opacity-60")}
                             />
@@ -821,6 +873,7 @@ export default function PublicMenuPage() {
                           src={selectedItem.imageUrl}
                           alt={selectedItem.name}
                           fill
+                          unoptimized
                           sizes="(max-width: 480px) 100vw, 448px"
                           className="object-cover"
                           priority

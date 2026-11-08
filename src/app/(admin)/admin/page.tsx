@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { db } from "@/lib/firebase-db";
-import { collection, getDocs, query, orderBy, limit } from "firebase/firestore";
+import { collection, getDocs, getCountFromServer, query, orderBy, limit } from "firebase/firestore";
 import { 
   Users, 
   Utensils, 
@@ -28,18 +28,21 @@ export default function AdminDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const usersSnap = await getDocs(collection(db, "restaurants"));
-        const itemsSnap = await getDocs(collection(db, "items"));
-        const standsSnap = await getDocs(collection(db, "stands"));
+        const [usersCount, itemsCount, standsCount] = await Promise.all([
+          getCountFromServer(collection(db, "restaurants")),
+          getCountFromServer(collection(db, "items")),
+          getCountFromServer(collection(db, "stands")),
+        ]);
 
+        const totalUsers = usersCount.data().count;
         setStats({
-          totalUsers: usersSnap.size,
-          totalItems: itemsSnap.size,
-          totalStands: standsSnap.size,
-          activeNow: Math.floor(usersSnap.size * 0.4) // Mock active users
+          totalUsers,
+          totalItems: itemsCount.data().count,
+          totalStands: standsCount.data().count,
+          activeNow: Math.floor(totalUsers * 0.4) // Mock active users
         });
 
-        // Fetch recent users
+        // Fetch recent users (only 5 documents)
         const recentQuery = query(collection(db, "restaurants"), orderBy("restaurantName"), limit(5));
         const recentSnap = await getDocs(recentQuery);
         setRecentUsers(recentSnap.docs.map(doc => ({ id: doc.id, ...doc.data() })));

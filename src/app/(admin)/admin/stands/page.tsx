@@ -33,32 +33,25 @@ export default function StandsManager() {
   const [exporting, setExporting] = useState(false);
 
   useEffect(() => {
-    fetchStands();
-    fetchRestaurants();
+    loadData();
   }, []);
 
-  const fetchRestaurants = async () => {
+  const loadData = async () => {
     try {
-      const snap = await getDocs(collection(db, "restaurants"));
-      setRestaurants(snap.docs.map(doc => ({ id: doc.id, ...doc.data() })));
-    } catch (error) {
-      console.error(error);
-    }
-  };
+      const [resSnap, standsSnap] = await Promise.all([
+        getDocs(collection(db, "restaurants")),
+        getDocs(query(collection(db, "stands"), orderBy("createdAt", "desc"), limit(200)))
+      ]);
 
-  const fetchStands = async () => {
-    try {
-      const q = query(collection(db, "stands"), orderBy("createdAt", "desc"));
-      const snap = await getDocs(q);
-      const standsData = snap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      const resList = resSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setRestaurants(resList);
 
-      // Fetch restaurant names for assigned stands
-      const resSnap = await getDocs(collection(db, "restaurants"));
       const resMap: Record<string, string> = {};
-      resSnap.docs.forEach(doc => {
-        resMap[doc.id] = doc.data().restaurantName || "Unnamed";
+      resList.forEach((r: any) => {
+        resMap[r.id] = r.restaurantName || "Unnamed";
       });
 
+      const standsData = standsSnap.docs.map(doc => ({ id: doc.id, ...doc.data() }));
       setStands(standsData.map((s: any) => ({
         ...s,
         restaurantName: s.assignedTo ? resMap[s.assignedTo] : null
@@ -127,7 +120,7 @@ export default function StandsManager() {
       await batch.commit();
       toast.success("Stand assigned successfully!");
       setIsAssignModalOpen(false);
-      fetchStands();
+      loadData();
     } catch (error) {
       console.error(error);
       toast.error("Assignment failed");
