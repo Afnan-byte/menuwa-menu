@@ -82,7 +82,8 @@ interface MenuItem {
 }
 
 export default function MenuPage() {
-  const { user } = useAuth();
+  const { user, restaurantData } = useAuth();
+  const currencySymbol = restaurantData?.currencySymbol || "₹";
   const [categories, setCategories] = useState<Category[]>([]);
   const [items, setItems] = useState<MenuItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -820,6 +821,7 @@ export default function MenuPage() {
               <MenuItemCard
                 key={item.id}
                 item={item}
+                currencySymbol={currencySymbol}
                 onEdit={() => {
                   setEditingItem(item);
                   setItemForm({
@@ -893,8 +895,8 @@ export default function MenuPage() {
                   </div>
 
                   <div className="space-y-2">
-                    <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-3 block">Price</label>
-                    <input required type="text" placeholder="e.g. $18.50" className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-medium outline-none text-primary" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} />
+                    <label className="text-[10px] font-medium text-gray-300 uppercase tracking-widest ml-1 mb-3 block">Price ({currencySymbol})</label>
+                    <input required type="text" placeholder={`e.g. ${currencySymbol}199`} className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white text-sm font-medium outline-none text-primary" value={itemForm.price} onChange={(e) => setItemForm({ ...itemForm, price: e.target.value })} />
                   </div>
 
                   <div className="md:col-span-2">
@@ -1049,7 +1051,7 @@ export default function MenuPage() {
                               newVariants[index].name = e.target.value;
                               setItemForm({ ...itemForm, variants: newVariants });
                             }} />
-                            <input type="number" placeholder="Price" className="w-24 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={variant.price} onChange={(e) => {
+                            <input type="number" placeholder={`Price (${currencySymbol})`} className="w-28 px-4 py-3 bg-white border-transparent rounded-xl focus:bg-white text-xs font-medium outline-none text-primary shadow-sm" value={variant.price} onChange={(e) => {
                               const newVariants = [...itemForm.variants];
                               newVariants[index].price = e.target.value;
                               setItemForm({ ...itemForm, variants: newVariants });

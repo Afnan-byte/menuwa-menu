@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Utensils, Edit2, Trash2, Leaf, Flame } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { motion } from "framer-motion";
+import { formatPrice } from "@/lib/currencies";
 
 interface MenuItemProps {
   item: {
@@ -18,12 +19,13 @@ interface MenuItemProps {
     variants?: { id: string; name: string; price: string }[];
     addons?: { id: string; name: string; imageUrl?: string }[];
   };
+  currencySymbol?: string;
   onEdit: () => void;
   onDelete: () => void;
   onToggleAvailability: () => void;
 }
 
-export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailability }: MenuItemProps) {
+export default function MenuItemCard({ item, currencySymbol = "₹", onEdit, onDelete, onToggleAvailability }: MenuItemProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
@@ -46,7 +48,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
           />
 
           <div className="absolute bottom-3 right-3 bg-[#196F03] text-white px-3 py-1 rounded-xl font-bold text-sm shadow-lg ">
-            ₹{item.price.replace(/[^0-9.]/g, '')}
+            {formatPrice(item.price, currencySymbol)}
           </div>
 
           <button
@@ -108,7 +110,7 @@ export default function MenuItemCard({ item, onEdit, onDelete, onToggleAvailabil
             )}
           </div>
           <div className="bg-[#196F03] text-white px-3 py-1.5 rounded-lg font-bold text-sm shadow-sm shrink-0 ml-auto">
-            ₹{item.price.replace(/[^0-9.]/g, '')}
+            {formatPrice(item.price, currencySymbol)}
           </div>
         </div>
       )}

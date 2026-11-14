@@ -12,6 +12,8 @@ interface AuthContextType {
   restaurantData: any | null;
   loading: boolean;
   isAdmin: boolean;
+  refreshRestaurantData: () => Promise<void>;
+  updateRestaurantDataLocally: (data: Partial<any>) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -19,6 +21,8 @@ const AuthContext = createContext<AuthContextType>({
   restaurantData: null,
   loading: true,
   isAdmin: false,
+  refreshRestaurantData: async () => {},
+  updateRestaurantDataLocally: () => {},
 });
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
@@ -26,15 +30,33 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [restaurantData, setRestaurantData] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
+  const fetchRestaurantData = async (uid: string) => {
+    try {
+      const docRef = doc(db, "restaurants", uid);
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setRestaurantData(docSnap.data());
+      }
+    } catch (e) {
+      console.error("Failed to fetch restaurant data", e);
+    }
+  };
+
+  const refreshRestaurantData = async () => {
+    if (user?.uid) {
+      await fetchRestaurantData(user.uid);
+    }
+  };
+
+  const updateRestaurantDataLocally = (newData: Partial<any>) => {
+    setRestaurantData((prev: any) => ({ ...(prev || {}), ...newData }));
+  };
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
       setUser(user);
       if (user) {
-        const docRef = doc(db, "restaurants", user.uid);
-        const docSnap = await getDoc(docRef);
-        if (docSnap.exists()) {
-          setRestaurantData(docSnap.data());
-        }
+        await fetchRestaurantData(user.uid);
       } else {
         setRestaurantData(null);
       }
@@ -49,7 +71,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
       user,
       restaurantData,
       loading,
-      isAdmin: checkIsAdmin(user?.email)
+      isAdmin: checkIsAdmin(user?.email),
+      refreshRestaurantData,
+      updateRestaurantDataLocally,
     }}>
       {children}
     </AuthContext.Provider>

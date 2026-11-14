@@ -18,6 +18,7 @@ import {
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { GoogleIcon, InstagramIcon } from "@/components/social-icons";
+import { formatPrice, getCurrencySymbol } from "@/lib/currencies";
 
 interface Category {
   id: string;
@@ -69,6 +70,9 @@ interface Restaurant {
   instagramUrl?: string;
   googleReview?: string;
   instagram?: string;
+  country?: string;
+  currency?: string;
+  currencySymbol?: string;
 }
 
 const getInstagramHref = (url?: string) => {
@@ -162,6 +166,7 @@ export default function PublicMenuPage() {
 
   // isDark driven by restaurant setting (not hardcoded)
   const isDark = restaurant?.menuTheme !== "light";
+  const currencySymbol = getCurrencySymbol(restaurant);
 
   useEffect(() => {
     if (id) fetchMenu();
@@ -645,7 +650,7 @@ export default function PublicMenuPage() {
                         {item.variants.slice(0, 2).map((v) => (
                           <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
                             <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
-                            <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
+                            <span className="text-[8px] font-black text-[#196F03]">{formatPrice(v.price, currencySymbol)}</span>
                           </div>
                         ))}
                         {item.variants.length > 2 && (
@@ -658,7 +663,7 @@ export default function PublicMenuPage() {
 
                     <div className="flex items-center justify-between mt-2">
                       <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
-                        ₹{item.price.replace(/[^0-9.]/g, "")}
+                        {formatPrice(item.price, currencySymbol)}
                       </span>
 
                       <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
@@ -749,7 +754,7 @@ export default function PublicMenuPage() {
                             {!item.isAvailable && <span className="text-[9px] font-black text-red-500 uppercase tracking-widest px-1.5 py-0.5 bg-red-500/10 rounded mt-1.5 inline-block">Sold Out</span>}
                           </div>
                           <div className={cn("shrink-0 pl-4 border-l flex flex-col items-end justify-center", isDark ? "border-white/10" : "border-gray-200")}>
-                            <span className="font-bold text-[#196F03] text-base">₹{item.price.replace(/[^0-9.]/g, "")}</span>
+                            <span className="font-bold text-[#196F03] text-base">{formatPrice(item.price, currencySymbol)}</span>
                             {((item.variants && item.variants.length > 0) || (item.addons && item.addons.length > 0)) && (
                               <span className="text-[9px] uppercase tracking-widest text-gray-500 font-bold mt-1">Options</span>
                             )}
@@ -810,7 +815,7 @@ export default function PublicMenuPage() {
                               {item.variants.slice(0, 2).map((v) => (
                                 <div key={v.id} className={cn("flex items-center gap-1 px-1.5 py-0.5 rounded border", isDark ? "bg-white/5 border-white/5" : "bg-gray-50 border-gray-100")}>
                                   <span className="text-[8px] font-bold text-gray-500 uppercase">{v.name}</span>
-                                  <span className="text-[8px] font-black text-[#196F03]">₹{v.price}</span>
+                                  <span className="text-[8px] font-black text-[#196F03]">{formatPrice(v.price, currencySymbol)}</span>
                                 </div>
                               ))}
                               {item.variants.length > 2 && (
@@ -823,7 +828,7 @@ export default function PublicMenuPage() {
 
                           <div className="flex items-center justify-between mt-1.5">
                             <span className={cn("text-sm font-medium", isDark ? "text-white/60" : "text-gray-500")}>
-                              ₹{item.price.replace(/[^0-9.]/g, "")}
+                              {formatPrice(item.price, currencySymbol)}
                             </span>
 
                             <div className={cn("h-6 w-6 rounded-full flex items-center justify-center transition-all", isDark ? "bg-white/5 text-white/50 group-hover:bg-[#196F03] group-hover:text-white" : "bg-gray-100 text-gray-400 group-hover:bg-[#196F03] group-hover:text-white")}>
@@ -913,7 +918,7 @@ export default function PublicMenuPage() {
                           {selectedItem.variants && selectedItem.variants.length > 0 && (
                             <span className="text-[10px] font-bold uppercase text-gray-500 mr-1.5">from</span>
                           )}
-                          ₹{selectedItem.price.replace(/[^0-9.]/g, "")}
+                          {formatPrice(selectedItem.price, currencySymbol)}
                         </span>
                       </div>
                       {selectedItem.dietaryType && selectedItem.dietaryType !== "none" && (
@@ -932,7 +937,7 @@ export default function PublicMenuPage() {
                           {selectedItem.variants.map((v) => (
                             <div key={v.id} className={cn("flex items-center justify-between p-4 rounded-2xl border", isDark ? "border-white/5 bg-white/5" : "border-gray-100 bg-gray-50")}>
                               <span className={cn("text-sm font-semibold", isDark ? "text-white" : "text-gray-900")}>{v.name}</span>
-                              <span className="text-sm font-bold text-[#196F03]">₹{v.price}</span>
+                              <span className="text-sm font-bold text-[#196F03]">{formatPrice(v.price, currencySymbol)}</span>
                             </div>
                           ))}
                         </div>

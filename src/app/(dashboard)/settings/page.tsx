@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@/components/auth-provider";
 import { db } from "@/lib/firebase-db";
 import { storage } from "@/lib/firebase-storage";
-import { doc, updateDoc } from "firebase/firestore";
+import { doc, updateDoc, setDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import {
   Save,
@@ -20,17 +20,19 @@ import {
   Star,
   Image as ImageIcon,
   Plus,
-  Trash2
+  Trash2,
+  Coins
 } from "lucide-react";
 import { motion } from "framer-motion";
 import toast from "react-hot-toast";
 import { cn } from "@/lib/utils";
 import { GoogleIcon, InstagramIcon } from "@/components/social-icons";
+import { COUNTRIES_CURRENCIES, DEFAULT_CURRENCY, formatPrice } from "@/lib/currencies";
 
 
 
 export default function SettingsPage() {
-  const { user, restaurantData } = useAuth();
+  const { user, restaurantData, updateRestaurantDataLocally } = useAuth();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     restaurantName: "",
@@ -43,6 +45,9 @@ export default function SettingsPage() {
     hideTopSelling: false,
     googleReviewUrl: "",
     instagramUrl: "",
+    country: "India",
+    currency: "INR",
+    currencySymbol: "₹",
   });
 
   useEffect(() => {
@@ -58,6 +63,9 @@ export default function SettingsPage() {
         hideTopSelling: restaurantData.hideTopSelling || false,
         googleReviewUrl: restaurantData.googleReviewUrl || restaurantData.googleReview || "",
         instagramUrl: restaurantData.instagramUrl || restaurantData.instagram || "",
+        country: restaurantData.country || "India",
+        currency: restaurantData.currency || "INR",
+        currencySymbol: restaurantData.currencySymbol || "₹",
       });
     }
   }, [restaurantData]);
@@ -201,9 +209,23 @@ export default function SettingsPage() {
     setLoading(true);
 
     try {
-      await updateDoc(doc(db, "restaurants", user.uid), formData);
+      await setDoc(doc(db, "restaurants", user.uid), formData, { merge: true });
+      if (updateRestaurantDataLocally) {
+        updateRestaurantDataLocally(formData);
+      }
+      // Invalidate cached public menus so fresh currency appears immediately
+      if (typeof window !== "undefined") {
+        try {
+          Object.keys(localStorage).forEach((key) => {
+            if (key.startsWith("menuwo_menu_v1_") || key.startsWith("menuwo_cache_")) {
+              localStorage.removeItem(key);
+            }
+          });
+        } catch (e) {}
+      }
       toast.success("Settings updated successfully!");
     } catch (error) {
+      console.error(error);
       toast.error("Failed to update settings");
     } finally {
       setLoading(false);
@@ -277,12 +299,112 @@ export default function SettingsPage() {
                     {formData.instagramUrl ? "Linked" : "Not set"}
                   </span>
                 </div>
+                <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-gray-300">
+                  <span>Currency</span>
+                  <span className="text-xs font-bold text-primary normal-case flex items-center gap-1.5">
+                    <span className="text-[#196F03] font-black">{formData.currencySymbol || "₹"}</span>
+                    <span className="text-gray-400">({formData.currency || "INR"})</span>
+                  </span>
+                </div>
               </div>
             </div>
           </div>
 
           {/* Right Column: Configuration Forms */}
           <div className="lg:col-span-2 space-y-8">
+
+            {/* Country & Currency Settings */}
+            <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
+              <div className="flex items-center gap-4 mb-8">
+                <div className="h-12 w-12 bg-emerald-500/10 rounded-2xl flex items-center justify-center text-[#196F03]">
+                  <Coins className="h-6 w-6" />
+                </div>
+                <div>
+                  <h3 className="text-xl font-bold text-primary tracking-tight">Country & Currency</h3>
+                  <p className="text-xs font-medium text-gray-400 uppercase tracking-widest mt-0.5">Set the currency symbol displayed across your digital menu</p>
+                </div>
+              </div>
+
+              <div className="space-y-6">
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                  <div className="sm:col-span-2">
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">
+                      Country
+                    </label>
+                    <div className="relative">
+                      <select
+                        value={formData.country}
+                        onChange={(e) => {
+                          const chosenCountry = e.target.value;
+                          const matched = COUNTRIES_CURRENCIES.find((c) => c.country === chosenCountry) || DEFAULT_CURRENCY;
+                          setFormData({
+                            ...formData,
+                            country: matched.country,
+                            currency: matched.code,
+                            currencySymbol: matched.symbol,
+                          });
+                        }}
+                        className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-semibold outline-none text-primary cursor-pointer appearance-none"
+                      >
+                        {COUNTRIES_CURRENCIES.map((c) => (
+                          <option key={c.country} value={c.country}>
+                            {c.flag} {c.country} ({c.symbol} - {c.code})
+                          </option>
+                        ))}
+                      </select>
+                      <div className="absolute right-6 top-1/2 -translate-y-1/2 pointer-events-none text-gray-400">
+                        <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                        </svg>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="sm:col-span-1">
+                    <label className="block text-[10px] font-bold text-gray-400 uppercase tracking-widest mb-3 ml-1">
+                      Currency Symbol
+                    </label>
+                    <input
+                      type="text"
+                      value={formData.currencySymbol}
+                      onChange={(e) => setFormData({ ...formData, currencySymbol: e.target.value })}
+                      className="w-full px-6 py-5 bg-gray-50 border-transparent rounded-[1.5rem] focus:bg-white focus:ring-4 focus:ring-brand-orange/5 transition-all text-sm font-black outline-none text-[#196F03] text-center"
+                      placeholder="e.g. ₹"
+                    />
+                  </div>
+                </div>
+
+                {/* Live Preview Card */}
+                <div className="bg-gray-50/80 rounded-2xl p-5 border border-gray-100 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                  <div className="flex items-center gap-4">
+                    <div className="h-12 w-12 rounded-2xl bg-white shadow-sm border border-gray-100 flex items-center justify-center text-[#196F03] font-black text-xl shrink-0">
+                      {formData.currencySymbol || "₹"}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <p className="text-xs font-bold text-primary">Live Menu Price Preview</p>
+                        <span className="text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md bg-[#196F03]/10 text-[#196F03]">
+                          {formData.currency || "INR"}
+                        </span>
+                      </div>
+                      <p className="text-xs text-gray-500 mt-0.5">
+                        Sample item price will appear as:{" "}
+                        <span className="font-extrabold text-base text-[#196F03]">
+                          {formatPrice("240", formData.currencySymbol)}
+                        </span>
+                      </p>
+                    </div>
+                  </div>
+
+                  <div className="text-right shrink-0">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-gray-400 block">
+                      Default: India (₹)
+                    </span>
+                    <span className="text-[11px] text-gray-400">Updates everywhere on save</span>
+                  </div>
+                </div>
+              </div>
+            </div>
 
             {/* Display Mode Section */}
             <div className="bg-white rounded-[2.5rem] p-10 shadow-sm border border-gray-100">
